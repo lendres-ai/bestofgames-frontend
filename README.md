@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Best of Games
 
-## Getting Started
+Eine schlanke Next.js‑App, die kuratierte Spiele‑Reviews präsentiert. Startseite mit den neuesten Reviews und Detailseiten pro Spiel.
 
-First, run the development server:
+### Tech‑Stack
+- **Framework**: Next.js 15 (App Router) mit React 19
+- **Datenbank**: PostgreSQL via drizzle‑orm und postgres‑js
+- **Styles**: Tailwind CSS 4
+- **Analytics**: Optional Plausible (nur in Production geladen)
 
+### Features
+- **Übersicht**: Neueste Reviews mit Titel, Kurzbeschreibung und Score
+- **Detailseite**: `/games/[slug]` mit SEO‑Metadata
+- **ISR**: Startseite revalidiert stündlich, Detailseiten täglich
+
+## Schnellstart
+
+### Voraussetzungen
+- Node.js 18.18+ (empfohlen 20+)
+- PostgreSQL Instanz (lokal oder z. B. Neon/Supabase)
+
+### Installation
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Umgebungsvariablen
+Lege eine Datei `.env.local` im Projektwurzelverzeichnis an und setze die Datenbank‑URL (SSL wird erzwungen):
+```bash
+DATABASE_URL=postgres://user:password@host:port/dbname
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Datenbank einrichten (Drizzle)
+Es gibt zwei gängige Wege – nimm den, der besser zu deinem Workflow passt:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1) Direkt pushen (schnell für lokale Entwicklung):
+```bash
+npm run db:push
+```
 
-## Learn More
+2) Migrationen generieren und ausführen:
+```bash
+npm run db:generate
+npm run db:migrate
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Seed‑Daten einspielen
+Ein kleines Seed‑Script legt ein Beispielspiel samt Review an:
+```bash
+npx tsx src/scripts/seed.ts
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Entwicklung starten
+```bash
+npm run dev
+# http://localhost:3000
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Wichtige Skripte
+- `dev`: Development‑Server (Turbopack)
+- `build`: Production‑Build (Turbopack)
+- `start`: Production‑Server starten
+- `lint`: ESLint ausführen
+- `db:generate`: Drizzle‑Migrationen aus dem Schema erzeugen
+- `db:migrate`: Drizzle‑Migrationen anwenden
+- `db:push`: Schema direkt gegen die DB synchronisieren
 
-## Deploy on Vercel
+## Projektstruktur (Auszug)
+- `src/app/page.tsx`: Startseite mit Liste der neuesten Reviews
+- `src/app/games/[slug]/page.tsx`: Detailseite zum Spiel
+- `src/lib/schema.ts`: Drizzle‑Schema (`games`, `reviews`)
+- `src/lib/queries.ts`: Abfragen für Listen‑ und Detailseite
+- `src/scripts/seed.ts`: Seed‑Script für Beispielinhalt
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Hinweise & Architektur
+- **Schema**: Ein `review` pro `game` (Unique‑Constraint auf `reviews.game_id`).
+- **SEO**: Dynamische `generateMetadata` für Spielseiten, inkl. Open‑Graph.
+- **ISR**: `revalidate` auf Start‑ und Detailseiten konfiguriert.
+- **Plausible**: Wird nur in `NODE_ENV=production` geladen. Domain in `src/app/layout.tsx` anpassbar.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deployment
+- Ideal über Vercel. Setze `DATABASE_URL` als Projekt‑Environment‑Variable.
+- Stelle sicher, dass deine Datenbank SSL unterstützt (Standard in vielen Cloud‑Anbietern).
+
+Viel Spaß beim Ausprobieren und Erweitern!
