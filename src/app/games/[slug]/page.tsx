@@ -2,6 +2,7 @@ import { getGameBySlug } from '@/lib/queries';
 import { notFound } from 'next/navigation';
 import GameHero from '@/components/GameHero';
 
+
 export const revalidate = 86400;      // 1 Tag
 export const dynamicParams = true;    // neue Slugs sofort möglich
 
@@ -31,6 +32,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         platforms={game.platforms ?? []}
         score={game.score ? Number(game.score) : null}
         heroUrl={game.heroUrl ?? undefined}
+        releaseDate={game.releaseDate ? new Date(game.releaseDate).toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' }) : undefined}
       />
       <article className="mx-auto max-w-3xl p-6 prose">
         <p>{game.summary}</p>
