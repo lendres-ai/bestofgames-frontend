@@ -24,9 +24,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         {process.env.NODE_ENV === 'production' && (
           <Script
-            strategy="lazyOnload"
-            data-domain="bestofgames-frontend.vercel.app"
-            src="https://plausible.io/js/script.js"
+            src="https://umami.mountdoom.space/script.js"
+            strategy="afterInteractive"
+            data-website-id="a696f6b4-f857-4add-a5fa-52469d4f203a"
           />
         )}
         {children}
