@@ -61,7 +61,19 @@ export async function getGameBySlug(slug: string) {
     conclusion: base.conclusion,
     score: base.score,
     developer: base.developer,
-    tags: Array.from(new Set(rows.map((r) => r.tagName).filter(Boolean))),
-    platforms: Array.from(new Set(rows.map((r) => r.platformName).filter(Boolean))),
+    tags: Array.from(
+      new Set(
+        rows
+          .map((r) => r.tagName)
+          .filter((name): name is string => typeof name === 'string')
+      )
+    ),
+    platforms: Array.from(
+      new Set(
+        rows
+          .map((r) => r.platformName)
+          .filter((name): name is string => typeof name === 'string')
+      )
+    ),
   };
 }
