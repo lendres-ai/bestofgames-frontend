@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import {SiMacos} from "react-icons/si";
+import { SiMacos } from "react-icons/si";
 
 
 interface GameHeroProps {
@@ -10,17 +10,19 @@ interface GameHeroProps {
     platforms?: string[];
     score?: number | null;
     heroUrl?: string | null;
+    images?: string[];
 }
 
 export default function GameHero({
-                                     title,
-                                     developer,
-                                     tags = [],
-                                     releaseDate,
-                                     platforms = [],
-                                     score,
-                                     heroUrl,
-                                 }: GameHeroProps) {
+    title,
+    developer,
+    tags = [],
+    releaseDate,
+    platforms = [],
+    score,
+    heroUrl,
+    images = [],
+}: GameHeroProps) {
     const starCount = Math.round(score ?? 0);
     return (
         <section className="py-8 bg-white md:py-16 dark:bg-gray-900 antialiased">
@@ -30,12 +32,14 @@ export default function GameHero({
                     <div className="shrink-0 max-w-md lg:max-w-lg mx-auto">
                         <Image
                             className="w-full h-auto"
-                            src={heroUrl || 'https://placehold.co/2000x1500.png'}
+                            src={images[0] || 'https://placehold.co/2000x1500.png'}
                             alt=""
                             width={640}
                             height={480}
                         />
                     </div>
+
+
 
 
                     <div className="mt-6 sm:mt-8 lg:mt-0">
@@ -50,6 +54,11 @@ export default function GameHero({
                                 ].filter(Boolean).join(" • ")}
                             </p>
                         )}
+                        <button className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
+                            <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent">
+                                Purple to blue
+                            </span>
+                        </button>
                         {tags.length > 0 && (
                             <div className="mt-4 flex flex-wrap gap-2">
                                 {tags.map((tag) => (
@@ -64,7 +73,7 @@ export default function GameHero({
                         )}
                         <div className="mt-4 flex items-center gap-2">
                             <div className="flex items-center gap-1">
-                                {[0, 1, 2, 3, 4].map((i) => (
+                                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
                                     <svg
                                         key={i}
                                         className={`w-4 h-4 ${i < starCount ? 'text-yellow-300' : 'text-gray-300 dark:text-gray-600'}`}
@@ -76,7 +85,7 @@ export default function GameHero({
                                         viewBox="0 0 24 24"
                                     >
                                         <path
-                                            d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z"/>
+                                            d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z" />
                                     </svg>
                                 ))}
                             </div>
@@ -91,8 +100,8 @@ export default function GameHero({
                                         key={platform}
                                         className="px-3 py-1 text-xs font-medium rounded-full bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-200"
                                     >
-                    {platform}
-                  </span>
+                                        {platform}
+                                    </span>
                                 ))}
                             </div>
                         )}

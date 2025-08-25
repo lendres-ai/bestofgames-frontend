@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
 
 module.exports = {
   images: {
-    domains: ['placehold.co'],
+    domains: ['placehold.co', 'www.nintendo.com'],
   },
 };
 

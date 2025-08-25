@@ -6,6 +6,7 @@ import {
     tags,
     gamePlatforms,
     platforms,
+    gameImages,
 } from './schema';
 import {desc, eq} from 'drizzle-orm';
 
@@ -30,6 +31,7 @@ export async function getGameBySlug(slug: string) {
             summary: games.summary,
             heroUrl: games.heroUrl,
             releaseDate: games.releaseDate,
+            reviewTitle: reviews.title,
             description: reviews.description,
             introduction: reviews.introduction,
             gameplayFeatures: reviews.gameplayFeatures,
@@ -38,6 +40,8 @@ export async function getGameBySlug(slug: string) {
             developer: games.developer,
             tagName: tags.name,
             platformName: platforms.name,
+            userOpinion: reviews.userOpinion,
+            images: gameImages.url,
         })
         .from(games)
         .leftJoin(reviews, eq(reviews.gameId, games.id))
@@ -45,6 +49,7 @@ export async function getGameBySlug(slug: string) {
         .leftJoin(tags, eq(reviewTags.tagId, tags.id))
         .leftJoin(gamePlatforms, eq(gamePlatforms.gameId, games.id))
         .leftJoin(platforms, eq(gamePlatforms.platformId, platforms.id))
+        .leftJoin(gameImages, eq(gameImages.gameId, games.id))
         .where(eq(games.slug, slug));
 
     if (rows.length === 0) return null;
@@ -77,5 +82,14 @@ export async function getGameBySlug(slug: string) {
                     .filter((name): name is string => typeof name === 'string')
             )
         ),
+        images: Array.from(
+            new Set(
+                rows
+                    .map((r) => r.images)
+                    .filter((name): name is string => typeof name === 'string')
+            )
+        ),
+        userOpinion: base.userOpinion,
+        reviewTitle: base.reviewTitle,
     };
 }

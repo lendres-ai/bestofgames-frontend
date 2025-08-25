@@ -1,6 +1,6 @@
 import os
 from decimal import Decimal
-from typing import List
+from typing import List, Optional
 
 from dotenv import load_dotenv
 import psycopg2
@@ -25,6 +25,7 @@ def insert_full_review(
     platform_windows: bool,
     platform_mac: bool,
     platform_linux: bool,
+    image_urls: Optional[List[str]] = None,
     review_title: str,
     description: str,
     introduction: str,
@@ -34,6 +35,7 @@ def insert_full_review(
     pros: List[str],
     cons: List[str],
     tags: List[str],
+    user_opinion: str,
 ):
     dsn = _ensure_sslmode_require(database_url)
 
@@ -86,12 +88,31 @@ def insert_full_review(
                     (game_id, platform_id),
                 )
 
+            # Game images: replace existing set if provided
+            if image_urls:
+                # Remove existing images to avoid duplicates on reseed
+                cur.execute(
+                    """
+                    DELETE FROM game_images
+                    WHERE game_id = %s;
+                    """,
+                    (game_id,),
+                )
+                for index, url in enumerate(image_urls):
+                    cur.execute(
+                        """
+                        INSERT INTO game_images (game_id, url, sort_order)
+                        VALUES (%s, %s, %s);
+                        """,
+                        (game_id, url, index),
+                    )
+
             # Insert review
             cur.execute(
                 """
                 INSERT INTO reviews (
-                  game_id, title, description, introduction, gameplay_features, conclusion, score
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s)
+                  game_id, title, description, introduction, gameplay_features, conclusion, score, user_opinion
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 RETURNING id;
                 """,
                 (
@@ -102,6 +123,7 @@ def insert_full_review(
                     gameplay_features,
                     conclusion,
                     score,
+                    user_opinion,
                 ),
             )
             review_row = cur.fetchone()
@@ -169,7 +191,7 @@ if __name__ == "__main__":
     # Example data — adjust as needed
     insert_full_review(
         database_url=database_url,
-        game_slug="hollow-knight",
+        game_slug="hollow-knight-v3",
         game_title="Hollow Knight",
         game_summary="Atmospheric Metroidvania with tight combat and rich exploration.",
         developer="Team Cherry",
@@ -177,12 +199,15 @@ if __name__ == "__main__":
         platform_windows=True,
         platform_mac=True,
         platform_linux=False,
+        image_urls=[
+            "https://www.nintendo.com/eu/media/images/10_share_images/games_15/wiiu_download_software_5/H2x1_WiiUDS_HollowKnight.jpg",
+        ],
         review_title="Hollow Knight Review",
         description="A masterclass in world-building and silky platforming.",
         introduction="Descend into Hallownest, a fallen kingdom teeming with secrets.",
         gameplay_features="Precise combat, vast interconnected map, optional challenge content",
         conclusion="A towering achievement that rewards curiosity and skill.",
-        score=Decimal("9.5"),
+        score=Decimal("2.5"),
         pros=[
             "Expansive world with meaningful exploration",
             "Excellent combat feedback and mobility",
@@ -193,6 +218,7 @@ if __name__ == "__main__":
             "Difficulty spikes in optional content",
         ],
         tags=["Metroidvania", "Indie", "Action", "Exploration"],
+        user_opinion="Ich habe das Spiel sehr genossen. Es ist ein sehr schönes Spiel mit vielen tolle Features. Ich würde es jedem empfehlen.",
     )
 
 
