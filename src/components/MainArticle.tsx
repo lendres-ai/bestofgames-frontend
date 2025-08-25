@@ -1,83 +1,117 @@
 import Image from 'next/image';
 
-
-
 interface MainArticleProps {
-    reviewTitle: string | null;
-    description: string | null;
-    introduction: string | null;
-    gameplayFeatures: string | null;
-    conclusion: string | null;
-    score: number | null;
-    userOpinion: string | null;
-    images?: string[];
+  reviewTitle: string | null;
+  description: string | null;
+  introduction: string | null;
+  gameplayFeatures: string | null;
+  conclusion: string | null;
+  score: number | null;
+  userOpinion: string | null;
+  images?: string[];
+  pros?: string[];
+  cons?: string[];
 }
 
 export default function MainArticle({
-    reviewTitle,
-    description,
-    introduction,
-    gameplayFeatures,
-    conclusion,
-    score,
-    userOpinion,
-    images = [],
+  reviewTitle,
+  description,
+  introduction,
+  gameplayFeatures,
+  conclusion,
+  score,
+  userOpinion,
+  images = [],
+  pros = [],
+  cons = [],
 }: MainArticleProps) {
-    return (
-        <article className="mx-auto max-w-3xl p-6 prose dark:prose-invert">
-            <header>
-                <h2 className="mb-2 text-3xl font-bold">{reviewTitle}</h2>
-                {description && (
-                    <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">{description}</p>
-                )}
-            </header>
+  return (
+    <article id="main" className="mx-auto max-w-3xl px-4 pb-16">
+      <header className="mb-8">
+        <h2 className="mb-3 bg-gradient-to-r from-indigo-600 via-sky-500 to-fuchsia-500 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
+          {reviewTitle}
+        </h2>
+        {description && (
+          <p className="text-lg text-gray-600 dark:text-gray-300">{description}</p>
+        )}
+      </header>
 
-            {images.length > 1 && (
-                <div className="flex gap-4 mb-6 overflow-x-auto">
-                    {images.slice(1, 4).map((img, idx) => (
-                        <Image
-                            key={img}
-                            src={img}
-                            alt={`Screenshot ${idx + 1}`}
-                            width={320}
-                            height={180}
-                            className="rounded shadow min-w-[200px] object-cover"
-                        />
-                    ))}
-                </div>
-            )}
+      {images.length > 1 && (
+        <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {images.slice(1, 4).map((img, idx) => (
+            <div key={img} className="overflow-hidden rounded-2xl shadow ring-1 ring-black/5">
+              <Image
+                src={img}
+                alt={`Screenshot ${idx + 1}`}
+                width={640}
+                height={360}
+                className="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.03]"
+              />
+            </div>
+          ))}
+        </div>
+      )}
 
-            <section className="mt-6">
-                {/* <h3 className="text-2xl font-semibold mt-6 mb-2">Einleitung</h3> */}
-                <p>{introduction}</p>
-            </section>
+      <div className="prose prose-slate max-w-none dark:prose-invert">
+        {introduction && <p>{introduction}</p>}
+        {gameplayFeatures && <p>{gameplayFeatures}</p>}
+        {conclusion && <p>{conclusion}</p>}
+      </div>
 
-            <section className="mt-6">
-                {/* <h3 className="text-2xl font-semibold mt-6 mb-2">Gameplay & Features</h3> */}
-                <p>{gameplayFeatures}</p>
-            </section>
+      {(pros.length > 0 || cons.length > 0) && (
+        <section className="mt-10 grid gap-4 sm:grid-cols-2">
+          {pros.length > 0 && (
+            <div className="rounded-2xl border bg-gray-50/60 p-5 shadow-sm ring-1 ring-emerald-400/30 dark:bg-gray-900/40">
+              <h4 className="mb-3 text-sm font-semibold text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]">
+                Pros
+              </h4>
+              <ul className="space-y-2">
+                {pros.map((p) => (
+                  <li
+                    key={p}
+                    className="relative rounded-xl bg-emerald-500/10 px-3 py-2 text-sm text-emerald-300 ring-1 ring-emerald-500/30 drop-shadow-[0_0_6px_rgba(16,185,129,0.6)]"
+                  >
+                    {p}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {cons.length > 0 && (
+            <div className="rounded-2xl border bg-gray-50/60 p-5 shadow-sm ring-1 ring-rose-400/30 dark:bg-gray-900/40">
+              <h4 className="mb-3 text-sm font-semibold text-rose-400 drop-shadow-[0_0_8px_rgba(244,63,94,0.8)]">
+                Cons
+              </h4>
+              <ul className="space-y-2">
+                {cons.map((c) => (
+                  <li
+                    key={c}
+                    className="relative rounded-xl bg-rose-500/10 px-3 py-2 text-sm text-rose-300 ring-1 ring-rose-500/30 drop-shadow-[0_0_6px_rgba(244,63,94,0.6)]"
+                  >
+                    {c}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </section>
+      )}
 
-            <section className="mt-6">
-                {/* <h3 className="text-2xl font-semibold mt-6 mb-2">Fazit</h3> */}
-                <p>{conclusion}</p>
-            </section>
+      {typeof score === 'number' && (
+        <div className="mt-10 flex items-center gap-3 rounded-2xl border bg-white/60 p-4 shadow-sm ring-1 ring-black/5 backdrop-blur dark:bg-gray-900/60">
+          <span className="text-sm font-semibold text-gray-600 dark:text-gray-300">Score</span>
+          <span className="font-mono text-2xl font-bold text-amber-500">{score.toFixed(1)} / 10</span>
+        </div>
+      )}
 
-            {typeof score === 'number' && (
-                <div className="mt-8 flex items-center gap-2">
-                    <span className="text-lg font-bold">Score:</span>
-                    <span className="text-2xl font-mono text-yellow-500">{score.toFixed(1)} / 10</span>
-                </div>
-            )}
-
-            {userOpinion && (
-                <section className="mt-10 border-t pt-6">
-                    <h4 className="text-lg font-semibold mb-2">Spielermeinung</h4>
-                    <blockquote className="italic text-gray-700 dark:text-gray-300 border-l-4 border-blue-400 pl-4">
-                        {userOpinion}
-                    </blockquote>
-                </section>
-            )}
-        </article>
-    );
+      {userOpinion && (
+        <section className="mt-12 rounded-2xl border bg-gradient-to-br from-sky-50 via-white to-purple-50 p-6 shadow-sm ring-1 ring-black/5 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
+          <h4 className="mb-2 text-lg font-semibold">Spielermeinung</h4>
+          <blockquote className="border-l-4 border-sky-400/70 pl-4 italic text-gray-700 dark:text-gray-300">
+            {userOpinion}
+          </blockquote>
+        </section>
+      )}
+    </article>
+  );
 }
-

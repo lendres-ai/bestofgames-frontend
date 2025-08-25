@@ -8,6 +8,13 @@
       "when": 1756123862019,
       "tag": "0000_magenta_johnny_blaze",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1756161582466,
+      "tag": "0001_next_morlocks",
+      "breakpoints": true
     }
   ]
 }

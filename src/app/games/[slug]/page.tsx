@@ -44,6 +44,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         score={game.score ? Number(game.score) : null}
         userOpinion={game.userOpinion}
         images={game.images ?? []}
+        pros={game.pros ?? []}
+        cons={game.cons ?? []}
       />
     </>
   );
