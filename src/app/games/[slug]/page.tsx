@@ -26,6 +26,12 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       <h1>{game.title}</h1>
       <p>{game.summary}</p>
       <p><strong>Score:</strong> {game.score ?? '—'}</p>
+      {game.userOpinion ? (
+        <aside>
+          <h2>User opinion</h2>
+          <p>{game.userOpinion}</p>
+        </aside>
+      ) : null}
       {/* Markdown-Body könntest du später mit e.g. marked/rehype rendern */}
     </article>
   );

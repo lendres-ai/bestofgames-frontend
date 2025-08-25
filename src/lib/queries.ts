@@ -22,6 +22,7 @@ export async function getGameBySlug(slug: string) {
     introduction: reviews.introduction,
     gameplayFeatures: reviews.gameplayFeatures,
     conclusion: reviews.conclusion,
+    userOpinion: reviews.userOpinion,
     score: reviews.score
   })
   .from(games)

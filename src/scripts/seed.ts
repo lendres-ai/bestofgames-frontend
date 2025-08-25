@@ -18,6 +18,7 @@ async function main() {
     introduction: 'Willkommen in der Wunderwelt von Mario!',
     gameplayFeatures: 'Levelvielfalt, Soundtrack',
     conclusion: 'Story flach, aber Spielspaß hoch',
+    userOpinion: 'Ich fand das Leveldesign großartig und die Musik eingängig.',
     score: '9.0'
   });
 

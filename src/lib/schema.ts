@@ -56,6 +56,7 @@ export const reviews = pgTable('reviews', {
   introduction: text('introduction').notNull(),
   gameplayFeatures: text('gameplay_features').notNull(),
   conclusion: text('conclusion').notNull(),
+  userOpinion: text('user_opinion'),
   score: numeric('score', { precision: 3, scale: 1 }).notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
@@ -88,10 +89,6 @@ export const reviewTags = pgTable(
   }),
 );
 
-export const userOpinions = pgTable('user_opinions', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  reviewId: uuid('review_id').references(() => reviews.id).notNull(),
-  opinionText: text('opinion_text').notNull(),
-});
+// removed user_opinions table in favor of reviews.userOpinion
 
 
