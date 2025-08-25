@@ -18,7 +18,11 @@ export async function getGameBySlug(slug: string) {
   const rows = await db.select({
     id: games.id, slug: games.slug, title: games.title,
     summary: games.summary, heroUrl: games.heroUrl,
-    bodyMd: reviews.bodyMd, score: reviews.score
+    description: reviews.description,
+    introduction: reviews.introduction,
+    gameplayFeatures: reviews.gameplayFeatures,
+    conclusion: reviews.conclusion,
+    score: reviews.score
   })
   .from(games)
   .leftJoin(reviews, eq(reviews.gameId, games.id))
