@@ -1,5 +1,6 @@
 import { getGameBySlug } from '@/lib/queries';
 import { notFound } from 'next/navigation';
+import GameHero from '@/components/GameHero';
 
 export const revalidate = 86400;      // 1 Tag
 export const dynamicParams = true;    // neue Slugs sofort möglich
@@ -22,11 +23,19 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   if (!game) return notFound();
 
   return (
-    <article className="mx-auto max-w-3xl p-6 prose">
-      <h1>{game.title}</h1>
-      <p>{game.summary}</p>
-      <p><strong>Score:</strong> {game.score ?? '—'}</p>
-      {/* Markdown-Body könntest du später mit e.g. marked/rehype rendern */}
-    </article>
+    <>
+      <GameHero
+        title={game.title}
+        developer={game.developer}
+        tags={game.tags ?? []}
+        platforms={game.platforms ?? []}
+        score={game.score ? Number(game.score) : null}
+        heroUrl={game.heroUrl ?? undefined}
+      />
+      <article className="mx-auto max-w-3xl p-6 prose">
+        <p>{game.summary}</p>
+        {/* Markdown-Body könntest du später mit e.g. marked/rehype rendern */}
+      </article>
+    </>
   );
 }

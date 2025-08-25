@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Script from 'next/script';
+import Header from "@/components/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="de">
-      <body>
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
         {process.env.NODE_ENV === 'production' && (
           <Script
             src="https://umami.mountdoom.space/script.js"
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             data-website-id="a696f6b4-f857-4add-a5fa-52469d4f203a"
           />
         )}
+        <Header />
         {children}
       </body>
     </html>
