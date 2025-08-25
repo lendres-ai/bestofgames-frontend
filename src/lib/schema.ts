@@ -32,8 +32,8 @@ export const platforms = pgTable('platforms', {
 export const gamePlatforms = pgTable(
   'game_platforms',
   {
-    gameId: uuid('game_id').references(() => games.id).notNull(),
-    platformId: uuid('platform_id').references(() => platforms.id).notNull(),
+    gameId: uuid('game_id').references(() => games.id, { onDelete: 'cascade' }).notNull(),
+    platformId: uuid('platform_id').references(() => platforms.id, { onDelete: 'cascade' }).notNull(),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.gameId, t.platformId] }),
@@ -42,7 +42,7 @@ export const gamePlatforms = pgTable(
 
 export const gameImages = pgTable('game_images', {
   id: uuid('id').defaultRandom().primaryKey(),
-  gameId: uuid('game_id').references(() => games.id).notNull(),
+  gameId: uuid('game_id').references(() => games.id, { onDelete: 'cascade' }).notNull(),
   url: text('url').notNull(),
   caption: text('caption'),
   sortOrder: integer('sort_order'),
@@ -50,7 +50,7 @@ export const gameImages = pgTable('game_images', {
 
 export const reviews = pgTable('reviews', {
   id: uuid('id').defaultRandom().primaryKey(),
-  gameId: uuid('game_id').references(() => games.id).notNull(),
+  gameId: uuid('game_id').references(() => games.id, { onDelete: 'cascade' }).notNull(),
   title: text('title').notNull(),
   description: text('description').notNull(),
   introduction: text('introduction').notNull(),
@@ -68,7 +68,7 @@ export const proConEnum = pgEnum('pro_con', ['pro', 'con']);
 
 export const reviewProsCons = pgTable('review_pros_cons', {
   id: uuid('id').defaultRandom().primaryKey(),
-  reviewId: uuid('review_id').references(() => reviews.id).notNull(),
+  reviewId: uuid('review_id').references(() => reviews.id, { onDelete: 'cascade' }).notNull(),
   text: text('text').notNull(),
   type: proConEnum('type').notNull(),
 });
@@ -81,8 +81,8 @@ export const tags = pgTable('tags', {
 export const reviewTags = pgTable(
   'review_tags',
   {
-    reviewId: uuid('review_id').references(() => reviews.id).notNull(),
-    tagId: uuid('tag_id').references(() => tags.id).notNull(),
+    reviewId: uuid('review_id').references(() => reviews.id, { onDelete: 'cascade' }).notNull(),
+    tagId: uuid('tag_id').references(() => tags.id, { onDelete: 'cascade' }).notNull(),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.reviewId, t.tagId] }),
