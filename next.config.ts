@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
       },
     ],
     // Optional: disable optimization in dev for speed
-    unoptimized: isDev,
+    unoptimized: true, // enable later for production
   },
 };
 
