@@ -1,21 +1,45 @@
 @import "tailwindcss";
 
+/* Global theme tokens for a dark gaming palette */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* base colors */
+  --bg: #0b0f17;
+  --surface: #121826;
+  --muted: #9aa4b2;
+
+  /* typography */
+  --text: #e6e8ee;
+  --text-muted: #b5bdc9;
+
+  /* accents */
+  --accent: #5b8cff;
+  --good: #22c55e;
+  --bad: #ef4444;
+
+  /* default document colors */
+  --background: var(--bg);
+  --foreground: var(--text);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-muted: var(--muted);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-good: var(--good);
+  --color-bad: var(--bad);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #ffffff;
+    --foreground: #171717;
   }
 }
 

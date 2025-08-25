@@ -1,41 +1,73 @@
-import { getGameBySlug } from '@/lib/queries';
 import { notFound } from 'next/navigation';
-import GameHero from '@/components/GameHero';
+import { getGameBySlug } from '@/lib/queries';
+import Hero from '@/components/Hero';
+import ArticleBody, { ArticleBlock } from '@/components/ArticleBody';
+import ProsCons from '@/components/ProsCons';
+import CircularScore from '@/components/CircularScore';
+import Section from '@/components/Section';
+import FadeIn from '@/components/FadeIn';
+import StatPill from '@/components/StatPill';
 
-export const revalidate = 86400;      // 1 Tag
-export const dynamicParams = true;    // neue Slugs sofort möglich
+export const revalidate = 3600;
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const game = await getGameBySlug(slug);
-  if (!game) return {};
-  return {
-    title: `${game.title} – Review & Score`,
-    description: game.summary ?? undefined,
-    alternates: { canonical: `/games/${slug}` },
-    openGraph: { images: game.heroUrl ? [game.heroUrl] : [] }
-  };
+function splitParagraphs(text?: string): ArticleBlock[] {
+  if (!text) return [];
+  return text
+    .split('\n')
+    .map((p) => p.trim())
+    .filter(Boolean)
+    .map((content) => ({ type: 'paragraph', content }));
 }
 
-export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const game = await getGameBySlug(slug);
-  if (!game) return notFound();
+export default async function GamePage({ params }: { params: { slug: string } }) {
+  const game = await getGameBySlug(params.slug);
+  if (!game) {
+    notFound();
+  }
+
+  const blocks: ArticleBlock[] = [
+    ...splitParagraphs(game.introduction),
+    ...splitParagraphs(game.description),
+    ...splitParagraphs(game.gameplayFeatures),
+    ...splitParagraphs(game.conclusion),
+  ];
 
   return (
-    <>
-      <GameHero
+    <main>
+      <Hero
         title={game.title}
-        developer={game.developer}
-        tags={game.tags ?? []}
-        platforms={game.platforms ?? []}
-        score={game.score ? Number(game.score) : null}
-        heroUrl={game.heroUrl ?? undefined}
+        subtitle={game.summary ?? undefined}
+        images={game.heroUrl ? [{ src: game.heroUrl, alt: game.title }] : []}
+        meta={
+          <>
+            {game.developer && <StatPill icon="👤" label={game.developer} />}
+            {game.tags?.map((tag) => (
+              <StatPill key={tag} icon="#" label={tag} />
+            ))}
+            {game.platforms?.map((p) => (
+              <StatPill key={p} icon="🎮" label={p} />
+            ))}
+          </>
+        }
       />
-      <article className="mx-auto max-w-3xl p-6 prose">
-        <p>{game.summary}</p>
-        {/* Markdown-Body könntest du später mit e.g. marked/rehype rendern */}
-      </article>
-    </>
+      <div className="max-w-3xl mx-auto p-6 space-y-12">
+        <FadeIn>
+          <ArticleBody blocks={blocks} />
+        </FadeIn>
+        <FadeIn>
+          <ProsCons pros={[]} cons={[]} />
+        </FadeIn>
+        <FadeIn>
+          <Section title="User Reviews">
+            <p className="text-text-muted">No reviews yet.</p>
+          </Section>
+        </FadeIn>
+        <FadeIn>
+          <Section title="Score" className="flex justify-center">
+            <CircularScore value={game.score ?? 0} />
+          </Section>
+        </FadeIn>
+      </div>
+    </main>
   );
 }
