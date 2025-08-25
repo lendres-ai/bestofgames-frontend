@@ -13,11 +13,18 @@ async function main() {
 
   await db.insert(reviews).values({
     gameId: g.id,
-    score: '9.0',
-    pros: ['Levelvielfalt', 'Soundtrack'],
-    cons: ['Story flach'],
-    bodyMd: 'Ein sehr gutes Jump & Run…',
+    title: 'Super Mario Wonder Review',
+    description: 'Ein sehr gutes Jump & Run…',
+    introduction: 'Willkommen in der Wunderwelt von Mario!',
+    gameplayFeatures: 'Levelvielfalt, Soundtrack',
+    conclusion: 'Story flach, aber Spielspaß hoch',
+    score: '9.0'
   });
+
   console.log('Seed ok');
 }
-main().then(()=>process.exit(0)).catch(e=>{console.error(e);process.exit(1);});
+
+main().then(() => process.exit(0)).catch(e => {
+  console.error(e);
+  process.exit(1);
+});
