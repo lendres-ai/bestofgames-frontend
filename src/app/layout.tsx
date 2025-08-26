@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="de">
       <body className={`${geistSans.variable} ${geistMono.variable} min-h-dvh flex flex-col`}>
-        {process.env.NODE_ENV === 'production' && (
+        {process.env.VERCEL_ENV === 'production' && (
           <Script
             src="https://umami.mountdoom.space/script.js"
             strategy="afterInteractive"
