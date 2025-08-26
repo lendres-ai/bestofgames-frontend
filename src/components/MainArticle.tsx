@@ -1,4 +1,8 @@
+"use client";
+
 import Image from 'next/image';
+import { useState } from 'react';
+import Lightbox from './Lightbox';
 
 interface MainArticleProps {
   reviewTitle: string | null;
@@ -8,7 +12,7 @@ interface MainArticleProps {
   conclusion: string | null;
   score: number | null;
   userOpinion: string | null;
-  images?: string[];
+  images?: Array<string | { src: string; caption?: string }>;
   pros?: string[];
   cons?: string[];
 }
@@ -25,6 +29,12 @@ export default function MainArticle({
   pros = [],
   cons = [],
 }: MainArticleProps) {
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const galleryImages = images.slice(1, 4).map((img) =>
+    typeof img === 'string' ? { src: img } : img,
+  );
+
   return (
     <article id="main" className="mx-auto max-w-3xl px-4 pb-16">
       <header className="mb-8">
@@ -36,18 +46,27 @@ export default function MainArticle({
         )}
       </header>
 
-      {images.length > 1 && (
+      {!!galleryImages.length && (
         <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {images.slice(1, 4).map((img, idx) => (
-            <div key={img} className="overflow-hidden rounded-2xl shadow ring-1 ring-black/5">
+          {galleryImages.map((img, idx) => (
+            <figure
+              key={img.src}
+              className="group cursor-pointer overflow-hidden rounded-2xl shadow ring-1 ring-black/5"
+              onClick={() => setLightboxIndex(idx)}
+            >
               <Image
-                src={img}
+                src={img.src}
                 alt={`Screenshot ${idx + 1}`}
                 width={640}
                 height={360}
-                className="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.03]"
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
               />
-            </div>
+              {img.caption && (
+                <figcaption className="bg-black/60 p-2 text-xs text-white">
+                  {img.caption}
+                </figcaption>
+              )}
+            </figure>
           ))}
         </div>
       )}
@@ -111,6 +130,13 @@ export default function MainArticle({
             {userOpinion}
           </blockquote>
         </section>
+      )}
+      {lightboxIndex !== null && (
+        <Lightbox
+          images={galleryImages}
+          startIndex={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+        />
       )}
     </article>
   );
