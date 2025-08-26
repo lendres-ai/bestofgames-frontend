@@ -7,7 +7,7 @@ export const revalidate = 86400;      // 1 Tag
 export const dynamicParams = true;    // neue Slugs sofort möglich
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+  const slug = decodeURIComponent((await params).slug);
   const game = await getGameBySlug(slug);
   if (!game) return {};
   return {
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+  const slug = decodeURIComponent((await params).slug);
   const game = await getGameBySlug(slug);
   if (!game) return notFound();
 
