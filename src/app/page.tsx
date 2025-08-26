@@ -115,12 +115,13 @@ export default async function Page() {
 
                   <div className="flex flex-wrap items-center gap-2 p-[var(--space-4)] sm:p-[var(--space-5)]">
                     {(featured.tags ?? []).slice(0, 4).map((t) => (
-                      <span
+                      <Link
                         key={t}
+                        href={`/tags/${encodeURIComponent(t)}`}
                         className="rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-medium text-gray-800 dark:bg-gray-800 dark:text-gray-200"
                       >
                         {t}
-                      </span>
+                      </Link>
                     ))}
                     <span className="ml-auto inline-flex items-center gap-1 text-sm font-medium text-indigo-600 transition group-hover:translate-x-0.5 dark:text-sky-400">
                       Read review
@@ -168,12 +169,13 @@ export default async function Page() {
                       {!!(x.tags?.length) && (
                         <div className="mt-3 flex flex-wrap gap-2">
                           {x.tags!.slice(0, 3).map((t) => (
-                            <span
+                            <Link
                               key={t}
+                              href={`/tags/${encodeURIComponent(t)}`}
                               className="rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-medium text-gray-800 dark:bg-gray-800 dark:text-gray-200"
                             >
                               {t}
-                            </span>
+                            </Link>
                           ))}
                         </div>
                       )}
@@ -219,12 +221,13 @@ export default async function Page() {
                       {!!(x.tags?.length) && (
                         <div className="mt-3 flex flex-wrap gap-2">
                           {x.tags!.slice(0, 3).map((t) => (
-                            <span
+                            <Link
                               key={t}
+                              href={`/tags/${encodeURIComponent(t)}`}
                               className="rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-medium text-gray-800 dark:bg-gray-800 dark:text-gray-200"
                             >
                               {t}
-                            </span>
+                            </Link>
                           ))}
                         </div>
                       )}
