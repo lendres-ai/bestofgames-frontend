@@ -71,7 +71,7 @@ export default function MainArticle({
         </div>
       )}
 
-      <div className="prose prose-slate max-w-none dark:prose-invert">
+      <div className="prose prose-slate max-w-none text-justify dark:prose-invert">
         {introduction && <p>{introduction}</p>}
         {gameplayFeatures && <p>{gameplayFeatures}</p>}
         {conclusion && <p>{conclusion}</p>}
