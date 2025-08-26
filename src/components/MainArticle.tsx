@@ -69,7 +69,7 @@ export default function MainArticle({
                 {pros.map((p) => (
                   <li
                     key={p}
-                    className="relative rounded-xl bg-emerald-500/10 px-3 py-2 text-sm text-emerald-300 ring-1 ring-emerald-500/30 drop-shadow-[0_0_6px_rgba(16,185,129,0.6)]"
+                    className="relative rounded-xl bg-emerald-500/10 px-3 py-2 text-sm text-emerald-800 ring-1 ring-emerald-500/30 drop-shadow-[0_0_6px_rgba(16,185,129,0.6)] dark:text-emerald-300"
                   >
                     {p}
                   </li>
@@ -86,7 +86,7 @@ export default function MainArticle({
                 {cons.map((c) => (
                   <li
                     key={c}
-                    className="relative rounded-xl bg-rose-500/10 px-3 py-2 text-sm text-rose-300 ring-1 ring-rose-500/30 drop-shadow-[0_0_6px_rgba(244,63,94,0.6)]"
+                    className="relative rounded-xl bg-rose-500/10 px-3 py-2 text-sm text-rose-800 ring-1 ring-rose-500/30 drop-shadow-[0_0_6px_rgba(244,63,94,0.6)] dark:text-rose-300"
                   >
                     {c}
                   </li>
