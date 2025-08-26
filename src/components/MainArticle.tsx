@@ -26,8 +26,11 @@ export default function MainArticle({
   cons = [],
 }: MainArticleProps) {
   return (
-    <article id="main" className="mx-auto max-w-3xl px-4 pb-16">
-      <header className="mb-8">
+    <article
+      id="main"
+      className="mx-auto max-w-3xl px-[var(--container-x)] pt-[var(--section-pt)] pb-[var(--section-pb)]"
+    >
+      <header className="mb-[var(--block-gap)]">
         <h2 className="mb-3 bg-gradient-to-r from-indigo-600 via-sky-500 to-fuchsia-500 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
           {reviewTitle}
         </h2>
@@ -37,7 +40,7 @@ export default function MainArticle({
       </header>
 
       {images.length > 1 && (
-        <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <div className="mb-[var(--block-gap)] grid grid-cols-2 gap-3 sm:grid-cols-3">
           {images.slice(1, 4).map((img, idx) => (
             <div key={img} className="overflow-hidden rounded-2xl shadow ring-1 ring-black/5">
               <Image
@@ -59,7 +62,7 @@ export default function MainArticle({
       </div>
 
       {(pros.length > 0 || cons.length > 0) && (
-        <section className="mt-10 grid gap-4 sm:grid-cols-2">
+        <section className="mt-[var(--block-gap)] grid gap-4 sm:grid-cols-2">
           {pros.length > 0 && (
             <div className="rounded-2xl border bg-gray-50/60 p-5 shadow-sm ring-1 ring-emerald-400/30 dark:bg-gray-900/40">
               <h4 className="mb-3 text-sm font-semibold text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]">
@@ -98,14 +101,14 @@ export default function MainArticle({
       )}
 
       {typeof score === 'number' && (
-        <div className="mt-10 flex items-center gap-3 rounded-2xl border bg-white/60 p-4 shadow-sm ring-1 ring-black/5 backdrop-blur dark:bg-gray-900/60">
+        <div className="mt-[var(--block-gap)] flex items-center gap-3 rounded-2xl border bg-white/60 p-4 shadow-sm ring-1 ring-black/5 backdrop-blur dark:bg-gray-900/60">
           <span className="text-sm font-semibold text-gray-600 dark:text-gray-300">Score</span>
           <span className="font-mono text-2xl font-bold text-amber-500">{score.toFixed(1)} / 10</span>
         </div>
       )}
 
       {userOpinion && (
-        <section className="mt-12 rounded-2xl border bg-gradient-to-br from-sky-50 via-white to-purple-50 p-6 shadow-sm ring-1 ring-black/5 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
+        <section className="mt-[var(--block-gap)] rounded-2xl border bg-gradient-to-br from-sky-50 via-white to-purple-50 p-6 shadow-sm ring-1 ring-black/5 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
           <h4 className="mb-2 text-lg font-semibold">Spielermeinung</h4>
           <blockquote className="border-l-4 border-sky-400/70 pl-4 italic text-gray-700 dark:text-gray-300">
             {userOpinion}

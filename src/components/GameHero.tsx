@@ -40,7 +40,7 @@ export default function GameHero({
       {/* Soft background gradient */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-indigo-600/15 via-sky-400/10 to-transparent" />
 
-      <div className="mx-auto max-w-screen-xl px-4 py-10 md:py-16 2xl:px-0">
+      <div className="mx-auto max-w-screen-xl px-[var(--container-x)] pt-[var(--section-pt)] pb-[var(--section-pb)] 2xl:px-0">
         <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
           {/* Media */}
           <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-lg ring-1 ring-black/5 backdrop-blur-sm dark:border-white/5">
@@ -91,7 +91,7 @@ export default function GameHero({
 
               {/* Tags */}
               {!!tags.length && (
-                <div className="mt-6 flex flex-wrap gap-2">
+                <div className="mt-[var(--block-gap)] flex flex-wrap gap-2">
                   {tags.map((t) => (
                     <Link
                       key={t}
@@ -106,7 +106,7 @@ export default function GameHero({
 
               {/* Platforms */}
               {!!platforms.length && (
-                <div className="mt-6 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
+                <div className="mt-[var(--block-gap)] grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
                   {platforms.map((p) => (
                     <div key={p} className="inline-flex items-center gap-2 rounded-xl border bg-white/60 px-3 py-1.5 text-xs font-medium shadow-sm ring-1 ring-black/5 backdrop-blur dark:bg-gray-900/60">
                       <Gamepad2 className="h-4 w-4" />
@@ -118,7 +118,7 @@ export default function GameHero({
             </div>
 
             {/* CTA area (optional, hidden if you don't need it) */}
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div className="mt-[var(--block-gap)] flex flex-wrap gap-3">
               <a
                 href="#main"
                 className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-600 to-sky-500 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-transform hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
