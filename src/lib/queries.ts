@@ -139,11 +139,20 @@ export async function getReviewsByTag(
             ? games.title
             : reviews.publishedAt;
 
+    const coverImageSubquery = sql<string>`(
+        select gi.url
+        from game_images as gi
+        where gi.game_id = ${games.id}
+        order by gi.sort_order nulls last, gi.id
+        limit 1
+    )`;
+
     return db
         .select({
             slug: games.slug,
             title: games.title,
             heroUrl: games.heroUrl,
+            images: coverImageSubquery,
             score: reviews.score,
             publishedAt: reviews.publishedAt,
             releaseDate: games.releaseDate,
