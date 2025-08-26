@@ -7,7 +7,7 @@ import { useState } from "react";
 export default function Header() {
   const [open, setOpen] = useState(false);
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-gradient-to-r from-indigo-600 via-sky-500 to-fuchsia-500 shadow-lg dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-brand-gradient shadow-lg dark:bg-gradient-to-r dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="mx-auto max-w-screen-xl px-6 lg:px-8">
         <div className="flex items-center justify-between py-4">
           {/* Brand / Logo */}

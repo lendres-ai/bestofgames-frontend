@@ -57,7 +57,7 @@ export default async function Page() {
       <section className="mx-auto max-w-screen-xl px-[var(--container-x)] pt-[var(--section-pt)] pb-[var(--section-pb)] 2xl:px-0">
         {/* hero header */}
         <header className="mb-[var(--space-8)] sm:mb-[var(--space-10)]">
-          <h1 className="bg-gradient-to-r from-indigo-600 via-sky-500 to-fuchsia-500 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
+          <h1 className="bg-brand-gradient bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
             Latest Trends
           </h1>
           <p className="mt-2 text-gray-600 dark:text-gray-300">

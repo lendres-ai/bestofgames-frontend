@@ -4,6 +4,12 @@
   /* Colors */
   --background: #ffffff;
   --foreground: #171717;
+  --brand-gradient: linear-gradient(
+    to right,
+    rgb(var(--color-indigo-600)),
+    rgb(var(--color-sky-500)),
+    rgb(var(--color-fuchsia-500))
+  );
 
   /* Spacing scale */
   --space-1: 0.25rem;  /* 4px */
