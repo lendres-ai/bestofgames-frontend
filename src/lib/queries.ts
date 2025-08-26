@@ -127,3 +127,31 @@ export async function getGameBySlug(slug: string) {
         ),
     };
 }
+
+export async function getReviewsByTag(
+    tag: string,
+    orderBy: 'score' | 'publishedAt' | 'title' = 'publishedAt'
+) {
+    const orderColumn =
+        orderBy === 'score'
+            ? reviews.score
+            : orderBy === 'title'
+            ? games.title
+            : reviews.publishedAt;
+
+    return db
+        .select({
+            slug: games.slug,
+            title: games.title,
+            heroUrl: games.heroUrl,
+            score: reviews.score,
+            publishedAt: reviews.publishedAt,
+            releaseDate: games.releaseDate,
+        })
+        .from(reviews)
+        .innerJoin(reviewTags, eq(reviewTags.reviewId, reviews.id))
+        .innerJoin(tags, eq(reviewTags.tagId, tags.id))
+        .innerJoin(games, eq(reviews.gameId, games.id))
+        .where(eq(tags.name, tag))
+        .orderBy(orderBy === 'title' ? orderColumn : desc(orderColumn));
+}
