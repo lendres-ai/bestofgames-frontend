@@ -58,7 +58,7 @@ export async function getAllReviews(orderBy: 'score' | 'publishedAt' | 'title' =
             slug: games.slug,
             title: games.title,
             heroUrl: games.heroUrl,
-            images: coverImageSubquery,
+            coverUrl: coverImageSubquery,
             score: reviews.score,
             publishedAt: reviews.publishedAt,
             releaseDate: games.releaseDate,

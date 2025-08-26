@@ -9,7 +9,7 @@ type ReviewItem = {
   slug: string;
   title: string;
   heroUrl?: string | null;
-  images?: string[] | null;
+  coverUrl?: string | null;
   score?: number | null;
   releaseDate?: Date | string | null;
 };
@@ -25,7 +25,7 @@ function scoreClasses(score?: number | null) {
 }
 
 function coverOf(x: ReviewItem) {
-  return x.images?.[0] || x.heroUrl || 'https://placehold.co/1200x675.png';
+  return x.coverUrl || x.heroUrl || 'https://placehold.co/1200x675.png';
 }
 
 export default async function Page({
@@ -44,7 +44,7 @@ export default async function Page({
     slug: r.slug,
     title: r.title,
     heroUrl: r.heroUrl,
-    images: r.images ? [r.images] : null,
+    coverUrl: r.coverUrl,
     score: r.score != null ? Number(r.score) : null,
     releaseDate: r.releaseDate,
   }));
