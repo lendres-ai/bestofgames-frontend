@@ -147,6 +147,8 @@ export async function getSimilarGames(slug: string, limit = 4) {
         limit 1
     )`;
 
+    const matchCount = sql<number>`count(distinct ${reviewTags.tagId})`;
+
     return db
         .select({
             slug: games.slug,
@@ -165,6 +167,7 @@ export async function getSimilarGames(slug: string, limit = 4) {
             )
         )
         .groupBy(games.id, games.slug, games.title, games.heroUrl)
+        .orderBy(desc(matchCount))
         .limit(limit);
 }
 
