@@ -16,8 +16,8 @@ const nextConfig: NextConfig = {
         hostname: "www.nintendo.com",
       },
     ],
-    // Optional: disable optimization in dev for speed
-    unoptimized: true, // enable later for production
+    // Enable image optimization for external domains
+    unoptimized: false,
   },
 };
 
