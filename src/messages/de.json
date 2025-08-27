@@ -1,0 +1,37 @@
+{
+  "Index": {
+    "latestTrends": "Neueste Trends",
+    "discoverLatestTrends": "Entdecke die neuesten Trends in der Gaming-Welt.",
+    "readReview": "Rezension lesen"
+  },
+  "Header": {
+    "games": "Spiele",
+    "reviews": "Rezensionen",
+    "about": "Über uns"
+  },
+  "Footer": {
+    "about": "Über uns",
+    "privacy": "Datenschutz",
+    "contact": "Kontakt"
+  },
+  "Error": {
+    "title": "Etwas ist schiefgelaufen",
+    "tryAgain": "Erneut versuchen"
+  },
+  "NotFound": {
+    "title": "404 - Seite nicht gefunden",
+    "description": "Entschuldigung, die gesuchte Seite wurde nicht gefunden.",
+    "home": "Zur Startseite"
+  },
+  "SimilarGames": {
+    "heading": "Ähnliche Spiele"
+  },
+  "Sort": {
+    "newest": "Neueste",
+    "score": "Bewertung",
+    "title": "Titel"
+  },
+  "GameHero": {
+    "readFullReview": "Vollständige Rezension lesen"
+  }
+}
