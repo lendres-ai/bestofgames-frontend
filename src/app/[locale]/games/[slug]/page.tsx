@@ -7,23 +7,25 @@ import SimilarGames from '@/components/SimilarGames';
 export const revalidate = 86400;      // 1 Tag
 export const dynamicParams = true;    // neue Slugs sofort möglich
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const slug = decodeURIComponent((await params).slug);
-  const game = await getGameBySlug(slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string; locale: string }> }) {
+  const { slug, locale } = await params;
+  const decodedSlug = decodeURIComponent(slug);
+  const game = await getGameBySlug(decodedSlug);
   if (!game) return {};
   return {
     title: `${game.title} – Review & Score`,
     description: game.summary ?? undefined,
-    alternates: { canonical: `/games/${slug}` },
+    alternates: { canonical: `/${locale}/games/${decodedSlug}` },
     openGraph: { images: game.heroUrl ? [game.heroUrl] : [] }
   };
 }
 
-export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
-    const slug = decodeURIComponent((await params).slug);
-    const game = await getGameBySlug(slug);
+export default async function Page({ params }: { params: Promise<{ slug: string; locale: string }> }) {
+    const { slug } = await params;
+    const decodedSlug = decodeURIComponent(slug);
+    const game = await getGameBySlug(decodedSlug);
     if (!game) return notFound();
-    const similarGames = await getSimilarGames(slug);
+    const similarGames = await getSimilarGames(decodedSlug);
 
     return (
       <>
