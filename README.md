@@ -56,11 +56,17 @@ npm run dev
 # http://localhost:3000
 ```
 
+### Tests ausführen
+```bash
+npm test
+```
+
 ## Wichtige Skripte
 - `dev`: Development‑Server (Turbopack)
 - `build`: Production‑Build (Turbopack)
 - `start`: Production‑Server starten
 - `lint`: ESLint ausführen
+- `test`: Tests mit dem Node-Test-Runner über `tsx`
 - `db:generate`: Drizzle‑Migrationen aus dem Schema erzeugen
 - `db:migrate`: Drizzle‑Migrationen anwenden
 - `db:push`: Schema direkt gegen die DB synchronisieren
