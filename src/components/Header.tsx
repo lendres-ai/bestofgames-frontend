@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next-intl/link";
+import {Link} from "@/navigation";
 import { Gamepad2, Menu, X } from "lucide-react";
 import { useState } from "react";
 import {useTranslations} from 'next-intl';

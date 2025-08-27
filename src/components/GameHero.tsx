@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import Link from 'next-intl/link';
+import {Link} from '@/navigation';
 import { CalendarDays, Gamepad2 } from 'lucide-react';
 import {getTranslations} from 'next-intl/server';
 

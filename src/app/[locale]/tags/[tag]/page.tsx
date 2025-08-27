@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import Link from 'next-intl/link';
+import {Link} from '@/navigation';
 import SortSelect from './SortSelect';
 import { getReviewsByTag } from '@/lib/queries';
 import { scoreClasses, coverOf } from '@/lib/ui-helpers';

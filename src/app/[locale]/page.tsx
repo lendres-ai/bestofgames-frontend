@@ -1,4 +1,4 @@
-import Link from "next-intl/link";
+import {Link} from "@/navigation";
 import Image from "next/image";
 import { getRecentReviews } from "@/lib/queries";
 import { scoreClasses, coverOf } from "@/lib/ui-helpers";
