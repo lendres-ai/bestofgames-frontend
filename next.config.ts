@@ -15,6 +15,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "www.nintendo.com",
       },
+      {
+        protocol: "https",
+        hostname: "shared.akamai.steamstatic.com",
+      },
     ],
     // Enable image optimization for external domains
     unoptimized: false,
