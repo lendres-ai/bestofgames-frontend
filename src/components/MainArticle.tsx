@@ -13,8 +13,9 @@ interface MainArticleProps {
   score: number | null;
   userOpinion: string | null;
   images?: Array<string | { src: string; caption?: string }>;
-  pros?: string[];
-  cons?: string[];
+    pros?: string[];
+    cons?: string[];
+    className?: string;
 }
 
 export default function MainArticle({
@@ -25,9 +26,10 @@ export default function MainArticle({
   conclusion,
   score,
   userOpinion,
-  images = [],
-  pros = [],
-  cons = [],
+    images = [],
+    pros = [],
+    cons = [],
+    className,
 }: MainArticleProps) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
@@ -35,8 +37,8 @@ export default function MainArticle({
     typeof img === 'string' ? { src: img } : img,
   );
 
-  return (
-    <article id="main" className="mx-auto max-w-3xl px-4 pb-16">
+    return (
+      <article id="main" className={`px-4 pb-16 ${className ?? ''}`}>
       <header className="mb-8">
         <h2 className="mb-3 bg-gradient-to-r from-indigo-600 via-sky-500 to-fuchsia-500 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
           {reviewTitle}
