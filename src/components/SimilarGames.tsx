@@ -1,5 +1,6 @@
 import Image from 'next/image';
-import Link from 'next/link';
+import Link from 'next-intl/link';
+import {getTranslations} from 'next-intl/server';
 
 interface SimilarGame {
   slug: string;
@@ -12,12 +13,13 @@ interface SimilarGamesProps {
   games: SimilarGame[];
 }
 
-export default function SimilarGames({ games }: SimilarGamesProps) {
+export default async function SimilarGames({ games }: SimilarGamesProps) {
   if (!games.length) return null;
+  const t = await getTranslations('SimilarGames');
 
   return (
     <aside className="w-full lg:col-start-2 lg:w-[300px] lg:sticky lg:top-4">
-      <h3 className="mb-4 text-lg font-semibold">Ähnliche Spiele</h3>
+      <h3 className="mb-4 text-lg font-semibold">{t('heading')}</h3>
       <ul className="grid gap-4">
         {games.map((game) => {
           const imageUrl = game.images ?? game.heroUrl;

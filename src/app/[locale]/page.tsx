@@ -1,7 +1,8 @@
-import Link from "next/link";
+import Link from "next-intl/link";
 import Image from "next/image";
 import { getRecentReviews } from "@/lib/queries";
 import { scoreClasses, coverOf } from "@/lib/ui-helpers";
+import {getTranslations} from 'next-intl/server';
 
 // ISR: 1h
 export const revalidate = 3600;
@@ -23,6 +24,7 @@ type ReviewItem = {
 };
 
 export default async function Page() {
+  const t = await getTranslations('Index');
   const rows = await getRecentReviews();
   const items: ReviewItem[] = rows
     .filter((r) => r.slug && r.title)
@@ -48,10 +50,10 @@ export default async function Page() {
         {/* hero header */}
         <header className="mb-[var(--space-8)] sm:mb-[var(--space-10)]">
           <h1 className="bg-gradient-to-r from-indigo-600 via-sky-500 to-fuchsia-500 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
-            Latest Trends
+            {t('latestTrends')}
           </h1>
           <p className="mt-2 text-gray-600 dark:text-gray-300">
-            Discover the latest trends in the gaming world.
+            {t('discoverLatestTrends')}
           </p>
 
           {/* optional category chips (static links; no client JS) */}
@@ -114,7 +116,7 @@ export default async function Page() {
                       </Link>
                     ))}
                     <span className="ml-auto inline-flex items-center gap-1 text-sm font-medium text-indigo-600 transition group-hover:translate-x-0.5 dark:text-sky-400">
-                      Read review
+                      {t('readReview')}
                       <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                         <path d="M5 12h14" />
                         <path d="m12 5 7 7-7 7" />

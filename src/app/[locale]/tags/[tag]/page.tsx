@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import Link from 'next/link';
+import Link from 'next-intl/link';
 import SortSelect from './SortSelect';
 import { getReviewsByTag } from '@/lib/queries';
 import { scoreClasses, coverOf } from '@/lib/ui-helpers';
@@ -17,7 +17,7 @@ export default async function Page({
   params,
   searchParams,
 }: {
-  params: { tag: string };
+  params: { locale: string; tag: string };
   searchParams: { sort?: string };
 }) {
   const order = ['score', 'publishedAt', 'title'].includes(
@@ -73,7 +73,7 @@ export default async function Page({
                 </h3>
                 {r.releaseDate && (
                   <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
-                    {new Date(r.releaseDate).toLocaleDateString('en-US', {
+                    {new Date(r.releaseDate).toLocaleDateString(params.locale, {
                       year: 'numeric',
                       month: 'short',
                       day: 'numeric',

@@ -1,7 +1,7 @@
 import Image from 'next/image';
-import Link from 'next/link';
-import { useMemo } from 'react';
+import Link from 'next-intl/link';
 import { CalendarDays, Gamepad2 } from 'lucide-react';
+import {getTranslations} from 'next-intl/server';
 
 interface GameHeroProps {
   title: string;
@@ -14,7 +14,7 @@ interface GameHeroProps {
   images?: string[];
 }
 
-export default function GameHero({
+export default async function GameHero({
   title,
   developer,
   tags = [],
@@ -25,15 +25,15 @@ export default function GameHero({
   images = [],
 }: GameHeroProps) {
   const cover = images[0] || heroUrl || 'https://placehold.co/2000x1500.png';
-
-  const normalized = useMemo(() => {
+  const normalized = (() => {
     const s = typeof score === 'number' ? Math.max(0, Math.min(10, score)) : 0;
     return {
       value10: s,
       value5: s / 2,
       pct: Math.round((s / 10) * 100),
     };
-  }, [score]);
+  })();
+  const t = await getTranslations('GameHero');
 
   return (
     <section className="relative isolate">
@@ -123,7 +123,7 @@ export default function GameHero({
                 href="#main"
                 className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-600 to-sky-500 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-transform hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
               >
-                Read full review
+                {t('readFullReview')}
               </a>
               {releaseDate && (
                 <div className="inline-flex items-center gap-2 rounded-2xl border bg-white/60 px-4 py-2 text-sm shadow-sm ring-1 ring-black/5 backdrop-blur dark:bg-gray-900/60">

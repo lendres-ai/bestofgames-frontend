@@ -1,6 +1,5 @@
 import type { NextConfig } from "next";
-
-const isDev = process.env.NODE_ENV !== "production";
+import createNextIntlPlugin from 'next-intl/plugin';
 
 
 const nextConfig: NextConfig = {
@@ -25,6 +24,6 @@ const nextConfig: NextConfig = {
   },
 };
 
+const withNextIntl = createNextIntlPlugin();
 
-
-export default nextConfig;
+export default withNextIntl(nextConfig);

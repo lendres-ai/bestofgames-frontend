@@ -1,14 +1,16 @@
-import Link from "next/link";
+import Link from "next-intl/link";
+import {getTranslations} from 'next-intl/server';
 
-export default function NotFound() {
+export default async function NotFound() {
+  const t = await getTranslations('NotFound');
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-6 text-center">
-      <h1 className="text-2xl font-semibold">404 - Page Not Found</h1>
+      <h1 className="text-2xl font-semibold">{t('title')}</h1>
       <p className="text-gray-600 dark:text-gray-400">
-        {"Sorry, we couldn't find the page you're looking for."}
+        {t('description')}
       </p>
       <Link href="/" className="text-indigo-600 underline dark:text-sky-400">
-        Go back home
+        {t('home')}
       </Link>
     </main>
   );

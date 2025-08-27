@@ -1,17 +1,19 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
+import {useTranslations} from 'next-intl';
 
-const options = [
-  { value: 'publishedAt', label: 'Newest' },
-  { value: 'score', label: 'Score' },
-  { value: 'title', label: 'Title' },
+const options: {value: string; key: 'newest' | 'score' | 'title'}[] = [
+  { value: 'publishedAt', key: 'newest' },
+  { value: 'score', key: 'score' },
+  { value: 'title', key: 'title' },
 ];
 
 export default function SortSelect() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const current = searchParams.get('sort') ?? 'publishedAt';
+  const t = useTranslations('Sort');
 
   return (
     <select
@@ -25,7 +27,7 @@ export default function SortSelect() {
     >
       {options.map((o) => (
         <option key={o.value} value={o.value}>
-          {o.label}
+          {t(o.key)}
         </option>
       ))}
     </select>
