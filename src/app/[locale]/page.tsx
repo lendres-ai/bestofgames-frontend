@@ -59,7 +59,7 @@ export default async function Page() {
             {["Metroidvania", "Roguelike", "Puzzle", "Narrative"].map((c) => (
               <Link
                 key={c}
-                href={`/tags/${encodeURIComponent(c.toLowerCase())}`}
+                href={`tags/${encodeURIComponent(c.toLowerCase())}`}
                 className="rounded-full border bg-white/60 px-3 py-1 text-xs font-medium text-gray-800 shadow-sm ring-1 ring-black/5 transition hover:bg-white dark:bg-gray-900/60 dark:text-gray-200"
               >
                 {c}
@@ -73,7 +73,7 @@ export default async function Page() {
           {/* FEATURED card */}
           {featured && (
             <article className="group">
-              <Link href={`/games/${featured.slug}`} className="block">
+              <Link href={`games/${featured.slug}`} className="block">
                 <div className="relative overflow-hidden rounded-3xl border bg-white/60 shadow-md ring-1 ring-black/5 transition hover:shadow-xl dark:bg-gray-900/60">
                   <div className="relative">
                     <Image
@@ -107,7 +107,7 @@ export default async function Page() {
                     {(featured.tags ?? []).slice(0, 4).map((t) => (
                       <Link
                         key={t}
-                        href={`/tags/${encodeURIComponent(t)}`}
+                        href={`tags/${encodeURIComponent(t)}`}
                         className="rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-medium text-gray-800 dark:bg-gray-800 dark:text-gray-200"
                       >
                         {t}
@@ -130,7 +130,7 @@ export default async function Page() {
           <div className="grid grid-cols-2 gap-[var(--block-gap)]">
             {rightItems.map((x) => (
               <article key={x.slug} className="group">
-                <Link href={`/games/${x.slug}`} className="block">
+                <Link href={`games/${x.slug}`} className="block">
                   <div className="overflow-hidden rounded-3xl border bg-white/60 shadow-sm ring-1 ring-black/5 transition hover:shadow-lg dark:bg-gray-900/60">
                     <div className="relative">
                       <Image
@@ -161,7 +161,7 @@ export default async function Page() {
                           {x.tags!.slice(0, 3).map((t) => (
                             <Link
                               key={t}
-                              href={`/tags/${encodeURIComponent(t)}`}
+                              href={`tags/${encodeURIComponent(t)}`}
                               className="rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-medium text-gray-800 dark:bg-gray-800 dark:text-gray-200"
                             >
                               {t}
@@ -182,7 +182,7 @@ export default async function Page() {
           <ul className="mt-[var(--space-12)] grid gap-[var(--block-gap)] sm:grid-cols-2 lg:grid-cols-3">
             {remaining.map((x) => (
               <li key={x.slug} className="group">
-                <Link href={`/games/${x.slug}`} className="block">
+                <Link href={`games/${x.slug}`} className="block">
                   <article className="overflow-hidden rounded-3xl border bg-white/60 shadow-sm ring-1 ring-black/5 transition hover:shadow-lg dark:bg-gray-900/60">
                     <div className="relative">
                       <Image
@@ -213,7 +213,7 @@ export default async function Page() {
                           {x.tags!.slice(0, 3).map((t) => (
                             <Link
                               key={t}
-                              href={`/tags/${encodeURIComponent(t)}`}
+                              href={`tags/${encodeURIComponent(t)}`}
                               className="rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-medium text-gray-800 dark:bg-gray-800 dark:text-gray-200"
                             >
                               {t}

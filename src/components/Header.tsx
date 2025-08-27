@@ -3,16 +3,18 @@
 import Link from "next/link";
 import { Gamepad2, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { useParams } from "next/navigation";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const { locale } = useParams<{ locale: string }>();
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-gradient-to-r from-indigo-600 via-sky-500 to-fuchsia-500 shadow-lg dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="mx-auto max-w-screen-xl px-6 lg:px-8">
         <div className="flex items-center justify-between py-4">
           {/* Brand / Logo */}
           <Link
-            href="/"
+            href={`/${locale}`}
             className="flex items-center gap-2 rounded-md text-2xl font-extrabold tracking-tight text-white drop-shadow-sm hover:opacity-90 transition"
           >
             <Gamepad2 className="h-6 w-6 text-white" />
@@ -21,9 +23,9 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
-            <Link href="/games" className="text-white/90 hover:text-white transition">Games</Link>
-            <Link href="/reviews" className="text-white/90 hover:text-white transition">Reviews</Link>
-            <Link href="/about" className="text-white/90 hover:text-white transition">About</Link>
+            <Link href={`/${locale}/games`} className="text-white/90 hover:text-white transition">Games</Link>
+            <Link href={`/${locale}/reviews`} className="text-white/90 hover:text-white transition">Reviews</Link>
+            <Link href={`/${locale}/about`} className="text-white/90 hover:text-white transition">About</Link>
           </nav>
 
           {/* Mobile toggle */}
@@ -40,9 +42,9 @@ export default function Header() {
         {open && (
           <nav className="md:hidden pb-4">
             <div className="flex flex-col gap-2 rounded-lg bg-white/20 p-3 ring-1 ring-white/20 backdrop-blur">
-              <Link onClick={() => setOpen(false)} href="/games" className="rounded px-3 py-2 text-white/95 hover:bg-white/10">Games</Link>
-              <Link onClick={() => setOpen(false)} href="/reviews" className="rounded px-3 py-2 text-white/95 hover:bg-white/10">Reviews</Link>
-              <Link onClick={() => setOpen(false)} href="/about" className="rounded px-3 py-2 text-white/95 hover:bg-white/10">About</Link>
+              <Link onClick={() => setOpen(false)} href={`/${locale}/games`} className="rounded px-3 py-2 text-white/95 hover:bg-white/10">Games</Link>
+              <Link onClick={() => setOpen(false)} href={`/${locale}/reviews`} className="rounded px-3 py-2 text-white/95 hover:bg-white/10">Reviews</Link>
+              <Link onClick={() => setOpen(false)} href={`/${locale}/about`} className="rounded px-3 py-2 text-white/95 hover:bg-white/10">About</Link>
             </div>
           </nav>
         )}

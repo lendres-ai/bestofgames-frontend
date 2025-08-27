@@ -4,6 +4,7 @@ const isDev = process.env.NODE_ENV !== "production";
 
 
 const nextConfig: NextConfig = {
+  i18n: { locales: ["en", "de"], defaultLocale: "en", localeDetection: true },
   images: {
     // Remote patterns are the new way instead of `domains`
     remotePatterns: [

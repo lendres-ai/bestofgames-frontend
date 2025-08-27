@@ -17,7 +17,7 @@ export default async function Page({
   params,
   searchParams,
 }: {
-  params: { tag: string };
+  params: { tag: string; locale: string };
   searchParams: { sort?: string };
 }) {
   const order = ['score', 'publishedAt', 'title'].includes(
@@ -25,8 +25,8 @@ export default async function Page({
   )
     ? (searchParams.sort as 'score' | 'publishedAt' | 'title')
     : 'publishedAt';
-
-  const rows = await getReviewsByTag(decodeURIComponent(params.tag), order);
+  const { tag, locale } = params;
+  const rows = await getReviewsByTag(decodeURIComponent(tag), order);
   const items: ReviewItem[] = rows.map((r) => ({
     slug: r.slug,
     title: r.title,
@@ -40,7 +40,7 @@ export default async function Page({
     <main className="mx-auto max-w-screen-xl px-[var(--container-x)] pt-[var(--section-pt)] pb-[var(--section-pb)] 2xl:px-0">
       <header className="mb-[var(--space-8)] flex items-center gap-4">
         <h1 className="text-3xl font-bold tracking-tight">
-          {decodeURIComponent(params.tag)}
+          {decodeURIComponent(tag)}
         </h1>
         <SortSelect />
       </header>
@@ -48,7 +48,7 @@ export default async function Page({
         {items.map((r) => (
           <li key={r.slug} className="group">
             <Link
-              href={`/games/${r.slug}`}
+              href={`/${locale}/games/${r.slug}`}
               className="block overflow-hidden rounded-3xl border bg-white/60 shadow-sm ring-1 ring-black/5 transition hover:shadow-lg dark:bg-gray-900/60"
             >
               <div className="relative">
