@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, LayoutProps } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import Script from 'next/script';
@@ -28,11 +28,9 @@ export function generateStaticParams() {
 
 export default async function RootLayout({
   children,
-  params: {locale}
-}: {
-  children: React.ReactNode;
-  params: {locale: string};
-}) {
+  params
+}: LayoutProps<"/[locale]">) {
+  const { locale } = await params;
   let messages;
   try {
     messages = (await import(`../../messages/${locale}.json`)).default;
