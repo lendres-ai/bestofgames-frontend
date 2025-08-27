@@ -40,7 +40,7 @@ export default function MainArticle({
     return (
       <article id="main" className={`px-4 pb-16 ${className ?? ''}`}>
       <header className="mb-8">
-        <h2 className="mb-3 bg-gradient-to-r from-indigo-600 via-sky-500 to-fuchsia-500 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
+        <h2 className="mb-3 bg-brand-gradient bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
           {reviewTitle}
         </h2>
         {description && (
