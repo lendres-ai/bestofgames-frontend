@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { getRecentReviews } from "@/lib/queries";
 import { scoreClasses, coverOf } from "@/lib/ui-helpers";
+import {getTranslations} from 'next-intl/server';
+
 
 // ISR: 1h
 export const revalidate = 3600;
@@ -39,6 +41,9 @@ export default async function Page() {
   const rightItems = (featured ? rest : items).slice(0, 4);
   const remaining = (featured ? rest : items).slice(4);
 
+  const t = await getTranslations('HomePage');
+
+
   return (
     <main className="relative isolate">
       {/* soft page backdrop */}
@@ -51,7 +56,7 @@ export default async function Page() {
             Latest Trends
           </h1>
           <p className="mt-2 text-gray-600 dark:text-gray-300">
-            Discover the latest trends in the gaming world.
+            {t('latestTrends')}
           </p>
 
           {/* optional category chips (static links; no client JS) */}

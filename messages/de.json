@@ -1,0 +1,11 @@
+{
+  "HomePage": {
+    "description": "Frische, schlanke Indie-Reviews mit schönen Covern und schnellen Lesemomenten.",
+    "latestTrends": "Entdecke die neuesten Trends im Gaming-Bereich."
+  },
+  "AboutPage": {
+    "title": "Über Best of Games",
+    "intro": "Best of Games ist ein kleines Herzensprojekt mit kurzen, stilvollen Indie-Spielrezensionen.",
+    "mission": "Unsere Mission: herausragende Indie-Perlen sichtbar machen und dir schnell und schön zeigen, was du als Nächstes spielen solltest."
+  }
+}

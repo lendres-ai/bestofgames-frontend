@@ -1,6 +1,5 @@
 import type { NextConfig } from "next";
-
-const isDev = process.env.NODE_ENV !== "production";
+import createNextIntlPlugin from 'next-intl/plugin';
 
 
 const nextConfig: NextConfig = {
@@ -22,9 +21,9 @@ const nextConfig: NextConfig = {
     ],
     // Enable image optimization for external domains
     unoptimized: false,
-  },
+  }
 };
 
 
-
-export default nextConfig;
+const withNextIntl = createNextIntlPlugin();
+export default withNextIntl(nextConfig);

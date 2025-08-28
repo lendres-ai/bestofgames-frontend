@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import {Link, useRouter, usePathname} from "@/i18n/navigation";
 import { Gamepad2, Menu, X } from "lucide-react";
 import { useState } from "react";
 
@@ -24,6 +24,7 @@ export default function Header() {
             <Link href="/games" className="text-white/90 hover:text-white transition">Games</Link>
             <Link href="/reviews" className="text-white/90 hover:text-white transition">Reviews</Link>
             <Link href="/about" className="text-white/90 hover:text-white transition">About</Link>
+            <LanguageSwitcherInline />
           </nav>
 
           {/* Mobile toggle */}
@@ -43,10 +44,38 @@ export default function Header() {
               <Link onClick={() => setOpen(false)} href="/games" className="rounded px-3 py-2 text-white/95 hover:bg-white/10">Games</Link>
               <Link onClick={() => setOpen(false)} href="/reviews" className="rounded px-3 py-2 text-white/95 hover:bg-white/10">Reviews</Link>
               <Link onClick={() => setOpen(false)} href="/about" className="rounded px-3 py-2 text-white/95 hover:bg-white/10">About</Link>
+              <LanguageSwitcherBlock onSwitch={() => setOpen(false)} />
             </div>
           </nav>
         )}
       </div>
     </header>
+  );
+}
+
+function LanguageSwitcherInline() {
+  const router = useRouter();
+  const pathname = usePathname();
+  return (
+    <div className="flex items-center gap-2">
+      <button onClick={() => router.replace(pathname, {locale: 'de'})} className="text-white/80 hover:text-white">DE</button>
+      <span className="text-white/40">|</span>
+      <button onClick={() => router.replace(pathname, {locale: 'en'})} className="text-white/80 hover:text-white">EN</button>
+    </div>
+  );
+}
+
+function LanguageSwitcherBlock({onSwitch}: {onSwitch?: () => void}) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const handle = async (locale: 'de' | 'en') => {
+    await router.replace(pathname, {locale});
+    onSwitch?.();
+  };
+  return (
+    <div className="flex items-center gap-3 pt-2">
+      <button onClick={() => handle('de')} className="rounded px-3 py-2 text-white/95 hover:bg-white/10">Deutsch</button>
+      <button onClick={() => handle('en')} className="rounded px-3 py-2 text-white/95 hover:bg-white/10">English</button>
+    </div>
   );
 }

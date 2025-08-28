@@ -17,16 +17,19 @@ export default async function Page({
   params,
   searchParams,
 }: {
-  params: { tag: string };
-  searchParams: { sort?: string };
+  params: Promise<{ tag: string }>;
+  searchParams: Promise<{ sort?: string }>;
 }) {
+  const {tag} = await params;
+  const {sort} = await searchParams;
+
   const order = ['score', 'publishedAt', 'title'].includes(
-    searchParams.sort ?? ''
+    sort ?? ''
   )
-    ? (searchParams.sort as 'score' | 'publishedAt' | 'title')
+    ? (sort as 'score' | 'publishedAt' | 'title')
     : 'publishedAt';
 
-  const rows = await getReviewsByTag(decodeURIComponent(params.tag), order);
+  const rows = await getReviewsByTag(decodeURIComponent(tag), order);
   const items: ReviewItem[] = rows.map((r) => ({
     slug: r.slug,
     title: r.title,
@@ -40,7 +43,7 @@ export default async function Page({
     <main className="mx-auto max-w-screen-xl px-[var(--container-x)] pt-[var(--section-pt)] pb-[var(--section-pb)] 2xl:px-0">
       <header className="mb-[var(--space-8)] flex items-center gap-4">
         <h1 className="text-3xl font-bold tracking-tight">
-          {decodeURIComponent(params.tag)}
+          {decodeURIComponent(tag)}
         </h1>
         <SortSelect />
       </header>

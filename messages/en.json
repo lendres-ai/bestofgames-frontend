@@ -1,0 +1,11 @@
+{
+  "HomePage": {
+    "description": "Fresh, stylish indie reviews with beautiful covers and quick reads.",
+    "latestTrends": "Discover the latest trends in the gaming world."
+  },
+  "AboutPage": {
+    "title": "About Best of Games",
+    "intro": "Best of Games is a small passion project focused on short, stylish indie game reviews.",
+    "mission": "Our mission is to surface standout indie gems and help you decide what to play next—quickly and beautifully."
+  }
+}
