@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getRecentReviews } from "@/lib/queries";
 import { scoreClasses, coverOf } from "@/lib/ui-helpers";
-import {getTranslations} from 'next-intl/server';
+import { getTranslations } from "next-intl/server";
 
 
 // ISR: 1h
@@ -53,7 +53,7 @@ export default async function Page() {
         {/* hero header */}
         <header className="mb-[var(--space-8)] sm:mb-[var(--space-10)]">
           <h1 className="bg-gradient-to-r from-indigo-600 via-sky-500 to-fuchsia-500 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
-            Latest Trends
+            {t('latestTrendsTitle')}
           </h1>
           <p className="mt-2 text-gray-600 dark:text-gray-300">
             {t('latestTrends')}
