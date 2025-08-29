@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import ReviewCard, { ReviewCardProps } from "@/components/ReviewCard";
 import { getRecentReviews } from "@/lib/queries";
 import { scoreClasses, coverOf } from "@/lib/ui-helpers";
 
@@ -11,15 +12,12 @@ export const metadata = {
   description: "Fresh, stylish indie reviews with beautiful covers and quick reads.",
 };
 
-type ReviewItem = {
-  slug: string;
-  title: string;
+type ReviewItem = ReviewCardProps & {
   summary?: string | null;
   images?: string[] | null;
   heroUrl?: string | null;
   tags?: string[] | null;
   platforms?: string[] | null;
-  score?: number | null;
 };
 
 export default async function Page() {
@@ -33,6 +31,7 @@ export default async function Page() {
       heroUrl: r.heroUrl,
       score: r.score != null ? Number(r.score) : null,
       images: r.images ? [r.images] : null,
+      image: coverOf(r),
     }));
   const [featured, ...rest] = items;
 
@@ -77,7 +76,7 @@ export default async function Page() {
                 <div className="relative overflow-hidden rounded-3xl border bg-white/60 shadow-md ring-1 ring-black/5 transition hover:shadow-xl dark:bg-gray-900/60">
                   <div className="relative">
                     <Image
-                      src={coverOf(featured)}
+                      src={featured.image}
                       alt={featured.title}
                       width={1600}
                       height={900}
@@ -127,104 +126,18 @@ export default async function Page() {
           )}
 
           {/* RIGHT: two-up grid of smaller cards */}
-          <div className="grid grid-cols-2 gap-[var(--block-gap)]">
+          <ul className="grid grid-cols-2 gap-[var(--block-gap)]">
             {rightItems.map((x) => (
-              <article key={x.slug} className="group">
-                <Link href={`/games/${x.slug}`} className="block">
-                  <div className="overflow-hidden rounded-3xl border bg-white/60 shadow-sm ring-1 ring-black/5 transition hover:shadow-lg dark:bg-gray-900/60">
-                    <div className="relative">
-                      <Image
-                        src={coverOf(x)}
-                        alt={x.title}
-                        width={1200}
-                        height={675}
-                        sizes="(max-width: 1024px) 100vw, 25vw"
-                        className="h-40 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                      />
-                      <span
-                        className={`absolute right-4 top-4 rounded-full px-2.5 py-1 text-[11px] font-semibold backdrop-blur ${scoreClasses(
-                          x.score
-                        )}`}
-                      >
-                        {typeof x.score === "number" ? x.score.toFixed(1) : "–"}
-                      </span>
-                    </div>
-                    <div className="p-[var(--space-4)]">
-                      <h3 className="line-clamp-1 text-lg font-semibold tracking-tight text-gray-900 dark:text-white">
-                        {x.title}
-                      </h3>
-                      {x.summary && (
-                        <p className="mt-1 line-clamp-2 text-sm text-gray-600 dark:text-gray-300">{x.summary}</p>
-                      )}
-                      {!!(x.tags?.length) && (
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          {x.tags!.slice(0, 3).map((t) => (
-                            <Link
-                              key={t}
-                              href={`/tags/${encodeURIComponent(t)}`}
-                              className="rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-medium text-gray-800 dark:bg-gray-800 dark:text-gray-200"
-                            >
-                              {t}
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </Link>
-              </article>
+              <ReviewCard key={x.slug} {...x} />
             ))}
-          </div>
+          </ul>
         </div>
 
         {/* remaining items */}
         {remaining.length > 0 && (
           <ul className="mt-[var(--space-12)] grid gap-[var(--block-gap)] sm:grid-cols-2 lg:grid-cols-3">
             {remaining.map((x) => (
-              <li key={x.slug} className="group">
-                <Link href={`/games/${x.slug}`} className="block">
-                  <article className="overflow-hidden rounded-3xl border bg-white/60 shadow-sm ring-1 ring-black/5 transition hover:shadow-lg dark:bg-gray-900/60">
-                    <div className="relative">
-                      <Image
-                        src={coverOf(x)}
-                        alt={x.title}
-                        width={1200}
-                        height={675}
-                        sizes="(max-width: 1024px) 100vw, 33vw"
-                        className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                      />
-                      <span
-                        className={`absolute right-4 top-4 rounded-full px-2.5 py-1 text-[11px] font-semibold backdrop-blur ${scoreClasses(
-                          x.score
-                        )}`}
-                      >
-                        {typeof x.score === "number" ? x.score.toFixed(1) : "–"}
-                      </span>
-                    </div>
-                    <div className="p-[var(--space-4)]">
-                      <h3 className="line-clamp-1 text-lg font-semibold tracking-tight text-gray-900 dark:text-white">
-                        {x.title}
-                      </h3>
-                      {x.summary && (
-                        <p className="mt-1 line-clamp-2 text-sm text-gray-600 dark:text-gray-300">{x.summary}</p>
-                      )}
-                      {!!(x.tags?.length) && (
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          {x.tags!.slice(0, 3).map((t) => (
-                            <Link
-                              key={t}
-                              href={`/tags/${encodeURIComponent(t)}`}
-                              className="rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-medium text-gray-800 dark:bg-gray-800 dark:text-gray-200"
-                            >
-                              {t}
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </article>
-                </Link>
-              </li>
+              <ReviewCard key={x.slug} {...x} />
             ))}
           </ul>
         )}
