@@ -8,6 +8,12 @@ export function scoreClasses(score?: number | null) {
   return 'bg-rose-500/15    text-rose-700    ring-1 ring-rose-400/40    dark:text-rose-300';
 }
 
-export function coverOf(x: { images?: string[] | null; heroUrl?: string | null }) {
-  return x.images?.[0] || x.heroUrl || 'https://placehold.co/1200x675.png';
+export function coverOf(x: {
+  images?: string | string[] | null;
+  heroUrl?: string | null;
+}) {
+  if (Array.isArray(x.images)) {
+    return x.images[0] || x.heroUrl || 'https://placehold.co/1200x675.png';
+  }
+  return x.images || x.heroUrl || 'https://placehold.co/1200x675.png';
 }
