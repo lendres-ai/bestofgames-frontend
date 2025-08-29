@@ -22,7 +22,6 @@ export default function Header() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
             <Link href="/games" className="text-white/90 hover:text-white transition">Games</Link>
-            <Link href="/reviews" className="text-white/90 hover:text-white transition">Reviews</Link>
             <Link href="/about" className="text-white/90 hover:text-white transition">About</Link>
           </nav>
 
@@ -41,7 +40,6 @@ export default function Header() {
           <nav className="md:hidden pb-4">
             <div className="flex flex-col gap-2 rounded-lg bg-white/20 p-3 ring-1 ring-white/20 backdrop-blur">
               <Link onClick={() => setOpen(false)} href="/games" className="rounded px-3 py-2 text-white/95 hover:bg-white/10">Games</Link>
-              <Link onClick={() => setOpen(false)} href="/reviews" className="rounded px-3 py-2 text-white/95 hover:bg-white/10">Reviews</Link>
               <Link onClick={() => setOpen(false)} href="/about" className="rounded px-3 py-2 text-white/95 hover:bg-white/10">About</Link>
             </div>
           </nav>
