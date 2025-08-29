@@ -171,6 +171,40 @@ export async function getSimilarGames(slug: string, limit = 4) {
         .limit(limit);
 }
 
+export async function getAllReviews(
+    orderBy: 'score' | 'publishedAt' | 'title' = 'publishedAt'
+) {
+    const orderColumn =
+        orderBy === 'score'
+            ? reviews.score
+            : orderBy === 'title'
+            ? games.title
+            : reviews.publishedAt;
+
+    const coverImageSubquery = sql<string>`(
+        select gi.url
+        from game_images as gi
+        where gi.game_id = ${games.id}
+        order by gi.sort_order nulls last, gi.id
+        limit 1
+    )`;
+
+    return db
+        .select({
+            slug: games.slug,
+            title: games.title,
+            heroUrl: games.heroUrl,
+            images: coverImageSubquery,
+            score: reviews.score,
+            publishedAt: reviews.publishedAt,
+            releaseDate: games.releaseDate,
+        })
+        .from(reviews)
+        .innerJoin(games, eq(reviews.gameId, games.id))
+        .where(eq(reviews.isPublished, true))
+        .orderBy(orderBy === 'title' ? orderColumn : desc(orderColumn));
+}
+
 export async function getReviewsByTag(
     tag: string,
     orderBy: 'score' | 'publishedAt' | 'title' = 'publishedAt'
