@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import SortSelect from '@/components/SortSelect';
-import { getReviewsByTag } from '@/lib/queries';
+import { getAllReviews } from '@/lib/queries';
 import { scoreClasses, coverOf } from '@/lib/ui-helpers';
 
 type ReviewItem = {
@@ -14,10 +14,8 @@ type ReviewItem = {
 };
 
 export default async function Page({
-  params,
   searchParams,
 }: {
-  params: { tag: string };
   searchParams: { sort?: string };
 }) {
   const order = ['score', 'publishedAt', 'title'].includes(
@@ -26,7 +24,7 @@ export default async function Page({
     ? (searchParams.sort as 'score' | 'publishedAt' | 'title')
     : 'publishedAt';
 
-  const rows = await getReviewsByTag(decodeURIComponent(params.tag), order);
+  const rows = await getAllReviews(order);
   const items: ReviewItem[] = rows.map((r) => ({
     slug: r.slug,
     title: r.title,
@@ -39,9 +37,7 @@ export default async function Page({
   return (
     <main className="mx-auto max-w-screen-xl px-[var(--container-x)] pt-[var(--section-pt)] pb-[var(--section-pb)] 2xl:px-0">
       <header className="mb-[var(--space-8)] flex items-center gap-4">
-        <h1 className="text-3xl font-bold tracking-tight">
-          {decodeURIComponent(params.tag)}
-        </h1>
+        <h1 className="text-3xl font-bold tracking-tight">All Games</h1>
         <SortSelect />
       </header>
       <ul className="grid gap-[var(--block-gap)] sm:grid-cols-2 lg:grid-cols-3">

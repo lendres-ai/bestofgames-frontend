@@ -5,6 +5,7 @@ import {
   getRecentReviews,
   getGameBySlug,
   getSimilarGames,
+  getAllReviews,
 } from './queries';
 
 const originalSelect = db.select;
@@ -56,6 +57,22 @@ describe('queries', () => {
     ];
     db.select = mockSelect([recent]);
     assert.deepStrictEqual(await getRecentReviews(), recent);
+  });
+
+  it('getAllReviews returns all reviews', async () => {
+    const all = [
+      {
+        slug: 'game-1',
+        title: 'Game 1',
+        heroUrl: 'hero1',
+        images: 'img1',
+        score: 90,
+        publishedAt: new Date('2024-01-01'),
+        releaseDate: '2024-01-01',
+      },
+    ];
+    db.select = mockSelect([all]);
+    assert.deepStrictEqual(await getAllReviews(), all);
   });
 
   it('getGameBySlug formats game data', async () => {
