@@ -5,9 +5,9 @@ export default function Footer() {
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <p className="order-2 sm:order-1">© {new Date().getFullYear()} BestOfGames</p>
           <nav className="order-1 flex items-center gap-5 sm:order-2">
-            <a className="hover:text-gray-900 dark:hover:text-white" href="/about">About</a>
-            <a className="hover:text-gray-900 dark:hover:text-white" href="/privacy">Privacy</a>
-            <a className="hover:text-gray-900 dark:hover:text-white" href="/contact">Contact</a>
+            <a className="hover:text-gray-900 dark:hover:text-white" href="/about">Über uns</a>
+            <a className="hover:text-gray-900 dark:hover:text-white" href="/privacy">Datenschutz</a>
+            <a className="hover:text-gray-900 dark:hover:text-white" href="/contact">Kontakt</a>
           </nav>
         </div>
       </div>

@@ -59,7 +59,7 @@ export default function GameHero({
               </h1>
               {(developer || releaseDate) && (
                 <p className="mt-1 text-sm text-white/80">
-                  {[developer ? `by ${developer}` : null, releaseDate || null]
+                  {[developer ? `von ${developer}` : null, releaseDate || null]
                     .filter(Boolean)
                     .join(' • ')}
                 </p>
@@ -74,7 +74,7 @@ export default function GameHero({
               <div className="rounded-3xl border bg-white/60 p-5 shadow-sm ring-1 ring-black/5 backdrop-blur dark:bg-gray-900/60">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Critic Score</span>
+                    <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Kritikerbewertung</span>
                   </div>
                   <span className="font-mono text-3xl font-semibold">
                     {typeof score === 'number' ? score.toFixed(1) : '–'}
@@ -123,7 +123,7 @@ export default function GameHero({
                 href="#main"
                 className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-600 to-sky-500 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-transform hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
               >
-                Read full review
+                Komplette Rezension lesen
               </a>
               {releaseDate && (
                 <div className="inline-flex items-center gap-2 rounded-2xl border bg-white/60 px-4 py-2 text-sm shadow-sm ring-1 ring-black/5 backdrop-blur dark:bg-gray-900/60">

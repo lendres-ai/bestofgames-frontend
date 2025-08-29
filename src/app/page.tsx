@@ -8,8 +8,8 @@ import { scoreClasses, coverOf } from "@/lib/ui-helpers";
 export const revalidate = 3600;
 
 export const metadata = {
-  title: "BestOfGames – Indie Gems",
-  description: "Fresh, stylish indie reviews with beautiful covers and quick reads.",
+  title: "BestOfGames – Indie-Perlen",
+  description: "Frische, stilvolle Indie-Reviews mit schönen Covern und kurzen Texten.",
 };
 
 type ReviewItem = ReviewCardProps & {
@@ -47,10 +47,10 @@ export default async function Page() {
         {/* hero header */}
         <header className="mb-[var(--space-8)] sm:mb-[var(--space-10)]">
           <h1 className="bg-gradient-to-r from-indigo-600 via-sky-500 to-fuchsia-500 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
-            Latest Trends
+            Aktuelle Trends
           </h1>
           <p className="mt-2 text-gray-600 dark:text-gray-300">
-            Discover the latest trends in the gaming world.
+            Entdecke die neuesten Trends in der Gaming-Welt.
           </p>
 
           {/* optional category chips (static links; no client JS) */}
@@ -113,7 +113,7 @@ export default async function Page() {
                       </Link>
                     ))}
                     <span className="ml-auto inline-flex items-center gap-1 text-sm font-medium text-indigo-600 transition group-hover:translate-x-0.5 dark:text-sky-400">
-                      Read review
+                      Rezension lesen
                       <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                         <path d="M5 12h14" />
                         <path d="m12 5 7 7-7 7" />

@@ -84,7 +84,7 @@ export default function MainArticle({
           {pros.length > 0 && (
             <div className="rounded-2xl border bg-gray-50/60 p-5 shadow-sm ring-1 ring-emerald-400/30 dark:bg-gray-900/40">
               <h4 className="mb-3 text-sm font-semibold text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]">
-                Pros
+                Pro
               </h4>
               <ul className="space-y-2">
                 {pros.map((p) => (
@@ -101,7 +101,7 @@ export default function MainArticle({
           {cons.length > 0 && (
             <div className="rounded-2xl border bg-gray-50/60 p-5 shadow-sm ring-1 ring-rose-400/30 dark:bg-gray-900/40">
               <h4 className="mb-3 text-sm font-semibold text-rose-400 drop-shadow-[0_0_8px_rgba(244,63,94,0.8)]">
-                Cons
+                Contra
               </h4>
               <ul className="space-y-2">
                 {cons.map((c) => (
@@ -120,7 +120,7 @@ export default function MainArticle({
 
       {typeof score === 'number' && (
         <div className="mt-10 flex items-center gap-3 rounded-2xl border bg-white/60 p-4 shadow-sm ring-1 ring-black/5 backdrop-blur dark:bg-gray-900/60">
-          <span className="text-sm font-semibold text-gray-600 dark:text-gray-300">Score</span>
+          <span className="text-sm font-semibold text-gray-600 dark:text-gray-300">Bewertung</span>
           <span className="font-mono text-2xl font-bold text-amber-500">{score.toFixed(1)} / 10</span>
         </div>
       )}

@@ -45,7 +45,7 @@ export default function ReviewCard({
           </h3>
           {releaseDate && (
             <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
-              {new Date(releaseDate).toLocaleDateString('en-US', {
+              {new Date(releaseDate).toLocaleDateString('de-DE', {
                 year: 'numeric',
                 month: 'short',
                 day: 'numeric',

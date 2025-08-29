@@ -3,9 +3,9 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 
 const options = [
-  { value: 'publishedAt', label: 'Newest' },
-  { value: 'score', label: 'Score' },
-  { value: 'title', label: 'Title' },
+  { value: 'publishedAt', label: 'Neueste' },
+  { value: 'score', label: 'Bewertung' },
+  { value: 'title', label: 'Titel' },
 ];
 
 export default function SortSelect() {

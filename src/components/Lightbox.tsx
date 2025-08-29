@@ -58,7 +58,7 @@ export default function Lightbox({ images, startIndex, onClose }: LightboxProps)
               e.stopPropagation();
               setIndex((i) => (i - 1 + images.length) % images.length);
             }}
-            aria-label="Previous image"
+            aria-label="Vorheriges Bild"
           >
             ‹
           </button>
@@ -68,7 +68,7 @@ export default function Lightbox({ images, startIndex, onClose }: LightboxProps)
               e.stopPropagation();
               setIndex((i) => (i + 1) % images.length);
             }}
-            aria-label="Next image"
+            aria-label="Nächstes Bild"
           >
             ›
           </button>
@@ -80,7 +80,7 @@ export default function Lightbox({ images, startIndex, onClose }: LightboxProps)
           e.stopPropagation();
           onClose();
         }}
-        aria-label="Close"
+        aria-label="Schließen"
       >
         ✕
       </button>

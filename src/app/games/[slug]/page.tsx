@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const game = await getGameBySlug(slug);
   if (!game) return {};
   return {
-    title: `${game.title} – Review & Score`,
+    title: `${game.title} – Rezension & Bewertung`,
     description: game.summary ?? undefined,
     alternates: { canonical: `/games/${slug}` },
     openGraph: { images: game.heroUrl ? [game.heroUrl] : [] }

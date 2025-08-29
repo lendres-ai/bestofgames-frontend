@@ -1,7 +1,13 @@
+import type { Metadata } from 'next';
 import SortSelect from '@/components/SortSelect';
 import ReviewCard, { ReviewCardProps } from '@/components/ReviewCard';
 import { getAllReviews } from '@/lib/queries';
 import { coverOf } from '@/lib/ui-helpers';
+
+export const metadata: Metadata = {
+  title: 'Alle Spiele - BestOfGames',
+  description: 'Durchstöbere alle Rezensionen.',
+};
 
 export default async function Page({
   searchParams,
@@ -26,7 +32,7 @@ export default async function Page({
   return (
     <main className="mx-auto max-w-screen-xl px-[var(--container-x)] pt-[var(--section-pt)] pb-[var(--section-pb)] 2xl:px-0">
       <header className="mb-[var(--space-8)] flex items-center gap-4">
-        <h1 className="text-3xl font-bold tracking-tight">All Games</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Alle Spiele</h1>
         <SortSelect />
       </header>
       <ul className="grid gap-[var(--block-gap)] sm:grid-cols-2 lg:grid-cols-3">
