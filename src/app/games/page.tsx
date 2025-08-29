@@ -22,11 +22,14 @@ export default async function Page({
     score: r.score != null ? Number(r.score) : null,
     releaseDate: r.releaseDate,
   }));
+  const totalGames = items.length;
 
   return (
     <main className="mx-auto max-w-screen-xl px-[var(--container-x)] pt-[var(--section-pt)] pb-[var(--section-pb)] 2xl:px-0">
       <header className="mb-[var(--space-8)] flex items-center gap-4">
-        <h1 className="text-3xl font-bold tracking-tight">All Games</h1>
+        <h1 className="text-3xl font-bold tracking-tight">
+          All Games ({totalGames})
+        </h1>
         <SortSelect />
       </header>
       <ul className="grid gap-[var(--block-gap)] sm:grid-cols-2 lg:grid-cols-3">
