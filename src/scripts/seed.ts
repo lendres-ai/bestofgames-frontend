@@ -8,7 +8,8 @@ async function main() {
     title: 'Super Mario Wonder',
     summary: 'Bunter Platformer mit cleveren Levels.',
     developer: 'Nintendo',
-    publisher: 'Nintendo'
+    publisher: 'Nintendo',
+    steamAppId: 3228590,
   }).returning();
 
   await db.insert(reviews).values({

@@ -22,6 +22,7 @@ export const games = pgTable('games', {
   trailerUrl: text('trailer_url'),
   developer: text('developer'),
   publisher: text('publisher'),
+  steamAppId: integer('steam_appid').unique(),
 });
 
 export const platforms = pgTable('platforms', {

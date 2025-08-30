@@ -22,6 +22,7 @@ def insert_full_review(
     game_summary: str,
     developer: str,
     publisher: str,
+    steam_appid: Optional[int] = None,
     platform_windows: bool,
     platform_mac: bool,
     platform_linux: bool,
@@ -44,16 +45,17 @@ def insert_full_review(
             # Upsert game by slug
             cur.execute(
                 """
-                INSERT INTO games (slug, title, summary, developer, publisher)
-                VALUES (%s, %s, %s, %s, %s)
+                INSERT INTO games (slug, title, summary, developer, publisher, steam_appid)
+                VALUES (%s, %s, %s, %s, %s, %s)
                 ON CONFLICT (slug) DO UPDATE
                   SET title = EXCLUDED.title,
                       summary = EXCLUDED.summary,
                       developer = EXCLUDED.developer,
-                      publisher = EXCLUDED.publisher
+                      publisher = EXCLUDED.publisher,
+                      steam_appid = EXCLUDED.steam_appid
                 RETURNING id;
                 """,
-                (game_slug, game_title, game_summary, developer, publisher),
+                (game_slug, game_title, game_summary, developer, publisher, steam_appid),
             )
             game_row = cur.fetchone()
             game_id = game_row["id"]
@@ -196,6 +198,7 @@ if __name__ == "__main__":
         game_summary="Atmospheric Metroidvania with tight combat and rich exploration.",
         developer="Team Cherry",
         publisher="Team Cherry",
+        steam_appid=367520,
         platform_windows=True,
         platform_mac=True,
         platform_linux=False,

@@ -15,6 +15,13 @@
       "when": 1756161582466,
       "tag": "0001_next_morlocks",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1756561098527,
+      "tag": "0002_smiling_gargoyle",
+      "breakpoints": true
     }
   ]
 }
