@@ -73,10 +73,10 @@ export default function MainArticle({
         </div>
       )}
 
-      <div className="prose prose-slate max-w-none text-justify dark:prose-invert">
-        {introduction && <p>{introduction}</p>}
-        {gameplayFeatures && <p>{gameplayFeatures}</p>}
-        {conclusion && <p>{conclusion}</p>}
+      <div className="prose prose-slate max-w-none text-justify dark:prose-invert space-y-6">
+        {introduction && <p className="m-0">{introduction}</p>}
+        {gameplayFeatures && <p className="m-0">{gameplayFeatures}</p>}
+        {conclusion && <p className="m-0">{conclusion}</p>}
       </div>
 
       {(pros.length > 0 || cons.length > 0) && (
