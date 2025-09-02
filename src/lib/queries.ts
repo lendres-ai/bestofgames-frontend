@@ -241,3 +241,11 @@ export async function getReviewsByTag(
         .where(eq(tags.name, tag))
         .orderBy(orderBy === 'title' ? orderColumn : desc(orderColumn));
 }
+
+export async function getAllTags() {
+    const rows = await db
+        .select({ name: tags.name })
+        .from(tags)
+        .orderBy(tags.name);
+    return rows.map((r) => r.name);
+}

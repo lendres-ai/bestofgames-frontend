@@ -1,12 +1,14 @@
 import SortSelect from '@/components/SortSelect';
 import ReviewCard, { ReviewCardProps } from '@/components/ReviewCard';
-import { getAllReviews } from '@/lib/queries';
+import SearchBar from '@/components/SearchBar';
+import TagSelect from '@/components/TagSelect';
+import { getAllReviews, getReviewsByTag, getAllTags } from '@/lib/queries';
 import { coverOf } from '@/lib/ui-helpers';
 
 export default async function Page({
   searchParams,
 }: {
-  searchParams: { sort?: string };
+  searchParams: { sort?: string; search?: string; tag?: string };
 }) {
   const order = ['score', 'publishedAt', 'title'].includes(
     searchParams.sort ?? ''
@@ -14,8 +16,19 @@ export default async function Page({
     ? (searchParams.sort as 'score' | 'publishedAt' | 'title')
     : 'publishedAt';
 
-  const rows = await getAllReviews(order);
-  const items: ReviewCardProps[] = rows.map((r) => ({
+  const tag = searchParams.tag;
+  const term = searchParams.search?.toLowerCase() ?? '';
+
+  const [rows, allTags] = await Promise.all([
+    tag ? getReviewsByTag(tag, order) : getAllReviews(order),
+    getAllTags(),
+  ]);
+
+  const filtered = term
+    ? rows.filter((r) => r.title.toLowerCase().includes(term))
+    : rows;
+
+  const items: ReviewCardProps[] = filtered.map((r) => ({
     slug: r.slug,
     title: r.title,
     image: coverOf(r),
@@ -26,11 +39,15 @@ export default async function Page({
 
   return (
     <main className="mx-auto max-w-screen-xl px-[var(--container-x)] pt-[var(--section-pt)] pb-[var(--section-pb)] 2xl:px-0">
-      <header className="mb-[var(--space-8)] flex items-center gap-4">
+      <header className="mb-[var(--space-8)] flex flex-wrap items-center gap-4">
         <h1 className="text-3xl font-bold tracking-tight">
           All Games ({totalGames})
         </h1>
-        <SortSelect />
+        <div className="flex flex-1 flex-wrap items-center gap-4">
+          <SearchBar />
+          <TagSelect tags={allTags} />
+          <SortSelect />
+        </div>
       </header>
       <ul className="grid gap-[var(--block-gap)] sm:grid-cols-2 lg:grid-cols-3">
         {items.map((r) => (
