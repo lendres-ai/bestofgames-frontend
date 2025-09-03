@@ -6,6 +6,7 @@ const options = [
   { value: 'publishedAt', label: 'Newest' },
   { value: 'score', label: 'Score' },
   { value: 'title', label: 'Title' },
+  { value: 'releaseDate', label: 'Release Date' },
 ];
 
 export default function SortSelect() {

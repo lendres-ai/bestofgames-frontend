@@ -75,6 +75,22 @@ describe('queries', () => {
     assert.deepStrictEqual(await getAllReviews(), all);
   });
 
+  it('getAllReviews allows sorting by release date', async () => {
+    const all = [
+      {
+        slug: 'game-1',
+        title: 'Game 1',
+        heroUrl: 'hero1',
+        images: 'img1',
+        score: 90,
+        publishedAt: new Date('2024-01-01'),
+        releaseDate: '2024-01-01',
+      },
+    ];
+    db.select = mockSelect([all]);
+    assert.deepStrictEqual(await getAllReviews('releaseDate'), all);
+  });
+
   it('getGameBySlug formats game data', async () => {
     const rows = [
       {

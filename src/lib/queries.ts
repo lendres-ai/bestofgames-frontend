@@ -172,13 +172,15 @@ export async function getSimilarGames(slug: string, limit = 4) {
 }
 
 export async function getAllReviews(
-    orderBy: 'score' | 'publishedAt' | 'title' = 'publishedAt'
+    orderBy: 'score' | 'publishedAt' | 'title' | 'releaseDate' = 'publishedAt'
 ) {
     const orderColumn =
         orderBy === 'score'
             ? reviews.score
             : orderBy === 'title'
             ? games.title
+            : orderBy === 'releaseDate'
+            ? games.releaseDate
             : reviews.publishedAt;
 
     const coverImageSubquery = sql<string>`(
@@ -207,13 +209,15 @@ export async function getAllReviews(
 
 export async function getReviewsByTag(
     tag: string,
-    orderBy: 'score' | 'publishedAt' | 'title' = 'publishedAt'
+    orderBy: 'score' | 'publishedAt' | 'title' | 'releaseDate' = 'publishedAt'
 ) {
     const orderColumn =
         orderBy === 'score'
             ? reviews.score
             : orderBy === 'title'
             ? games.title
+            : orderBy === 'releaseDate'
+            ? games.releaseDate
             : reviews.publishedAt;
 
     const coverImageSubquery = sql<string>`(

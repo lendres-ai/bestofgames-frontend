@@ -8,10 +8,14 @@ export default async function Page({
 }: {
   searchParams: { sort?: string };
 }) {
-  const order = ['score', 'publishedAt', 'title'].includes(
+  const order = ['score', 'publishedAt', 'title', 'releaseDate'].includes(
     searchParams.sort ?? ''
   )
-    ? (searchParams.sort as 'score' | 'publishedAt' | 'title')
+    ? (searchParams.sort as
+        | 'score'
+        | 'publishedAt'
+        | 'title'
+        | 'releaseDate')
     : 'publishedAt';
 
   const rows = await getAllReviews(order);
