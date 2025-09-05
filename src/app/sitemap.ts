@@ -2,6 +2,8 @@ import { db } from '@/lib/db';
 import { games, reviews } from '@/lib/schema';
 import { eq } from 'drizzle-orm';
 
+export const revalidate = 86400;
+
 export default async function sitemap() {
   const base = 'https://bestof.games';
   

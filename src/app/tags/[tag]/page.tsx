@@ -3,6 +3,8 @@ import ReviewCard, { ReviewCardProps } from '@/components/ReviewCard';
 import { getReviewsByTag } from '@/lib/queries';
 import { coverOf } from '@/lib/ui-helpers';
 
+export const revalidate = 3600;
+
 export default async function Page({
   params,
   searchParams,
