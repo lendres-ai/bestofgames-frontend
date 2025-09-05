@@ -38,7 +38,8 @@ export async function getRecentReviews(limit = 8) {
 }
 
 export async function getGameBySlug(slug: string) {
-    const rows = await db
+    // First, get the main game and review data
+    const gameData = await db
         .select({
             id: games.id,
             slug: games.slug,
@@ -46,85 +47,72 @@ export async function getGameBySlug(slug: string) {
             summary: games.summary,
             heroUrl: games.heroUrl,
             releaseDate: games.releaseDate,
+            developer: games.developer,
+            reviewId: reviews.id,
             reviewTitle: reviews.title,
             description: reviews.description,
             introduction: reviews.introduction,
             gameplayFeatures: reviews.gameplayFeatures,
             conclusion: reviews.conclusion,
             score: reviews.score,
-            developer: games.developer,
-            tagName: tags.name,
-            platformName: platforms.name,
             userOpinion: reviews.userOpinion,
-            images: gameImages.url,
-            proConText: reviewProsCons.text,
-            proConType: reviewProsCons.type,
         })
         .from(games)
         .leftJoin(reviews, eq(reviews.gameId, games.id))
-        .leftJoin(reviewTags, eq(reviewTags.reviewId, reviews.id))
-        .leftJoin(tags, eq(reviewTags.tagId, tags.id))
-        .leftJoin(gamePlatforms, eq(gamePlatforms.gameId, games.id))
-        .leftJoin(platforms, eq(gamePlatforms.platformId, platforms.id))
-        .leftJoin(gameImages, eq(gameImages.gameId, games.id))
-        .leftJoin(reviewProsCons, eq(reviewProsCons.reviewId, reviews.id))
-        .where(eq(games.slug, slug));
+        .where(eq(games.slug, slug))
+        .limit(1);
 
-    if (rows.length === 0) return null;
+    if (gameData.length === 0) return null;
 
-    const base = rows[0];
+    const game = gameData[0];
+    if (!game.reviewId) return null;
+
+    // Fetch related data in parallel
+    const [tagsData, platformsData, imagesData, prosConsData] = await Promise.all([
+        // Get tags
+        db.select({ name: tags.name })
+            .from(reviewTags)
+            .innerJoin(tags, eq(reviewTags.tagId, tags.id))
+            .where(eq(reviewTags.reviewId, game.reviewId)),
+        
+        // Get platforms
+        db.select({ name: platforms.name })
+            .from(gamePlatforms)
+            .innerJoin(platforms, eq(gamePlatforms.platformId, platforms.id))
+            .where(eq(gamePlatforms.gameId, game.id)),
+        
+        // Get images
+        db.select({ url: gameImages.url })
+            .from(gameImages)
+            .where(eq(gameImages.gameId, game.id))
+            .orderBy(gameImages.sortOrder),
+        
+        // Get pros and cons
+        db.select({ text: reviewProsCons.text, type: reviewProsCons.type })
+            .from(reviewProsCons)
+            .where(eq(reviewProsCons.reviewId, game.reviewId))
+    ]);
+
     return {
-        id: base.id,
-        slug: base.slug,
-        title: base.title,
-        summary: base.summary,
-        heroUrl: base.heroUrl,
-        description: base.description,
-        introduction: base.introduction,
-        gameplayFeatures: base.gameplayFeatures,
-        conclusion: base.conclusion,
-        score: base.score,
-        developer: base.developer,
-        releaseDate: base.releaseDate,
-        tags: Array.from(
-            new Set(
-                rows
-                    .map((r) => r.tagName)
-                    .filter((name): name is string => typeof name === 'string')
-            )
-        ),
-        platforms: Array.from(
-            new Set(
-                rows
-                    .map((r) => r.platformName)
-                    .filter((name): name is string => typeof name === 'string')
-            )
-        ),
-        images: Array.from(
-            new Set(
-                rows
-                    .map((r) => r.images)
-                    .filter((name): name is string => typeof name === 'string')
-            )
-        ),
-        userOpinion: base.userOpinion,
-        reviewTitle: base.reviewTitle,
-        pros: Array.from(
-            new Set(
-                rows
-                    .filter((r) => r.proConType === 'pro')
-                    .map((r) => r.proConText)
-                    .filter((t): t is string => typeof t === 'string')
-            )
-        ),
-        cons: Array.from(
-            new Set(
-                rows
-                    .filter((r) => r.proConType === 'con')
-                    .map((r) => r.proConText)
-                    .filter((t): t is string => typeof t === 'string')
-            )
-        ),
+        id: game.id,
+        slug: game.slug,
+        title: game.title,
+        summary: game.summary,
+        heroUrl: game.heroUrl,
+        description: game.description,
+        introduction: game.introduction,
+        gameplayFeatures: game.gameplayFeatures,
+        conclusion: game.conclusion,
+        score: game.score,
+        developer: game.developer,
+        releaseDate: game.releaseDate,
+        reviewTitle: game.reviewTitle,
+        userOpinion: game.userOpinion,
+        tags: tagsData.map(t => t.name),
+        platforms: platformsData.map(p => p.name),
+        images: imagesData.map(i => i.url),
+        pros: prosConsData.filter(pc => pc.type === 'pro').map(pc => pc.text),
+        cons: prosConsData.filter(pc => pc.type === 'con').map(pc => pc.text),
     };
 }
 
