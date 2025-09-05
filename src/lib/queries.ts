@@ -28,6 +28,7 @@ export async function getRecentReviews(limit = 8) {
         heroUrl: games.heroUrl,
         score: reviews.score,
         publishedAt: reviews.publishedAt,
+        releaseDate: games.releaseDate,
         images: coverImageSubquery,
     })
         .from(reviews)
