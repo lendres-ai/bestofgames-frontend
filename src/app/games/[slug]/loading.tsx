@@ -1,12 +1,23 @@
+import { GameHeroSkeleton, MainArticleSkeleton } from '@/components/SkeletonLoader';
+
 export default function Loading() {
   return (
-    <div className="flex min-h-[50vh] items-center justify-center">
-      <div className="relative h-14 w-14">
-        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-600 via-sky-500 to-fuchsia-500 opacity-75 blur-md dark:from-gray-900 dark:via-gray-800 dark:to-gray-900" />
-        <div className="h-full w-full animate-[spin_1s_linear_infinite] rounded-full bg-gradient-to-r from-indigo-600 via-sky-500 to-fuchsia-500 p-[3px] dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-          <div className="h-full w-full rounded-full bg-background" />
-        </div>
+    <>
+      <GameHeroSkeleton />
+      <div className="mx-auto grid gap-8 px-4 lg:grid-cols-[minmax(0,1fr)_300px]">
+        <MainArticleSkeleton />
+        <aside className="space-y-4">
+          <div className="h-6 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+          <div className="space-y-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="border rounded-lg p-3 bg-white/60 dark:bg-gray-900/60">
+                <div className="h-4 w-3/4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2" />
+                <div className="h-3 w-1/2 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+              </div>
+            ))}
+          </div>
+        </aside>
       </div>
-    </div>
+    </>
   );
 }

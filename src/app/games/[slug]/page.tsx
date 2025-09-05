@@ -1,8 +1,10 @@
 import { getGameBySlug, getSimilarGames } from '@/lib/queries';
 import { notFound } from 'next/navigation';
+import Script from 'next/script';
 import GameHero from '@/components/GameHero';
 import MainArticle from '@/components/MainArticle';
 import SimilarGames from '@/components/SimilarGames';
+import { generateGameReviewStructuredData, generateBreadcrumbStructuredData } from '@/lib/structured-data';
 
 export const revalidate = 86400;      // 1 Tag
 export const dynamicParams = true;    // neue Slugs sofort möglich
@@ -25,8 +27,34 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     if (!game) return notFound();
     const similarGames = await getSimilarGames(slug);
 
+    const reviewStructuredData = generateGameReviewStructuredData({
+      title: game.title,
+      summary: game.summary,
+      heroUrl: game.heroUrl,
+      score: game.score ? Number(game.score) : null,
+      developer: game.developer,
+      releaseDate: game.releaseDate,
+      slug: game.slug,
+    });
+
+    const breadcrumbStructuredData = generateBreadcrumbStructuredData([
+      { name: 'Home', url: 'https://bestof.games' },
+      { name: 'Games', url: 'https://bestof.games/games' },
+      { name: game.title, url: `https://bestof.games/games/${slug}` },
+    ]);
+
     return (
       <>
+        <Script
+          id="game-review-structured-data"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewStructuredData) }}
+        />
+        <Script
+          id="breadcrumb-structured-data"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData) }}
+        />
         <GameHero
           title={game.title}
           developer={game.developer}

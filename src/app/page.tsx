@@ -1,8 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
+import Script from "next/script";
 import ReviewCard, { ReviewCardProps } from "@/components/ReviewCard";
 import { getRecentReviews } from "@/lib/queries";
 import { scoreClasses, coverOf } from "@/lib/ui-helpers";
+import { generateWebsiteStructuredData, generateGameListStructuredData } from "@/lib/structured-data";
 
 // ISR: 1h
 export const revalidate = 3600;
@@ -38,8 +40,29 @@ export default async function Page() {
   const rightItems = (featured ? rest : items).slice(0, 4);
   const remaining = (featured ? rest : items).slice(4);
 
+  const websiteStructuredData = generateWebsiteStructuredData();
+  const gameListStructuredData = generateGameListStructuredData(
+    items.map(item => ({
+      title: item.title,
+      slug: item.slug,
+      summary: item.summary,
+      score: item.score,
+    }))
+  );
+
   return (
-    <main className="relative isolate">
+    <>
+      <Script
+        id="website-structured-data"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteStructuredData) }}
+      />
+      <Script
+        id="game-list-structured-data"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(gameListStructuredData) }}
+      />
+      <main className="relative isolate">
       {/* soft page backdrop */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-indigo-600/10 via-sky-400/10 to-transparent" />
 
@@ -142,6 +165,7 @@ export default async function Page() {
           </ul>
         )}
       </section>
-    </main>
+      </main>
+    </>
   );
 }
