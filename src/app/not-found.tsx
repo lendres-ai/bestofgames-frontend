@@ -14,7 +14,7 @@ export default function NotFound() {
         </h2>
         
         <p className="mb-8 text-lg text-gray-600 dark:text-gray-300">
-          Sorry, we couldn't find the game you're looking for. It might have been removed or the URL is incorrect.
+          Sorry, we couldn&apos;t find the game you&apos;re looking for. It might have been removed or the URL is incorrect.
         </p>
         
         <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
