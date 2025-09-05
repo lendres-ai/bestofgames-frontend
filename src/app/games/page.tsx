@@ -1,3 +1,17 @@
+export const metadata = {
+  title: 'All Games',
+  description: 'Browse all reviewed indie games on BestOfGames.',
+};
+
+export default function GamesPage() {
+  return (
+    <section className="mx-auto max-w-screen-xl px-[var(--container-x)] py-[var(--section-pt)]">
+      <h1 className="text-3xl font-bold tracking-tight">All Games</h1>
+      <p className="mt-2 text-gray-600 dark:text-gray-300">A full browse page will appear here.</p>
+    </section>
+  );
+}
+
 import SortSelect from '@/components/SortSelect';
 import ReviewCard, { ReviewCardProps } from '@/components/ReviewCard';
 import { getAllReviews } from '@/lib/queries';

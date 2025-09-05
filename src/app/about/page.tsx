@@ -1,3 +1,20 @@
+export const metadata = {
+  title: 'About',
+  description: 'What BestOfGames is about and our review approach.',
+};
+
+export default function AboutPage() {
+  return (
+    <section className="mx-auto max-w-screen-md px-[var(--container-x)] py-[var(--section-pt)] prose dark:prose-invert">
+      <h1>About BestOfGames</h1>
+      <p>
+        BestOfGames curates stylish, concise reviews of the best indie titles. We focus on clarity,
+        beautiful presentation, and helpful scoring.
+      </p>
+    </section>
+  );
+}
+
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
