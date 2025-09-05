@@ -216,6 +216,9 @@ export async function getReviewsByTag(
         limit 1
     )`;
 
+    // Perform case-insensitive tag matching by lowercasing both sides
+    const loweredTag = tag.toLowerCase();
+
     return db
         .select({
             slug: games.slug,
@@ -230,6 +233,6 @@ export async function getReviewsByTag(
         .innerJoin(reviewTags, eq(reviewTags.reviewId, reviews.id))
         .innerJoin(tags, eq(reviewTags.tagId, tags.id))
         .innerJoin(games, eq(reviews.gameId, games.id))
-        .where(eq(tags.name, tag))
+        .where(sql`lower(${tags.name}) = ${loweredTag}`)
         .orderBy(orderBy === 'title' ? orderColumn : desc(orderColumn));
 }

@@ -77,7 +77,7 @@ export default async function Page() {
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             <Link href="/games" className="rounded-full bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 dark:bg-sky-500 dark:hover:bg-sky-400">Browse all reviews</Link>
-            <Link href="/games?sort=score_desc" className="rounded-full border bg-white/60 px-4 py-2 text-sm font-medium text-gray-800 shadow-sm ring-1 ring-black/5 hover:bg-white dark:bg-gray-900/60 dark:text-gray-200">Top‑rated</Link>
+            <Link href="/games?sort=score" className="rounded-full border bg-white/60 px-4 py-2 text-sm font-medium text-gray-800 shadow-sm ring-1 ring-black/5 hover:bg-white dark:bg-gray-900/60 dark:text-gray-200">Top‑rated</Link>
           </div>
 
           {/* category chips */}
@@ -134,7 +134,7 @@ export default async function Page() {
                     {(featured.tags ?? []).slice(0, 4).map((t) => (
                       <Link
                         key={t}
-                        href={`/tags/${encodeURIComponent(t)}`}
+                        href={`/tags/${encodeURIComponent(t.toLowerCase())}`}
                         className="rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-medium text-gray-800 dark:bg-gray-800 dark:text-gray-200"
                       >
                         {t}
