@@ -43,15 +43,19 @@ export default function ReviewCard({
           <h3 className="line-clamp-1 text-lg font-semibold tracking-tight text-gray-900 dark:text-white">
             {title}
           </h3>
-          {releaseDate && (
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
-              {new Date(releaseDate).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-              })}
-            </p>
-          )}
+          <p
+            className={`mt-1 h-5 text-sm ${
+              releaseDate ? 'text-gray-600 dark:text-gray-300' : 'invisible'
+            }`}
+          >
+            {releaseDate
+              ? new Date(releaseDate).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })
+              : 'placeholder'}
+          </p>
         </div>
       </Link>
     </li>
