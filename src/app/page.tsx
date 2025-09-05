@@ -70,14 +70,18 @@ export default async function Page() {
         {/* hero header */}
         <header className="mb-[var(--space-8)] sm:mb-[var(--space-10)]">
           <h1 className="bg-gradient-to-r from-indigo-600 via-sky-500 to-fuchsia-500 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
-            Latest Trends
+            Fresh indie game reviews. Gorgeous cover art. No fluff.
           </h1>
           <p className="mt-2 text-gray-600 dark:text-gray-300">
-            Discover the latest trends in the gaming world.
+            Handpicked indie gems with concise reads and honest scores.
           </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Link href="/games" className="rounded-full bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 dark:bg-sky-500 dark:hover:bg-sky-400">Browse all reviews</Link>
+            <Link href="/games?sort=score" className="rounded-full border bg-white/60 px-4 py-2 text-sm font-medium text-gray-800 shadow-sm ring-1 ring-black/5 hover:bg-white dark:bg-gray-900/60 dark:text-gray-200">Top‑rated</Link>
+          </div>
 
-          {/* optional category chips (static links; no client JS) */}
-          {/* <div className="mt-4 flex flex-wrap gap-2">
+          {/* category chips */}
+          <div className="mt-4 flex flex-wrap gap-2">
             {["Metroidvania", "Roguelike", "Puzzle", "Narrative"].map((c) => (
               <Link
                 key={c}
@@ -87,7 +91,7 @@ export default async function Page() {
                 {c}
               </Link>
             ))}
-          </div> */}
+          </div>
         </header>
 
         {/* top grid: 2 columns on lg - featured left, two-up right */}
@@ -95,12 +99,12 @@ export default async function Page() {
           {/* FEATURED card */}
           {featured && (
             <article className="group">
-              <Link href={`/games/${featured.slug}`} className="block">
+              <Link href={`/games/${featured.slug}`} className="block" aria-label={`Read review: ${featured.title}`}>
                 <div className="relative overflow-hidden rounded-3xl border bg-white/60 shadow-md ring-1 ring-black/5 transition hover:shadow-xl dark:bg-gray-900/60">
                   <div className="relative">
                     <Image
                       src={featured.image}
-                      alt={featured.title}
+                      alt={`${featured.title} cover art`}
                       width={1600}
                       height={900}
                       sizes="(max-width: 1024px) 100vw, 50vw"
@@ -117,6 +121,7 @@ export default async function Page() {
                     </div>
 
                     <span
+                      aria-label={typeof featured.score === 'number' ? `Score ${featured.score.toFixed(1)} out of 10` : 'Unscored'}
                       className={`absolute right-5 top-5 rounded-full px-3 py-1 text-xs font-semibold backdrop-blur ${scoreClasses(
                         featured.score
                       )}`}
@@ -129,7 +134,7 @@ export default async function Page() {
                     {(featured.tags ?? []).slice(0, 4).map((t) => (
                       <Link
                         key={t}
-                        href={`/tags/${encodeURIComponent(t)}`}
+                        href={`/tags/${encodeURIComponent(t.toLowerCase())}`}
                         className="rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-medium text-gray-800 dark:bg-gray-800 dark:text-gray-200"
                       >
                         {t}

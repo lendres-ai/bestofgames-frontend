@@ -95,7 +95,7 @@ export default function GameHero({
                   {tags.map((t) => (
                     <Link
                       key={t}
-                      href={`/tags/${encodeURIComponent(t)}`}
+                      href={`/tags/${encodeURIComponent(t.toLowerCase())}`}
                       className="rounded-full border border-transparent bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800 shadow-sm transition-colors hover:border-gray-300 dark:bg-gray-800 dark:text-gray-200"
                     >
                       {t}
