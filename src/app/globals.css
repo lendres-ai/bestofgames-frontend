@@ -29,6 +29,12 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  /* New tokens */
+  --radius-card: 1.5rem;
+  --shadow-card: 0 10px 25px -10px rgb(0 0 0 / 0.25);
+  --shadow-card-hover: 0 18px 40px -12px rgb(0 0 0 / 0.35);
+  --ease-standard: cubic-bezier(.2,.8,.2,1);
+  --dur-fast: 150ms;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -91,6 +97,44 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   .dark .bg-gray-900\/60 {
     background-color: #111827;
   }
+}
+
+/* Utilities */
+@utility .btn {
+  @apply inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium transition;
+}
+@utility .btn-primary {
+  @apply bg-indigo-600 text-white hover:bg-indigo-500 dark:bg-sky-500 dark:hover:bg-sky-400;
+}
+@utility .btn-ghost {
+  @apply border bg-white/60 text-gray-800 ring-1 ring-black/5 hover:bg-white dark:bg-gray-900/60 dark:text-gray-200;
+}
+
+@utility .chip {
+  @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium transition;
+  background: color-mix(in oklab, var(--background) 70%, white 30%);
+}
+.dark @utility .chip {
+  background: color-mix(in oklab, var(--background) 70%, black 30%);
+}
+
+@utility .card {
+  @apply overflow-hidden border ring-1 ring-black/5 shadow-md transition;
+  border-radius: var(--radius-card);
+  background: color-mix(in oklab, var(--background) 85%, white 15%);
+  box-shadow: var(--shadow-card);
+}
+@utility .card-hover:hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+@utility .heading-gradient {
+  @apply bg-clip-text text-transparent font-extrabold tracking-tight;
+  background-image: linear-gradient(to right, rgb(79 70 229), rgb(14 165 233), rgb(217 70 239));
+}
+
+@utility .score-badge {
+  @apply rounded-full px-3 py-1 text-xs font-semibold backdrop-blur;
 }
 
 /* Screen reader only content */
