@@ -32,6 +32,7 @@ export default async function Page() {
       summary: r.summary,
       heroUrl: r.heroUrl,
       score: r.score != null ? Number(r.score) : null,
+      releaseDate: r.releaseDate,
       images: r.images ? [r.images] : null,
       image: coverOf(r),
     }));
