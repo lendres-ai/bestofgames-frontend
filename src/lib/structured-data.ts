@@ -63,7 +63,7 @@ export function generateGameReviewStructuredData(game: {
       url: baseUrl,
     },
     url: `${baseUrl}/games/${game.slug}`,
-    ...(game.score && {
+    ...(game.score != null && {
       reviewRating: {
         '@type': 'Rating',
         ratingValue: game.score,

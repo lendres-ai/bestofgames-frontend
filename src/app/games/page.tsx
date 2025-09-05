@@ -2,8 +2,14 @@ import SortSelect from '@/components/SortSelect';
 import ReviewCard, { ReviewCardProps } from '@/components/ReviewCard';
 import { getAllReviews } from '@/lib/queries';
 import { coverOf } from '@/lib/ui-helpers';
+import type { Metadata } from 'next';
 
-export default async function Page({
+export const metadata: Metadata = {
+  title: 'All Games',
+  description: 'Browse all reviewed indie games on BestOfGames.',
+};
+
+export default async function GamesPage({
   searchParams,
 }: {
   searchParams: { sort?: string };

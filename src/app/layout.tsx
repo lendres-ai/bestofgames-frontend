@@ -64,20 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="theme-color" content="#4f46e5" />
         <meta name="color-scheme" content="light dark" />
         <link rel="icon" href="/favicon.ico" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  const theme = localStorage.getItem('theme');
-                  if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                    document.documentElement.classList.add('dark');
-                  }
-                } catch (e) {}
-              })();
-            `,
-          }}
-        />
+        <Script src="/theme-init.js" strategy="beforeInteractive" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} min-h-dvh flex flex-col`}>
         {process.env.VERCEL_ENV === 'production' && (
