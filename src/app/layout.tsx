@@ -32,16 +32,18 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: 'website',
-    locale: 'de_DE',
+    locale: 'en_US',
     url: 'https://bestof.games',
     siteName: 'BestOfGames',
     title: 'BestOfGames – Indie Game Reviews & Ratings',
     description: 'Discover the best indie games with in-depth reviews, ratings, and recommendations.',
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'BestOfGames' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'BestOfGames – Indie Game Reviews & Ratings',
     description: 'Discover the best indie games with in-depth reviews, ratings, and recommendations.',
+    images: ['/og.png'],
   },
   robots: {
     index: true,
@@ -58,8 +60,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="de">
+    <html lang="en">
       <head>
+        <a href="#main" className="sr-only focus:not-sr-only">Skip to content</a>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#4f46e5" />
         <meta name="color-scheme" content="light dark" />
@@ -88,7 +91,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           />
         )}
         <Header />
-        <main className="flex-1">{children}</main>
+        <main id="main" className="flex-1">{children}</main>
         <Footer />
       </body>
     </html>

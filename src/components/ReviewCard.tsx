@@ -26,12 +26,14 @@ export default function ReviewCard({
         <div className="relative">
           <Image
             src={image}
-            alt={title}
+            alt={`${title} cover art`}
             width={1200}
             height={675}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="h-40 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
           <span
+            aria-label={typeof score === 'number' ? `Score ${score.toFixed(1)} out of 10` : 'Unscored'}
             className={`absolute right-4 top-4 rounded-full px-2.5 py-1 text-[11px] font-semibold backdrop-blur ${scoreClasses(
               score,
             )}`}
