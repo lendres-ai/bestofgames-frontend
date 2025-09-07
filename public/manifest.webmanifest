@@ -1,0 +1,20 @@
+{
+  "name": "BestOfGames – Indie Game Reviews & Ratings",
+  "short_name": "BestOfGames",
+  "description": "Discover the best indie games with in-depth reviews, ratings, and recommendations.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#4f46e5",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32 48x48",
+      "type": "image/x-icon",
+      "purpose": "any"
+    }
+  ]
+}
+
