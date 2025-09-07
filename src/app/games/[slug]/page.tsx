@@ -46,7 +46,9 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     const game = await getGameBySlug(slug);
     if (!game) return notFound();
     const similarGames = await getSimilarGames(slug);
-    const steamPriceText = (game as any).steamAppId ? await getSteamPriceText((game as any).steamAppId as number) : null;
+    const steamPriceText = typeof (game as { steamAppId?: unknown }).steamAppId === 'number'
+      ? await getSteamPriceText((game as { steamAppId?: number }).steamAppId as number)
+      : null;
 
     const reviewStructuredData = generateGameReviewStructuredData({
       title: game.title,
@@ -85,7 +87,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           heroUrl={game.heroUrl ?? undefined}
           images={game.images ?? []}
           releaseDate={game.releaseDate ? new Date(game.releaseDate).toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' }) : undefined}
-          steamAppId={(game as any).steamAppId as number | undefined}
+          steamAppId={typeof (game as { steamAppId?: unknown }).steamAppId === 'number' ? (game as { steamAppId?: number }).steamAppId : undefined}
           steamPriceText={steamPriceText}
         />
         <div className={`mx-auto grid gap-8 px-4 ${similarGames.length ? 'lg:grid-cols-[minmax(0,1fr)_300px]' : ''}`}>
