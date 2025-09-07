@@ -70,6 +70,8 @@ const nextConfig: NextConfig = {
               "img-src 'self' data: https: blob:",
               "font-src 'self' https://fonts.gstatic.com",
               "connect-src 'self' https://umami.mountdoom.space",
+              "worker-src 'self'",
+              "manifest-src 'self'",
               "media-src 'self'",
               "object-src 'none'",
               "base-uri 'self'",

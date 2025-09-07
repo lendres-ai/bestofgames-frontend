@@ -30,6 +30,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
+  manifest: '/manifest.webmanifest',
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -88,6 +89,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             src="https://umami.mountdoom.space/script.js"
             strategy="afterInteractive"
             data-website-id="a696f6b4-f857-4add-a5fa-52469d4f203a"
+          />
+        )}
+        {process.env.NODE_ENV === 'production' && (
+          <Script
+            id="sw-register"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                if ('serviceWorker' in navigator) {
+                  window.addEventListener('load', function () {
+                    navigator.serviceWorker.register('/sw.js').catch(function (e) {
+                      console.error('SW registration failed', e);
+                    });
+                  });
+                }
+              `,
+            }}
           />
         )}
         <Header />
