@@ -33,8 +33,18 @@ export default function MainArticle({
 }: MainArticleProps) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const galleryImages = images.slice(1, 4).map((img) =>
+  // Normalize images and skip the first one (used as cover in the hero)
+  const normalizedImages = images.map((img) =>
     typeof img === 'string' ? { src: img } : img,
+  );
+  const lightboxImages = normalizedImages.slice(1);
+
+  const textSections = (
+    [
+      introduction ? { key: 'introduction', text: introduction } : null,
+      gameplayFeatures ? { key: 'gameplay', text: gameplayFeatures } : null,
+      conclusion ? { key: 'conclusion', text: conclusion } : null,
+    ].filter(Boolean) as Array<{ key: string; text: string }>
   );
 
     return (
@@ -48,35 +58,59 @@ export default function MainArticle({
         )}
       </header>
 
-      {!!galleryImages.length && (
-        <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {galleryImages.map((img, idx) => (
-            <figure
-              key={img.src}
-              className="group cursor-pointer overflow-hidden rounded-2xl shadow ring-1 ring-black/5"
-              onClick={() => setLightboxIndex(idx)}
-            >
-              <Image
-                src={img.src}
-                alt={`Screenshot ${idx + 1}`}
-                width={640}
-                height={360}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-              />
-              {img.caption && (
-                <figcaption className="bg-black/60 p-2 text-xs text-white">
-                  {img.caption}
-                </figcaption>
-              )}
-            </figure>
-          ))}
-        </div>
-      )}
+      <div className="space-y-8">
+        {textSections.map((section, idx) => (
+          <div key={section.key} className="space-y-6">
+            <div className="prose prose-slate max-w-none text-justify dark:prose-invert">
+              <p>{section.text}</p>
+            </div>
 
-      <div className="prose prose-slate max-w-none text-justify dark:prose-invert">
-        {introduction && <p>{introduction}</p>}
-        {gameplayFeatures && <p>{gameplayFeatures}</p>}
-        {conclusion && <p>{conclusion}</p>}
+            {lightboxImages[idx] && (
+              <figure
+                className="group cursor-pointer overflow-hidden rounded-2xl shadow ring-1 ring-black/5"
+                onClick={() => setLightboxIndex(idx)}
+              >
+                <Image
+                  src={lightboxImages[idx].src}
+                  alt={lightboxImages[idx].caption ?? `Screenshot ${idx + 1}`}
+                  width={1280}
+                  height={720}
+                  className="h-auto w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                />
+                {lightboxImages[idx].caption && (
+                  <figcaption className="bg-black/60 p-2 text-xs text-white">
+                    {lightboxImages[idx].caption}
+                  </figcaption>
+                )}
+              </figure>
+            )}
+          </div>
+        ))}
+
+        {lightboxImages.length > textSections.length && (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {lightboxImages.slice(textSections.length).map((img, i) => (
+              <figure
+                key={img.src}
+                className="group cursor-pointer overflow-hidden rounded-2xl shadow ring-1 ring-black/5"
+                onClick={() => setLightboxIndex(textSections.length + i)}
+              >
+                <Image
+                  src={img.src}
+                  alt={img.caption ?? `Screenshot ${textSections.length + i + 1}`}
+                  width={640}
+                  height={360}
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                />
+                {img.caption && (
+                  <figcaption className="bg-black/60 p-2 text-xs text-white">
+                    {img.caption}
+                  </figcaption>
+                )}
+              </figure>
+            ))}
+          </div>
+        )}
       </div>
 
       {(pros.length > 0 || cons.length > 0) && (
@@ -135,7 +169,7 @@ export default function MainArticle({
       )}
       {lightboxIndex !== null && (
         <Lightbox
-          images={galleryImages}
+          images={lightboxImages}
           startIndex={lightboxIndex}
           onClose={() => setLightboxIndex(null)}
         />
