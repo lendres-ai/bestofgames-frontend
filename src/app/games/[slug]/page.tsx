@@ -9,6 +9,26 @@ import { generateGameReviewStructuredData, generateBreadcrumbStructuredData } fr
 export const revalidate = 86400;      // 1 Tag
 export const dynamicParams = true;    // neue Slugs sofort möglich
 
+async function getSteamPriceText(appId: number): Promise<string | null> {
+  try {
+    const res = await fetch(
+      `https://store.steampowered.com/api/appdetails?appids=${appId}&cc=DE&l=en`,
+      { next: { revalidate: 3600 } }
+    );
+    if (!res.ok) return null;
+    const json = await res.json();
+    const entry = json?.[appId];
+    if (!entry?.success) return null;
+    const data = entry.data;
+    if (data?.is_free) return 'Free';
+    const po = data?.price_overview;
+    if (!po) return null;
+    return po.final_formatted ?? (po.final ? `${(po.final / 100).toFixed(2)} ${po.currency}` : null);
+  } catch {
+    return null;
+  }
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const slug = decodeURIComponent((await params).slug);
   const game = await getGameBySlug(slug);
@@ -26,6 +46,9 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     const game = await getGameBySlug(slug);
     if (!game) return notFound();
     const similarGames = await getSimilarGames(slug);
+    const steamPriceText = typeof (game as { steamAppId?: unknown }).steamAppId === 'number'
+      ? await getSteamPriceText((game as { steamAppId?: number }).steamAppId as number)
+      : null;
 
     const reviewStructuredData = generateGameReviewStructuredData({
       title: game.title,
@@ -64,6 +87,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           heroUrl={game.heroUrl ?? undefined}
           images={game.images ?? []}
           releaseDate={game.releaseDate ? new Date(game.releaseDate).toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' }) : undefined}
+          steamAppId={typeof (game as { steamAppId?: unknown }).steamAppId === 'number' ? (game as { steamAppId?: number }).steamAppId : undefined}
+          steamPriceText={steamPriceText}
         />
         <div className={`mx-auto grid gap-8 px-4 ${similarGames.length ? 'lg:grid-cols-[minmax(0,1fr)_300px]' : ''}`}>
           <MainArticle
