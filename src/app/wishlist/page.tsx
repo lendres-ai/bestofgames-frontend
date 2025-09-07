@@ -13,8 +13,6 @@ type ApiItem = {
   releaseDate: string | null;
 };
 
-export const revalidate = 0;
-
 export default function WishlistPage() {
   const [items, setItems] = useState<ReviewCardProps[] | null>(null);
 
