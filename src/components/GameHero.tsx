@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo } from 'react';
-import { CalendarDays, Gamepad2 } from 'lucide-react';
+import { CalendarDays, Gamepad2, ExternalLink } from 'lucide-react';
 
 interface GameHeroProps {
   title: string;
@@ -12,6 +12,8 @@ interface GameHeroProps {
   score?: number | null; // 0..10
   heroUrl?: string | null;
   images?: string[];
+  steamAppId?: number;
+  steamPriceText?: string | null;
 }
 
 export default function GameHero({
@@ -23,6 +25,8 @@ export default function GameHero({
   score,
   heroUrl,
   images = [],
+  steamAppId,
+  steamPriceText,
 }: GameHeroProps) {
   const cover = images[0] || heroUrl || 'https://placehold.co/2000x1500.png';
 
@@ -125,6 +129,17 @@ export default function GameHero({
               >
                 Read full review
               </a>
+              {steamAppId && (
+                <a
+                  href={`https://store.steampowered.com/app/${steamAppId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-2xl border bg-white/60 px-4 py-2 text-sm shadow-sm ring-1 ring-black/5 backdrop-blur hover:bg-white/80 dark:bg-gray-900/60"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  <span>View on Steam{steamPriceText ? ` • ${steamPriceText}` : ''}</span>
+                </a>
+              )}
               {releaseDate && (
                 <div className="inline-flex items-center gap-2 rounded-2xl border bg-white/60 px-4 py-2 text-sm shadow-sm ring-1 ring-black/5 backdrop-blur dark:bg-gray-900/60">
                   <CalendarDays className="h-4 w-4" /> {releaseDate}
