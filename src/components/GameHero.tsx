@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { CalendarDays, Gamepad2 } from 'lucide-react';
+import WishlistButton from './WishlistButton';
 
 interface GameHeroProps {
   title: string;
@@ -12,6 +13,7 @@ interface GameHeroProps {
   score?: number | null; // 0..10
   heroUrl?: string | null;
   images?: string[];
+  slug?: string;
 }
 
 export default function GameHero({
@@ -23,6 +25,7 @@ export default function GameHero({
   score,
   heroUrl,
   images = [],
+  slug,
 }: GameHeroProps) {
   const cover = images[0] || heroUrl || 'https://placehold.co/2000x1500.png';
 
@@ -125,6 +128,7 @@ export default function GameHero({
               >
                 Read full review
               </a>
+              {slug ? <WishlistButton slug={slug} /> : null}
               {releaseDate && (
                 <div className="inline-flex items-center gap-2 rounded-2xl border bg-white/60 px-4 py-2 text-sm shadow-sm ring-1 ring-black/5 backdrop-blur dark:bg-gray-900/60">
                   <CalendarDays className="h-4 w-4" /> {releaseDate}

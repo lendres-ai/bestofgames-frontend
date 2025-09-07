@@ -63,6 +63,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           score={game.score ? Number(game.score) : null}
           heroUrl={game.heroUrl ?? undefined}
           images={game.images ?? []}
+          slug={game.slug}
           releaseDate={game.releaseDate ? new Date(game.releaseDate).toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' }) : undefined}
         />
         <div className={`mx-auto grid gap-8 px-4 ${similarGames.length ? 'lg:grid-cols-[minmax(0,1fr)_300px]' : ''}`}>
