@@ -6,9 +6,16 @@ import { sendPush } from '@/lib/push';
 
 // Simple helper to require a secret header
 function authorize(req: NextRequest) {
-  const provided = req.headers.get('x-cron-secret');
   const expected = process.env.CRON_SECRET;
-  return provided && expected && provided === expected;
+  if (!expected) return false;
+
+  // Vercel Cron sends: Authorization: Bearer <CRON_SECRET>
+  const authHeader = req.headers.get('authorization');
+  if (authHeader && authHeader === `Bearer ${expected}`) return true;
+
+  // Fallback for manual/local triggering with a custom header
+  const provided = req.headers.get('x-cron-secret');
+  return provided === expected;
 }
 
 export async function GET(req: NextRequest) {
