@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getWishlistSlugs } from "@/lib/wishlist";
 import ReviewCard, { ReviewCardProps } from "@/components/ReviewCard";
+import AlertsToggle from "@/components/AlertsToggle";
 
 type ApiItem = {
   slug: string;
@@ -40,8 +41,9 @@ export default function WishlistClient() {
 
   return (
     <main className="mx-auto max-w-screen-xl px-[var(--container-x)] pt-[var(--section-pt)] pb-[var(--section-pb)] 2xl:px-0">
-      <header className="mb-[var(--space-8)] flex items-center gap-4">
+      <header className="mb-[var(--space-8)] flex items-center gap-4 justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Your Wishlist</h1>
+        <AlertsToggle />
       </header>
       {items === null ? (
         <p className="text-sm text-gray-600 dark:text-gray-300">Loading...</p>

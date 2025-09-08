@@ -8,6 +8,7 @@ import {
   primaryKey,
   pgEnum,
   integer,
+  index,
 } from 'drizzle-orm/pg-core';
 
 export const games = pgTable('games', {
@@ -92,4 +93,62 @@ export const reviewTags = pgTable(
 
 // removed user_opinions table in favor of reviews.userOpinion
 
+
+// Web Push subscriptions stored per-browser/device, identified by endpoint
+export const pushSubscriptions = pgTable('push_subscriptions', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+  endpoint: text('endpoint').notNull().unique(),
+  p256dh: text('p256dh').notNull(),
+  auth: text('auth').notNull(),
+  userAgent: text('user_agent'),
+});
+
+// Mapping of which games a given subscription wants alerts for
+export const subscriptionGames = pgTable(
+  'subscription_games',
+  {
+    subscriptionId: uuid('subscription_id').references(() => pushSubscriptions.id, { onDelete: 'cascade' }).notNull(),
+    gameId: uuid('game_id').references(() => games.id, { onDelete: 'cascade' }).notNull(),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.subscriptionId, t.gameId] }),
+  }),
+);
+
+// Price snapshots from external stores (e.g., Steam)
+export const priceSnapshots = pgTable(
+  'price_snapshots',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    gameId: uuid('game_id').references(() => games.id, { onDelete: 'cascade' }).notNull(),
+    store: text('store').notNull(), // e.g. 'steam'
+    currency: text('currency'),
+    priceInitial: integer('price_initial'), // in minor units (e.g. cents)
+    priceFinal: integer('price_final'), // in minor units
+    discountPercent: integer('discount_percent'),
+    isOnSale: boolean('is_on_sale').default(false).notNull(),
+    fetchedAt: timestamp('fetched_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => ({
+    byGameStoreFetched: index('idx_price_snapshots_game_store_fetched').on(t.gameId, t.store, t.fetchedAt),
+  }),
+);
+
+// Track sent notifications to avoid duplicates
+export const sentNotifications = pgTable(
+  'sent_notifications',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    subscriptionId: uuid('subscription_id').references(() => pushSubscriptions.id, { onDelete: 'cascade' }).notNull(),
+    gameId: uuid('game_id').references(() => games.id, { onDelete: 'cascade' }).notNull(),
+    store: text('store').notNull(),
+    dedupeKey: text('dedupe_key'),
+    sentAt: timestamp('sent_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => ({
+    bySubGameStore: index('idx_sent_notifications_sub_game_store').on(t.subscriptionId, t.gameId, t.store),
+  }),
+);
 
