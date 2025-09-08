@@ -5,9 +5,22 @@ const PRECACHE_URLS = [
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_URLS)).then(() => self.skipWaiting())
-  );
+  event.waitUntil((async () => {
+    try {
+      const cache = await caches.open(CACHE_NAME);
+      // Add each URL individually so a single failure doesn't abort the whole install
+      for (const url of PRECACHE_URLS) {
+        try {
+          // Use cache 'reload' to bypass HTTP cache in dev
+          await cache.add(new Request(url, { cache: 'reload' }));
+        } catch (e) {
+          // Ignore individual failures (e.g., favicon on https://localhost)
+        }
+      }
+    } finally {
+      await self.skipWaiting();
+    }
+  })());
 });
 
 self.addEventListener('activate', (event) => {
