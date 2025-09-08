@@ -5,6 +5,15 @@ import { coverOf } from '@/lib/ui-helpers';
 
 export const revalidate = 3600;
 
+export async function generateMetadata({ params }: { params: { tag: string } }) {
+  const tag = decodeURIComponent(params.tag);
+  return {
+    title: `${tag} – Indie Games`,
+    description: `Browse ${tag} indie game reviews and ratings.`,
+    alternates: { canonical: `/tags/${encodeURIComponent(tag)}` },
+  };
+}
+
 export default async function Page({
   params,
   searchParams,

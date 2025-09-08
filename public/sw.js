@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bestofgames-cache-v1';
+const CACHE_NAME = 'bestofgames-cache-v2';
 const PRECACHE_URLS = [
   '/',
   '/favicon.ico',
@@ -36,15 +36,70 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET') return;
 
-  event.respondWith(
-    fetch(request)
-      .then((networkResponse) => {
-        const responseClone = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
-        return networkResponse;
-      })
-      .catch(() => caches.match(request))
-  );
+  const url = new URL(request.url);
+
+  // Bypass analytics and tracking
+  if (url.hostname === 'umami.mountdoom.space') {
+    return; // let it hit the network without SW interference
+  }
+
+  // HTML navigation: network-first with offline fallback
+  if (request.mode === 'navigate') {
+    event.respondWith((async () => {
+      try {
+        const fresh = await fetch(request);
+        const cache = await caches.open(CACHE_NAME);
+        cache.put(request, fresh.clone());
+        return fresh;
+      } catch {
+        const cached = await caches.match(request);
+        if (cached) return cached;
+        return caches.match('/');
+      }
+    })());
+    return;
+  }
+
+  // Static Next.js assets: cache-first
+  if (url.pathname.startsWith('/_next/static') || url.pathname.startsWith('/icons/')) {
+    event.respondWith((async () => {
+      const cached = await caches.match(request);
+      if (cached) return cached;
+      const response = await fetch(request);
+      const cache = await caches.open(CACHE_NAME);
+      cache.put(request, response.clone());
+      return response;
+    })());
+    return;
+  }
+
+  // Images: stale-while-revalidate
+  if (request.destination === 'image') {
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE_NAME);
+      const cached = await cache.match(request);
+      const networkPromise = fetch(request).then((response) => {
+        cache.put(request, response.clone());
+        return response;
+      }).catch(() => undefined);
+      return cached || (await networkPromise) || fetch(request);
+    })());
+    return;
+  }
+
+  // Default: network-first with cache fallback
+  event.respondWith((async () => {
+    try {
+      const response = await fetch(request);
+      const cache = await caches.open(CACHE_NAME);
+      cache.put(request, response.clone());
+      return response;
+    } catch {
+      const cached = await caches.match(request);
+      if (cached) return cached;
+      throw new Error('Network error and no cache');
+    }
+  })());
 });
 
 // Handle incoming push events

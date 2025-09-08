@@ -5,6 +5,12 @@ import { coverOf } from '@/lib/ui-helpers';
 
 export const revalidate = 3600;
 
+export const metadata = {
+  title: 'All Games – Reviews',
+  description: 'Browse all reviewed indie games by rating, date, or title.',
+  alternates: { canonical: '/games' },
+};
+
 export default async function Page({
   searchParams,
 }: {

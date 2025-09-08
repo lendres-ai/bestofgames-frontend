@@ -63,7 +63,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
-        <a href="#main" className="sr-only focus:not-sr-only">Skip to content</a>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#4f46e5" />
         <meta name="color-scheme" content="light dark" />
@@ -84,6 +83,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} min-h-dvh flex flex-col`}>
+        <a href="#main" className="sr-only focus:not-sr-only">Skip to content</a>
         {process.env.VERCEL_ENV === 'production' && (
           <Script
             src="https://umami.mountdoom.space/script.js"
