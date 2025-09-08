@@ -70,13 +70,20 @@ self.addEventListener('push', (event) => {
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   const targetUrl = (event.notification && event.notification.data && event.notification.data.url) || '/';
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      for (const client of clientList) {
-        if ('focus' in client) return client.focus();
+  event.waitUntil((async () => {
+    const clientList = await clients.matchAll({ type: 'window', includeUncontrolled: true });
+    for (const client of clientList) {
+      if ('focus' in client) {
+        await client.focus();
+        if ('navigate' in client && client.url !== targetUrl) {
+          try { await client.navigate(targetUrl); } catch (e) {}
+        }
+        return;
       }
-      if (clients.openWindow) return clients.openWindow(targetUrl);
-    })
-  );
+    }
+    if (clients.openWindow) {
+      await clients.openWindow(targetUrl);
+    }
+  })());
 });
 

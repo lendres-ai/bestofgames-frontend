@@ -16,7 +16,11 @@ export default function AlertsToggle() {
     if (!supported) return;
     const reg = await navigator.serviceWorker.ready;
     const vapid = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
-    const sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: vapid && urlBase64ToUint8Array(vapid) });
+    if (!vapid) {
+      console.warn('Missing NEXT_PUBLIC_VAPID_PUBLIC_KEY; cannot subscribe to push notifications');
+      return;
+    }
+    const sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(vapid) });
     const res = await fetch('/api/push/subscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ endpoint: sub.endpoint, keys: sub.toJSON().keys, userAgent: navigator.userAgent }) });
     if (!res.ok) return;
     const slugs = getWishlistSlugs();

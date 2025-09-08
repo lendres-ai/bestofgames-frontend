@@ -82,7 +82,12 @@ export async function GET(req: NextRequest) {
     const already = await db
       .select({ id: sentNotifications.id })
       .from(sentNotifications)
-      .where(and(eq(sentNotifications.subscriptionId, row.subscriptionId), eq(sentNotifications.gameId, row.gameId), eq(sentNotifications.store, latest.store)));
+      .where(and(
+        eq(sentNotifications.subscriptionId, row.subscriptionId),
+        eq(sentNotifications.gameId, row.gameId),
+        eq(sentNotifications.store, latest.store),
+        eq(sentNotifications.dedupeKey, dedupeKey),
+      ));
     if (already.length > 0) continue;
 
     try {
