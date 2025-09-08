@@ -33,11 +33,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const slug = decodeURIComponent((await params).slug);
   const game = await getGameBySlug(slug);
   if (!game) return {};
+  const hero = game.images?.[0];
   return {
     title: `${game.title} – Review & Score`,
     description: game.summary ?? undefined,
     alternates: { canonical: `/games/${slug}` },
-    openGraph: { images: game.heroUrl ? [game.heroUrl] : [] }
+    openGraph: { images: hero ? [hero] : [] }
   };
 }
 
@@ -84,7 +85,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           tags={game.tags ?? []}
           platforms={game.platforms ?? []}
           score={game.score ? Number(game.score) : null}
-          heroUrl={game.heroUrl ?? undefined}
+          heroUrl={game.images?.[0] ?? undefined}
           images={game.images ?? []}
           slug={game.slug}
           releaseDate={game.releaseDate ? new Date(game.releaseDate).toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' }) : undefined}
