@@ -22,6 +22,13 @@
       "when": 1756561098527,
       "tag": "0002_smiling_gargoyle",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1757322949000,
+      "tag": "0003_colossal_molten_man",
+      "breakpoints": true
     }
   ]
 }

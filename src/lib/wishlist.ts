@@ -41,6 +41,21 @@ export function toggleWishlist(slug: string): boolean {
     current.add(slug);
   }
   window.localStorage.setItem(WISHLIST_KEY, JSON.stringify(Array.from(current)));
+  // Fire-and-forget sync with server push subscriptions if present
+  try {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.ready.then(async (reg) => {
+        const sub = await reg.pushManager.getSubscription();
+        if (sub) {
+          fetch('/api/push/sync-wishlist', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ endpoint: sub.endpoint, slugs: Array.from(current) }),
+          }).catch(() => {});
+        }
+      });
+    }
+  } catch {}
   return current.has(slug);
 }
 

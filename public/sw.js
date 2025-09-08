@@ -33,3 +33,37 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
+// Handle incoming push events
+self.addEventListener('push', (event) => {
+  let payload = {};
+  try {
+    if (event.data) {
+      payload = event.data.json();
+    }
+  } catch (e) {}
+
+  const { title = 'Game on sale!', body = 'A wishlisted game is discounted.', icon = '/favicon.ico', url = '/' } = payload;
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body,
+      icon,
+      data: { url },
+      tag: payload.tag,
+    })
+  );
+});
+
+// Open the URL when the notification is clicked
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const targetUrl = (event.notification && event.notification.data && event.notification.data.url) || '/';
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if ('focus' in client) return client.focus();
+      }
+      if (clients.openWindow) return clients.openWindow(targetUrl);
+    })
+  );
+});
+
