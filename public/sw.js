@@ -1,7 +1,8 @@
 const CACHE_NAME = 'bestofgames-cache-v1';
 const PRECACHE_URLS = [
   '/',
-  '/favicon.ico'
+  '/favicon.ico',
+  '/logo.png'
 ];
 
 self.addEventListener('install', (event) => {
@@ -55,7 +56,7 @@ self.addEventListener('push', (event) => {
     }
   } catch (e) {}
 
-  const { title = 'Game on sale!', body = 'A wishlisted game is discounted.', icon = '/favicon.ico', url = '/' } = payload;
+  const { title = 'Game on sale!', body = 'A wishlisted game is discounted.', icon = '/logo.png', url = '/' } = payload;
   event.waitUntil(
     self.registration.showNotification(title, {
       body,

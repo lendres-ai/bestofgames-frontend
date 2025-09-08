@@ -33,11 +33,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const slug = decodeURIComponent((await params).slug);
   const game = await getGameBySlug(slug);
   if (!game) return {};
+  const ogImage = (game.images && game.images.length > 0 && game.images[0]) || game.heroUrl || '/logo.png';
   return {
     title: `${game.title} – Review & Score`,
     description: game.summary ?? undefined,
     alternates: { canonical: `/games/${slug}` },
-    openGraph: { images: game.heroUrl ? [game.heroUrl] : [] }
+    openGraph: { images: ogImage ? [ogImage] : [] }
   };
 }
 

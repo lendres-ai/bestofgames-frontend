@@ -38,13 +38,13 @@ export const metadata: Metadata = {
     siteName: 'BestOfGames',
     title: 'BestOfGames – Indie Game Reviews & Ratings',
     description: 'Discover the best indie games with in-depth reviews, ratings, and recommendations.',
-    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'BestOfGames' }],
+    images: [{ url: '/logo.png', width: 1200, height: 630, alt: 'BestOfGames' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'BestOfGames – Indie Game Reviews & Ratings',
     description: 'Discover the best indie games with in-depth reviews, ratings, and recommendations.',
-    images: ['/og.png'],
+    images: ['/logo.png'],
   },
   robots: {
     index: true,

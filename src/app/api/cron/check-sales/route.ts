@@ -96,7 +96,7 @@ export async function GET(req: NextRequest) {
         {
           title: `${game.title} is on sale` ,
           body: latest.discountPercent != null ? `-${latest.discountPercent}%` : 'On sale now',
-          icon: game.heroUrl ?? '/favicon.ico',
+          icon: game.heroUrl ?? '/logo.png',
           url: `/games/${game.slug}`,
           tag: dedupeKey,
         },
