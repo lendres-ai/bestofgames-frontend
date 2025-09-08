@@ -31,6 +31,12 @@ export default function Header() {
                 Games
               </Link>
               <Link 
+                href="/wishlist" 
+                className="text-white/90 transition-colors hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:rounded"
+              >
+                Wishlist
+              </Link>
+              <Link 
                 href="/about" 
                 className="text-white/90 transition-colors hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:rounded"
               >
@@ -62,6 +68,13 @@ export default function Header() {
                 className="rounded px-3 py-2 text-white/95 transition-colors hover:bg-white/10 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50"
               >
                 Games
+              </Link>
+              <Link 
+                onClick={() => setOpen(false)} 
+                href="/wishlist" 
+                className="rounded px-3 py-2 text-white/95 transition-colors hover:bg-white/10 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50"
+              >
+                Wishlist
               </Link>
               <Link 
                 onClick={() => setOpen(false)} 

@@ -86,6 +86,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           score={game.score ? Number(game.score) : null}
           heroUrl={game.heroUrl ?? undefined}
           images={game.images ?? []}
+          slug={game.slug}
           releaseDate={game.releaseDate ? new Date(game.releaseDate).toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' }) : undefined}
           steamAppId={typeof (game as { steamAppId?: unknown }).steamAppId === 'number' ? (game as { steamAppId?: number }).steamAppId : undefined}
           steamPriceText={steamPriceText}

@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { CalendarDays, Gamepad2, ExternalLink } from 'lucide-react';
+import WishlistButton from './WishlistButton';
 
 interface GameHeroProps {
   title: string;
@@ -14,6 +15,7 @@ interface GameHeroProps {
   images?: string[];
   steamAppId?: number;
   steamPriceText?: string | null;
+  slug?: string;
 }
 
 export default function GameHero({
@@ -27,6 +29,7 @@ export default function GameHero({
   images = [],
   steamAppId,
   steamPriceText,
+  slug,
 }: GameHeroProps) {
   const cover = images[0] || heroUrl || 'https://placehold.co/2000x1500.png';
 
@@ -129,6 +132,7 @@ export default function GameHero({
               >
                 Read full review
               </a>
+              {slug ? <WishlistButton slug={slug} /> : null}
               {steamAppId && (
                 <a
                   href={`https://store.steampowered.com/app/${steamAppId}`}
