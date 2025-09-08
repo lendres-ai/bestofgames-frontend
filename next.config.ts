@@ -60,6 +60,10 @@ const nextConfig: NextConfig = {
             key: 'Referrer-Policy',
             value: 'strict-origin-when-cross-origin'
           },
+          {
+            key: 'Permissions-Policy',
+            value: "geolocation=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), accelerometer=(), payment=(), usb=(), interest-cohort=()"
+          },
           // Content Security Policy
           {
             key: 'Content-Security-Policy',
