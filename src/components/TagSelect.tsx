@@ -3,17 +3,10 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
 
-const options = [
-  { value: 'publishedAt', label: 'Newest' },
-  { value: 'score', label: 'Score' },
-  { value: 'title', label: 'Title' },
-  { value: 'releaseDate', label: 'Release Date' },
-];
-
-export default function SortSelect() {
+export default function TagSelect({ tags }: { tags: string[] }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const current = searchParams.get('sort') ?? 'publishedAt';
+  const current = searchParams.get('tag') ?? '';
 
   return (
     <div className="relative min-w-32">
@@ -21,14 +14,20 @@ export default function SortSelect() {
         value={current}
         onChange={(e) => {
           const params = new URLSearchParams(searchParams.toString());
-          params.set('sort', e.target.value);
+          const value = e.target.value;
+          if (value) {
+            params.set('tag', value);
+          } else {
+            params.delete('tag');
+          }
           router.replace(`?${params.toString()}`);
         }}
         className="h-10 w-full appearance-none rounded-md border bg-white px-3 pr-8 text-sm shadow-sm"
       >
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
+        <option value="">All Tags</option>
+        {tags.map((t) => (
+          <option key={t} value={t}>
+            {t}
           </option>
         ))}
       </select>
