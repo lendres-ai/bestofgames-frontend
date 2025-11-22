@@ -10,6 +10,10 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const nextConfig: NextConfig = {
   images: {
+    // Reduce image optimization costs
+    minimumCacheTTL: 2678400, // 31 days
+    formats: ['image/webp'], // Limit to WebP to reduce transformations
+    
     // Remote patterns are the new way instead of `domains`
     remotePatterns: [
       {
