@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Gamepad2, Menu, X } from "lucide-react";
 import { useState } from "react";
 import ThemeToggle from "./ThemeToggle";
+import Search from "./Search";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -23,6 +24,9 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
+            <div className="w-48">
+              <Search />
+            </div>
             <nav className="flex items-center gap-8 text-sm font-medium" role="navigation" aria-label="Main navigation">
               <Link 
                 href="/games" 
@@ -62,6 +66,9 @@ export default function Header() {
         {open && (
           <nav id="mobile-menu" className="md:hidden pb-4" role="navigation" aria-label="Mobile navigation">
             <div className="flex flex-col gap-2 rounded-lg bg-white/20 p-3 ring-1 ring-white/20 backdrop-blur">
+              <div className="px-3 py-2">
+                <Search />
+              </div>
               <Link 
                 onClick={() => setOpen(false)} 
                 href="/games" 

@@ -9,7 +9,7 @@ import {
     gameImages,
     reviewProsCons,
 } from './schema';
-import {and, desc, eq, inArray, ne, sql} from 'drizzle-orm';
+import {and, desc, eq, inArray, ne, sql, ilike, or} from 'drizzle-orm';
 
 export async function getRecentReviews(limit = 8) {
     // Select a single cover image per game via correlated subquery to avoid duplicating rows
@@ -238,4 +238,39 @@ export async function getReviewsByTag(
         .innerJoin(games, eq(reviews.gameId, games.id))
         .where(sql`lower(${tags.name}) = ${loweredTag}`)
         .orderBy(orderBy === 'title' ? orderColumn : desc(orderColumn));
+}
+
+export async function searchGames(query: string) {
+    const searchPattern = `%${query}%`;
+
+    const coverImageSubquery = sql<string>`(
+        select gi.url
+        from game_images as gi
+        where gi.game_id = ${games.id}
+        order by gi.sort_order nulls last, gi.id
+        limit 1
+    )`;
+
+    return db
+        .select({
+            slug: games.slug,
+            title: games.title,
+            heroUrl: games.heroUrl,
+            images: coverImageSubquery,
+            score: reviews.score,
+            publishedAt: reviews.publishedAt,
+            releaseDate: games.releaseDate,
+        })
+        .from(games)
+        .innerJoin(reviews, eq(reviews.gameId, games.id))
+        .where(
+            and(
+                eq(reviews.isPublished, true),
+                or(
+                    ilike(games.title, searchPattern),
+                    ilike(games.summary, searchPattern)
+                )
+            )
+        )
+        .orderBy(desc(reviews.publishedAt));
 }
