@@ -1,172 +1,90 @@
-import { describe, it, beforeEach } from 'node:test';
-import assert from 'node:assert/strict';
-import { db } from './db';
-import {
-  getRecentReviews,
-  getGameBySlug,
-  getSimilarGames,
-  getAllReviews,
-} from './queries';
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { db, client } from "./db";
+import { games, reviews } from "./schema";
+import { searchGames } from "./queries";
 
-const originalSelect = db.select;
+describe("searchGames", () => {
+  beforeAll(async () => {
+    // Clean up any existing test data
+    await db.delete(reviews);
+    await db.delete(games);
 
-type QueryChain = {
-  from: () => QueryChain;
-  leftJoin: () => QueryChain;
-  innerJoin: () => QueryChain;
-  where: () => QueryChain;
-  orderBy: () => QueryChain;
-  groupBy: () => QueryChain;
-  limit: () => QueryChain;
-  then: (resolve: (value: unknown) => unknown) => Promise<unknown>;
-};
+    // Seed the database with test data
+    const game1 = await db
+      .insert(games)
+      .values({
+        title: "Test Game 1",
+        slug: "test-game-1",
+        summary: "This is a test game about searching.",
+      })
+      .returning();
 
-function mockSelect(responses: unknown[]): () => QueryChain {
-  return () => {
-    const data = responses.shift();
-    const chain: QueryChain = {
-      from: () => chain,
-      leftJoin: () => chain,
-      innerJoin: () => chain,
-      where: () => chain,
-      orderBy: () => chain,
-      groupBy: () => chain,
-      limit: () => chain,
-      then: (resolve) => Promise.resolve(data).then(resolve),
-    };
-    return chain;
-  };
-}
+    const game2 = await db
+      .insert(games)
+      .values({
+        title: "Another Game",
+        slug: "another-game",
+        summary: "This is a test of the search.",
+      })
+      .returning();
 
-beforeEach(() => {
-  db.select = originalSelect;
-});
-
-describe('queries', () => {
-  it('getRecentReviews returns recent reviews', async () => {
-    const recent = [
+    await db.insert(reviews).values([
       {
-        slug: 'game-1',
-        title: 'Game 1',
-        summary: 'Summary',
-        heroUrl: 'hero1',
-        score: 90,
-        publishedAt: new Date('2024-01-01'),
-        images: 'img1',
+        gameId: game1[0].id,
+        isPublished: true,
+        score: 8,
+        title: "Review for Test Game 1",
+        description: "A review.",
+        introduction: "Intro.",
+        gameplayFeatures: "Features.",
+        conclusion: "Conclusion.",
       },
-    ];
-    db.select = mockSelect([recent]);
-    assert.deepStrictEqual(await getRecentReviews(), recent);
+      {
+        gameId: game2[0].id,
+        isPublished: true,
+        score: 9,
+        title: "Review for Another Game",
+        description: "A review.",
+        introduction: "Intro.",
+        gameplayFeatures: "Features.",
+        conclusion: "Conclusion.",
+      },
+    ]);
   });
 
-  it('getAllReviews returns all reviews', async () => {
-    const all = [
-      {
-        slug: 'game-1',
-        title: 'Game 1',
-        heroUrl: 'hero1',
-        images: 'img1',
-        score: 90,
-        publishedAt: new Date('2024-01-01'),
-        releaseDate: '2024-01-01',
-      },
-    ];
-    db.select = mockSelect([all]);
-    assert.deepStrictEqual(await getAllReviews(), all);
+  afterAll(async () => {
+    // Clean up the test data
+    await db.delete(reviews);
+    await db.delete(games);
+    // Close the database connection
+    await client.end();
   });
 
-  it('getAllReviews allows sorting by release date', async () => {
-    const all = [
-      {
-        slug: 'game-1',
-        title: 'Game 1',
-        heroUrl: 'hero1',
-        images: 'img1',
-        score: 90,
-        publishedAt: new Date('2024-01-01'),
-        releaseDate: '2024-01-01',
-      },
-    ];
-    db.select = mockSelect([all]);
-    assert.deepStrictEqual(await getAllReviews('releaseDate'), all);
+  it("should return games that match the query in the title", async () => {
+    const results = await searchGames("Test Game");
+    expect(results).toHaveLength(1);
+    expect(results[0].title).toBe("Test Game 1");
   });
 
-  it('getGameBySlug formats game data', async () => {
-    const rows = [
-      {
-        id: 1,
-        slug: 'game',
-        title: 'Game',
-        summary: 'Summary',
-        heroUrl: 'hero',
-        releaseDate: '2024-01-01',
-        reviewTitle: 'Review',
-        description: 'Desc',
-        introduction: 'Intro',
-        gameplayFeatures: 'Features',
-        conclusion: 'Conclusion',
-        score: 85,
-        developer: 'Dev',
-        tagName: 'Action',
-        platformName: 'PC',
-        userOpinion: 'Great',
-        images: 'img1',
-        proConText: 'Good',
-        proConType: 'pro',
-      },
-      {
-        id: 1,
-        slug: 'game',
-        title: 'Game',
-        summary: 'Summary',
-        heroUrl: 'hero',
-        releaseDate: '2024-01-01',
-        reviewTitle: 'Review',
-        description: 'Desc',
-        introduction: 'Intro',
-        gameplayFeatures: 'Features',
-        conclusion: 'Conclusion',
-        score: 85,
-        developer: 'Dev',
-        tagName: 'RPG',
-        platformName: 'Xbox',
-        userOpinion: 'Great',
-        images: 'img2',
-        proConText: 'Bad',
-        proConType: 'con',
-      },
-    ];
-    db.select = mockSelect([rows]);
-    assert.deepStrictEqual(await getGameBySlug('game'), {
-      id: 1,
-      slug: 'game',
-      title: 'Game',
-      summary: 'Summary',
-      heroUrl: 'hero',
-      description: 'Desc',
-      introduction: 'Intro',
-      gameplayFeatures: 'Features',
-      conclusion: 'Conclusion',
-      score: 85,
-      developer: 'Dev',
-      releaseDate: '2024-01-01',
-      tags: ['Action', 'RPG'],
-      platforms: ['PC', 'Xbox'],
-      images: ['img1', 'img2'],
-      userOpinion: 'Great',
-      reviewTitle: 'Review',
-      pros: ['Good'],
-      cons: ['Bad'],
-    });
+  it("should return games that match the query in the summary", async () => {
+    const results = await searchGames("searching");
+    expect(results).toHaveLength(1);
+    expect(results[0].title).toBe("Test Game 1");
   });
 
-  it('getSimilarGames returns games sharing tags', async () => {
-    const tagRows = [{ tagId: 1 }];
-    const similar = [
-      { slug: 'other', title: 'Other', heroUrl: 'hero2', images: 'img2' },
-    ];
-    db.select = mockSelect([tagRows, similar]);
-    assert.deepStrictEqual(await getSimilarGames('game'), similar);
+  it("should return multiple games that match the query", async () => {
+    const results = await searchGames("test");
+    expect(results).toHaveLength(2);
+  });
+
+  it("should be case-insensitive", async () => {
+    const results = await searchGames("another game");
+    expect(results).toHaveLength(1);
+    expect(results[0].title).toBe("Another Game");
+  });
+
+  it("should return an empty array if no games match", async () => {
+    const results = await searchGames("non-existent");
+    expect(results).toHaveLength(0);
   });
 });
-
