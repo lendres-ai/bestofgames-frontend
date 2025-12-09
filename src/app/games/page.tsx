@@ -14,16 +14,13 @@ export const metadata = {
 export default async function Page({
   searchParams,
 }: {
-  searchParams: { sort?: string };
+  searchParams: Promise<{ sort?: string }>;
 }) {
+  const { sort } = await searchParams;
   const order = ['score', 'publishedAt', 'title', 'releaseDate'].includes(
-    searchParams.sort ?? ''
+    sort ?? ''
   )
-    ? (searchParams.sort as
-        | 'score'
-        | 'publishedAt'
-        | 'title'
-        | 'releaseDate')
+    ? (sort as 'score' | 'publishedAt' | 'title' | 'releaseDate')
     : 'publishedAt';
 
   const rows = await getAllReviews(order);
