@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { useMemo } from 'react';
 import { CalendarDays, Gamepad2, ExternalLink } from 'lucide-react';
 import WishlistButton from './WishlistButton';
 
@@ -33,14 +32,9 @@ export default function GameHero({
 }: GameHeroProps) {
   const cover = images[0] || heroUrl || 'https://placehold.co/2000x1500.png';
 
-  const normalized = useMemo(() => {
-    const s = typeof score === 'number' ? Math.max(0, Math.min(10, score)) : 0;
-    return {
-      value10: s,
-      value5: s / 2,
-      pct: Math.round((s / 10) * 100),
-    };
-  }, [score]);
+  // Simple inline computation - no hook needed, keeps this a Server Component
+  const clampedScore = typeof score === 'number' ? Math.max(0, Math.min(10, score)) : 0;
+  const scorePct = Math.round((clampedScore / 10) * 100);
 
   return (
     <section className="relative isolate">
@@ -92,7 +86,7 @@ export default function GameHero({
 
                 {/* Progress bar */}
                 <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-800" aria-hidden>
-                  <div className="h-full bg-gradient-to-r from-amber-400 via-orange-400 to-pink-500" style={{ width: `${normalized.pct}%` }} />
+                  <div className="h-full bg-gradient-to-r from-amber-400 via-orange-400 to-pink-500" style={{ width: `${scorePct}%` }} />
                 </div>
               </div>
 
