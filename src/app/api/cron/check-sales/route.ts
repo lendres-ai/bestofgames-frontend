@@ -66,6 +66,20 @@ export async function GET(req: NextRequest) {
     .where(inArray(games.id, gameIds));
   const gameIdToInfo = new Map(gameInfo.map((g) => [g.id, g] as const));
 
+  // Batch fetch all existing notifications for these subscriptions (avoids N+1 queries)
+  const existingNotifications = await db
+    .select({
+      subscriptionId: sentNotifications.subscriptionId,
+      dedupeKey: sentNotifications.dedupeKey,
+    })
+    .from(sentNotifications)
+    .where(inArray(sentNotifications.subscriptionId, subscriptionIds));
+
+  // Build a Set for O(1) deduplication lookups: "subscriptionId:dedupeKey"
+  const alreadySentSet = new Set(
+    existingNotifications.map((n) => `${n.subscriptionId}:${n.dedupeKey}`)
+  );
+
   let sentCount = 0;
 
   // Send for each (subscription, game) pair using the latest snapshot data
@@ -79,16 +93,9 @@ export async function GET(req: NextRequest) {
 
     // Dedupe key: gameId-store-priceFinal
     const dedupeKey = `${row.gameId}:${latest.store}:${latest.priceFinal ?? ''}`;
-    const already = await db
-      .select({ id: sentNotifications.id })
-      .from(sentNotifications)
-      .where(and(
-        eq(sentNotifications.subscriptionId, row.subscriptionId),
-        eq(sentNotifications.gameId, row.gameId),
-        eq(sentNotifications.store, latest.store),
-        eq(sentNotifications.dedupeKey, dedupeKey),
-      ));
-    if (already.length > 0) continue;
+    
+    // O(1) in-memory check instead of database query per iteration
+    if (alreadySentSet.has(`${row.subscriptionId}:${dedupeKey}`)) continue;
 
     try {
       await sendPush(
