@@ -50,6 +50,7 @@ export default function GameHero({
               alt={title}
               width={1280}
               height={720}
+              sizes="(max-width: 1024px) 100vw, 640px"
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
               priority
             />

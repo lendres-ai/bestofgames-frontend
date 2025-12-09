@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
     // Reduce image optimization costs
     minimumCacheTTL: 2678400, // 31 days
     formats: ['image/webp'], // Limit to WebP to reduce transformations
+    // Limit generated sizes to reduce transformations
+    deviceSizes: [640, 1080, 1920],
+    imageSizes: [96, 256, 384],
     
     // Remote patterns are the new way instead of `domains`
     remotePatterns: [

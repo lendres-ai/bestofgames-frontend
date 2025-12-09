@@ -108,7 +108,7 @@ export default async function Page() {
                       alt={`${featured.title} cover art`}
                       width={1600}
                       height={900}
-                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      sizes="(max-width: 1024px) 100vw, 640px"
                       className="h-[320px] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                       priority
                     />

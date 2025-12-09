@@ -33,6 +33,7 @@ export default function SimilarGames({ games }: SimilarGamesProps) {
                     alt={game.title}
                     width={80}
                     height={45}
+                    sizes="96px"
                     className="h-16 w-24 flex-none rounded-md object-cover"
                   />
                 )}

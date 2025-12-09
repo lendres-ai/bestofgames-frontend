@@ -75,6 +75,7 @@ export default function MainArticle({
                   alt={lightboxImages[idx].caption ?? `Screenshot ${idx + 1}`}
                   width={1280}
                   height={720}
+                  sizes="(max-width: 768px) 100vw, 800px"
                   className="h-auto w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                 />
                 {lightboxImages[idx].caption && (
@@ -100,6 +101,7 @@ export default function MainArticle({
                   alt={img.caption ?? `Screenshot ${textSections.length + i + 1}`}
                   width={640}
                   height={360}
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 256px"
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                 />
                 {img.caption && (
