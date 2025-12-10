@@ -1,16 +1,18 @@
 import { NextResponse } from 'next/server';
 import { getRecentReviews } from '@/lib/queries';
+import { getLocalizedText } from '@/lib/i18n';
 
 export const revalidate = 3600;
 
 export async function GET() {
   const baseUrl = 'https://bestof.games';
+  const locale = 'en'; // RSS feed uses English as default
   const items = await getRecentReviews(20);
 
   const feedItems = items.map((item) => {
-    const link = `${baseUrl}/games/${item.slug}`;
-    const title = escapeXml(item.title ?? 'Untitled');
-    const description = escapeXml(item.summary ?? '');
+    const link = `${baseUrl}/${locale}/games/${item.slug}`;
+    const title = escapeXml(getLocalizedText(item.title, locale) || 'Untitled');
+    const description = escapeXml(getLocalizedText(item.summary, locale) || '');
     const pubDate = item.publishedAt ? new Date(item.publishedAt).toUTCString() : new Date().toUTCString();
     return `
       <item>
@@ -23,12 +25,13 @@ export async function GET() {
   }).join('');
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-  <rss version="2.0">
+  <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
       <title>BestOfGames – Latest Reviews</title>
-      <link>${baseUrl}</link>
+      <link>${baseUrl}/${locale}</link>
       <description>Latest indie game reviews and ratings from BestOfGames</description>
       <language>en-us</language>
+      <atom:link href="${baseUrl}/rss.xml" rel="self" type="application/rss+xml"/>
       ${feedItems}
     </channel>
   </rss>`;
@@ -49,4 +52,3 @@ function escapeXml(input: string): string {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&apos;');
 }
-

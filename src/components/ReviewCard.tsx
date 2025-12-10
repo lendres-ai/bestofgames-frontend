@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { scoreClasses } from '@/lib/ui-helpers';
+import { Locale } from '@/lib/dictionaries';
+import { formatLocalizedShortDate } from '@/lib/i18n';
 
 export type ReviewCardProps = {
   slug: string;
@@ -8,6 +10,7 @@ export type ReviewCardProps = {
   image: string;
   score?: number | null;
   releaseDate?: Date | string | null;
+  locale: Locale;
 };
 
 export default function ReviewCard({
@@ -16,11 +19,12 @@ export default function ReviewCard({
   image,
   score,
   releaseDate,
+  locale,
 }: ReviewCardProps) {
   return (
     <li className="group">
       <Link
-        href={`/games/${slug}`}
+        href={`/${locale}/games/${slug}`}
         className="block overflow-hidden rounded-3xl border bg-white/60 shadow-sm ring-1 ring-black/5 transition hover:shadow-lg dark:bg-gray-900/60"
       >
         <div className="relative">
@@ -47,11 +51,7 @@ export default function ReviewCard({
           </h3>
           {releaseDate && (
             <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
-              {new Date(releaseDate).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-              })}
+              {formatLocalizedShortDate(releaseDate, locale)}
             </p>
           )}
         </div>
@@ -59,4 +59,3 @@ export default function ReviewCard({
     </li>
   );
 }
-

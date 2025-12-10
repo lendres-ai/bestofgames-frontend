@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import Lightbox from './Lightbox';
+import { Locale, Dictionary } from '@/lib/dictionaries';
 
 interface MainArticleProps {
   reviewTitle: string | null;
@@ -13,9 +14,11 @@ interface MainArticleProps {
   score: number | null;
   userOpinion: string | null;
   images?: Array<string | { src: string; caption?: string }>;
-    pros?: string[];
-    cons?: string[];
-    className?: string;
+  pros?: string[];
+  cons?: string[];
+  className?: string;
+  locale: Locale;
+  dict: Dictionary;
 }
 
 export default function MainArticle({
@@ -26,10 +29,13 @@ export default function MainArticle({
   conclusion,
   score,
   userOpinion,
-    images = [],
-    pros = [],
-    cons = [],
-    className,
+  images = [],
+  pros = [],
+  cons = [],
+  className,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  locale,
+  dict,
 }: MainArticleProps) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
@@ -47,8 +53,8 @@ export default function MainArticle({
     ].filter(Boolean) as Array<{ key: string; text: string }>
   );
 
-    return (
-      <article id="main" className={`px-4 pb-16 ${className ?? ''}`}>
+  return (
+    <article id="main" className={`px-4 pb-16 ${className ?? ''}`}>
       <header className="mb-8">
         <h2 className="mb-3 bg-gradient-to-r from-indigo-600 via-sky-500 to-fuchsia-500 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
           {reviewTitle}
@@ -120,12 +126,12 @@ export default function MainArticle({
           {pros.length > 0 && (
             <div className="rounded-2xl border bg-gray-50/60 p-5 shadow-sm ring-1 ring-emerald-400/30 dark:bg-gray-900/40">
               <h4 className="mb-3 text-sm font-semibold text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]">
-                Pros
+                {dict.game_detail.pros}
               </h4>
               <ul className="space-y-2">
-                {pros.map((p) => (
+                {pros.map((p, idx) => (
                   <li
-                    key={p}
+                    key={idx}
                     className="relative rounded-xl bg-emerald-500/10 px-3 py-2 text-sm text-emerald-800 ring-1 ring-emerald-500/30 drop-shadow-[0_0_6px_rgba(16,185,129,0.6)] dark:text-emerald-300"
                   >
                     {p}
@@ -137,12 +143,12 @@ export default function MainArticle({
           {cons.length > 0 && (
             <div className="rounded-2xl border bg-gray-50/60 p-5 shadow-sm ring-1 ring-rose-400/30 dark:bg-gray-900/40">
               <h4 className="mb-3 text-sm font-semibold text-rose-400 drop-shadow-[0_0_8px_rgba(244,63,94,0.8)]">
-                Cons
+                {dict.game_detail.cons}
               </h4>
               <ul className="space-y-2">
-                {cons.map((c) => (
+                {cons.map((c, idx) => (
                   <li
-                    key={c}
+                    key={idx}
                     className="relative rounded-xl bg-rose-500/10 px-3 py-2 text-sm text-rose-800 ring-1 ring-rose-500/30 drop-shadow-[0_0_6px_rgba(244,63,94,0.6)] dark:text-rose-300"
                   >
                     {c}
@@ -156,14 +162,16 @@ export default function MainArticle({
 
       {typeof score === 'number' && (
         <div className="mt-10 flex items-center gap-3 rounded-2xl border bg-white/60 p-4 shadow-sm ring-1 ring-black/5 backdrop-blur dark:bg-gray-900/60">
-          <span className="text-sm font-semibold text-gray-600 dark:text-gray-300">Score</span>
+          <span className="text-sm font-semibold text-gray-600 dark:text-gray-300">{dict.game_detail.score}</span>
           <span className="font-mono text-2xl font-bold text-amber-500">{score.toFixed(1)} / 10</span>
         </div>
       )}
 
       {userOpinion && (
         <section className="mt-12 rounded-2xl border bg-gradient-to-br from-sky-50 via-white to-purple-50 p-6 shadow-sm ring-1 ring-black/5 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
-          <h4 className="mb-2 text-lg font-semibold">Spielermeinung</h4>
+          <h4 className="mb-2 text-lg font-semibold">
+            {dict.game_detail.player_opinion}
+          </h4>
           <blockquote className="border-l-4 border-sky-400/70 pl-4 italic text-gray-700 dark:text-gray-300">
             {userOpinion}
           </blockquote>

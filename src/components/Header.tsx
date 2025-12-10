@@ -4,16 +4,24 @@ import Link from "next/link";
 import { Gamepad2, Menu, X } from "lucide-react";
 import { useState } from "react";
 import ThemeToggle from "./ThemeToggle";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { Locale, Dictionary } from "@/lib/dictionaries";
 
-export default function Header() {
+type HeaderProps = {
+  locale: Locale;
+  dict: Dictionary;
+};
+
+export default function Header({ locale, dict }: HeaderProps) {
   const [open, setOpen] = useState(false);
+  
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-gradient-to-r from-indigo-600 via-sky-500 to-fuchsia-500 shadow-lg dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="mx-auto max-w-screen-xl px-6 lg:px-8">
         <div className="flex items-center justify-between py-4">
           {/* Brand / Logo */}
           <Link
-            href="/"
+            href={`/${locale}`}
             aria-label="BestOfGames - Go to homepage"
             className="flex items-center gap-2 rounded-md text-2xl font-extrabold tracking-tight text-white drop-shadow-sm transition-opacity hover:opacity-90 focus:opacity-90 focus:outline-none focus:ring-2 focus:ring-white/50"
           >
@@ -25,24 +33,25 @@ export default function Header() {
           <div className="hidden md:flex items-center gap-6">
             <nav className="flex items-center gap-8 text-sm font-medium" role="navigation" aria-label="Main navigation">
               <Link 
-                href="/games" 
+                href={`/${locale}/games`} 
                 className="text-white/90 transition-colors hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:rounded"
               >
-                Games
+                {dict.nav.games}
               </Link>
               <Link 
-                href="/wishlist" 
+                href={`/${locale}/wishlist`} 
                 className="text-white/90 transition-colors hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:rounded"
               >
-                Wishlist
+                {dict.nav.wishlist}
               </Link>
               <Link 
-                href="/about" 
+                href={`/${locale}/about`} 
                 className="text-white/90 transition-colors hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:rounded"
               >
-                About
+                {dict.nav.about}
               </Link>
             </nav>
+            <LanguageSwitcher currentLocale={locale} />
             <ThemeToggle />
           </div>
 
@@ -64,25 +73,29 @@ export default function Header() {
             <div className="flex flex-col gap-2 rounded-lg bg-white/20 p-3 ring-1 ring-white/20 backdrop-blur">
               <Link 
                 onClick={() => setOpen(false)} 
-                href="/games" 
+                href={`/${locale}/games`} 
                 className="rounded px-3 py-2 text-white/95 transition-colors hover:bg-white/10 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50"
               >
-                Games
+                {dict.nav.games}
               </Link>
               <Link 
                 onClick={() => setOpen(false)} 
-                href="/wishlist" 
+                href={`/${locale}/wishlist`} 
                 className="rounded px-3 py-2 text-white/95 transition-colors hover:bg-white/10 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50"
               >
-                Wishlist
+                {dict.nav.wishlist}
               </Link>
               <Link 
                 onClick={() => setOpen(false)} 
-                href="/about" 
+                href={`/${locale}/about`} 
                 className="rounded px-3 py-2 text-white/95 transition-colors hover:bg-white/10 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50"
               >
-                About
+                {dict.nav.about}
               </Link>
+              <div className="flex items-center justify-between rounded px-3 py-2">
+                <span className="text-white/95 text-sm">Language</span>
+                <LanguageSwitcher currentLocale={locale} />
+              </div>
               <div className="flex items-center justify-between rounded px-3 py-2">
                 <span className="text-white/95 text-sm">Theme</span>
                 <ThemeToggle />

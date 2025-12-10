@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { CalendarDays, Gamepad2, ExternalLink } from 'lucide-react';
 import WishlistButton from './WishlistButton';
+import { Locale, Dictionary } from '@/lib/dictionaries';
 
 interface GameHeroProps {
   title: string;
@@ -15,6 +16,8 @@ interface GameHeroProps {
   steamAppId?: number;
   steamPriceText?: string | null;
   slug?: string;
+  locale: Locale;
+  dict: Dictionary;
 }
 
 export default function GameHero({
@@ -29,6 +32,8 @@ export default function GameHero({
   steamAppId,
   steamPriceText,
   slug,
+  locale,
+  dict,
 }: GameHeroProps) {
   const cover = images[0] || heroUrl || 'https://placehold.co/2000x1500.png';
 
@@ -61,7 +66,7 @@ export default function GameHero({
               </h1>
               {(developer || releaseDate) && (
                 <p className="mt-1 text-sm text-white/80">
-                  {[developer ? `by ${developer}` : null, releaseDate || null]
+                  {[developer ? `${dict.game_detail.by_developer} ${developer}` : null, releaseDate || null]
                     .filter(Boolean)
                     .join(' • ')}
                 </p>
@@ -76,14 +81,14 @@ export default function GameHero({
               <div className="rounded-3xl border bg-white/60 p-5 shadow-sm ring-1 ring-black/5 backdrop-blur dark:bg-gray-900/60">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Critic Score</span>
+                    <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                      {dict.game_detail.critic_score}
+                    </span>
                   </div>
                   <span className="font-mono text-3xl font-semibold">
                     {typeof score === 'number' ? score.toFixed(1) : '–'}
                   </span>
                 </div>
-
-                
 
                 {/* Progress bar */}
                 <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-800" aria-hidden>
@@ -97,7 +102,7 @@ export default function GameHero({
                   {tags.map((t) => (
                     <Link
                       key={t}
-                      href={`/tags/${encodeURIComponent(t.toLowerCase())}`}
+                      href={`/${locale}/tags/${encodeURIComponent(t.toLowerCase())}`}
                       className="rounded-full border border-transparent bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800 shadow-sm transition-colors hover:border-gray-300 dark:bg-gray-800 dark:text-gray-200"
                     >
                       {t}
@@ -119,15 +124,15 @@ export default function GameHero({
               )}
             </div>
 
-            {/* CTA area (optional, hidden if you don't need it) */}
+            {/* CTA area */}
             <div className="mt-6 flex flex-wrap gap-3">
               <a
                 href="#main"
                 className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-600 to-sky-500 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-transform hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
               >
-                Read full review
+                {dict.game_detail.read_review}
               </a>
-              {slug ? <WishlistButton slug={slug} /> : null}
+              {slug ? <WishlistButton slug={slug} dict={dict} /> : null}
               {steamAppId && (
                 <a
                   href={`https://store.steampowered.com/app/${steamAppId}`}
@@ -136,7 +141,7 @@ export default function GameHero({
                   className="inline-flex items-center gap-2 rounded-2xl border bg-white/60 px-4 py-2 text-sm shadow-sm ring-1 ring-black/5 backdrop-blur hover:bg-white/80 dark:bg-gray-900/60"
                 >
                   <ExternalLink className="h-4 w-4" />
-                  <span>View on Steam{steamPriceText ? ` • ${steamPriceText}` : ''}</span>
+                  <span>{dict.game_detail.buy_on_steam}{steamPriceText ? ` • ${steamPriceText}` : ''}</span>
                 </a>
               )}
               {releaseDate && (

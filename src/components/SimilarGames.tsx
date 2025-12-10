@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { Locale, Dictionary } from '@/lib/dictionaries';
 
 interface SimilarGame {
   slug: string;
@@ -10,14 +11,16 @@ interface SimilarGame {
 
 interface SimilarGamesProps {
   games: SimilarGame[];
+  locale: Locale;
+  dict: Dictionary;
 }
 
-export default function SimilarGames({ games }: SimilarGamesProps) {
+export default function SimilarGames({ games, locale, dict }: SimilarGamesProps) {
   if (!games.length) return null;
 
   return (
     <aside className="w-full lg:col-start-2 lg:w-[300px] lg:sticky lg:top-4">
-      <h3 className="mb-4 text-lg font-semibold">Ähnliche Spiele</h3>
+      <h3 className="mb-4 text-lg font-semibold">{dict.game_detail.similar_games}</h3>
       <ul className="grid gap-4">
         {games.map((game) => {
           const imageUrl = game.images ?? game.heroUrl;
@@ -26,7 +29,7 @@ export default function SimilarGames({ games }: SimilarGamesProps) {
               key={game.slug}
               className="overflow-hidden rounded-xl border bg-white/60 shadow-sm ring-1 ring-black/5 dark:bg-gray-900/60"
             >
-              <Link href={`/games/${game.slug}`} className="flex gap-3 p-3">
+              <Link href={`/${locale}/games/${game.slug}`} className="flex gap-3 p-3">
                 {imageUrl && (
                   <Image
                     src={imageUrl}

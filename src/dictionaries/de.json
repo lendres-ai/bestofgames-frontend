@@ -1,0 +1,106 @@
+{
+  "nav": {
+    "games": "Spiele",
+    "wishlist": "Wunschliste",
+    "about": "Über uns"
+  },
+  "home": {
+    "hero_title": "Frische Indie-Game Reviews. Wunderschöne Cover. Kein Schnickschnack.",
+    "hero_subtitle": "Handverlesene Indie-Perlen mit prägnanten Texten und ehrlichen Bewertungen.",
+    "browse_all": "Alle Reviews ansehen",
+    "top_rated": "Bestbewertet",
+    "read_review": "Review lesen",
+    "categories": {
+      "metroidvania": "Metroidvania",
+      "roguelike": "Roguelike",
+      "puzzle": "Puzzle",
+      "narrative": "Narrativ"
+    }
+  },
+  "games": {
+    "all_games": "Alle Spiele",
+    "sort_by": "Sortieren nach",
+    "sort_options": {
+      "publishedAt": "Neueste",
+      "score": "Bestbewertet",
+      "title": "Titel",
+      "releaseDate": "Erscheinungsdatum"
+    }
+  },
+  "game_detail": {
+    "read_review": "Review lesen",
+    "similar_games": "Ähnliche Spiele",
+    "pros": "Vorteile",
+    "cons": "Nachteile",
+    "platforms": "Plattformen",
+    "release_date": "Erscheinungsdatum",
+    "developer": "Entwickler",
+    "buy_on_steam": "Auf Steam kaufen",
+    "add_to_wishlist": "Zur Wunschliste",
+    "remove_from_wishlist": "Von Wunschliste entfernen",
+    "player_opinion": "Spielermeinung",
+    "by_developer": "von",
+    "critic_score": "Bewertung",
+    "score": "Bewertung"
+  },
+  "wishlist": {
+    "title": "Deine Wunschliste",
+    "empty": "Deine Wunschliste ist leer.",
+    "loading": "Lädt...",
+    "alerts": "Preisalarme"
+  },
+  "about": {
+    "title": "Über uns",
+    "content_p1": "BestOfGames ist eine kuratierte Sammlung von Indie-Game Reviews. Wir konzentrieren uns auf stilvolle, kompakte Einblicke, die dir helfen, dein nächstes Lieblingsspiel zu entdecken.",
+    "content_p2": "Dieses Projekt wurde mit dem Ziel entwickelt, moderne Web-Technologien zu präsentieren und die Leidenschaft für einzigartige Spielerlebnisse zu teilen. Alle Reviews sind mit Sorgfalt geschrieben und zielen darauf ab, das Besondere jedes Spiels hervorzuheben.",
+    "content_p3": "Möchtest du mit uns in Kontakt treten? Kontaktiere uns gerne über unsere Kontaktseite oder folge uns in den sozialen Medien. Wir freuen uns immer über dein Feedback und deine Vorschläge."
+  },
+  "footer": {
+    "about": "Über uns",
+    "privacy": "Datenschutz",
+    "contact": "Kontakt"
+  },
+  "common": {
+    "score_label": "Bewertung {score} von 10",
+    "unscored": "Keine Bewertung",
+    "loading": "Lädt...",
+    "error": "Etwas ist schiefgelaufen",
+    "not_found": "Seite nicht gefunden",
+    "go_home": "Zur Startseite"
+  },
+  "metadata": {
+    "site_title": "BestOfGames – Indie-Game Reviews & Bewertungen",
+    "site_description": "Entdecke die besten Indie-Games mit ausführlichen Reviews, Bewertungen und Empfehlungen. Frische, stilvolle Reviews mit wunderschönen Covern.",
+    "games_title": "Alle Spiele – Reviews",
+    "games_description": "Durchsuche alle bewerteten Indie-Games nach Bewertung, Datum oder Titel.",
+    "about_title": "Über uns",
+    "about_description": "Erfahre mehr über BestOfGames und unsere Mission.",
+    "privacy_title": "Datenschutz",
+    "privacy_description": "Erfahre, wie wir mit deinen Daten umgehen und deine Privatsphäre schützen.",
+    "contact_title": "Kontakt",
+    "contact_description": "Nimm Kontakt mit dem BestOfGames-Team auf."
+  },
+  "privacy": {
+    "title": "Datenschutzerklärung",
+    "intro": "Deine Privatsphäre ist uns wichtig. Diese Richtlinie erklärt, wie wir mit deinen Daten umgehen.",
+    "data_collection_title": "Daten, die wir erheben",
+    "data_collection_content": "Wir erheben nur die minimal notwendigen Daten, um unsere Dienste bereitzustellen. Dazu gehören anonyme Nutzungsstatistiken und, falls du Push-Benachrichtigungen aktivierst, dein Abonnement-Endpunkt.",
+    "cookies_title": "Cookies",
+    "cookies_content": "Wir verwenden notwendige Cookies, um deine Einstellungen wie Theme und Wunschliste zu speichern. Diese werden lokal in deinem Browser gespeichert.",
+    "third_party_title": "Drittanbieter-Dienste",
+    "third_party_content": "Wir verlinken möglicherweise auf externe Dienste wie Steam für Spielkäufe. Diese Dienste haben ihre eigenen Datenschutzrichtlinien.",
+    "contact_title": "Fragen?",
+    "contact_content": "Wenn du Fragen zu unseren Datenschutzpraktiken hast, kontaktiere uns bitte."
+  },
+  "contact": {
+    "title": "Kontakt",
+    "intro": "Wir freuen uns von dir zu hören! Ob Feedback, Vorschläge oder einfach nur ein Hallo.",
+    "email_title": "E-Mail",
+    "email_content": "Für allgemeine Anfragen erreichst du uns unter:",
+    "social_title": "Social Media",
+    "social_content": "Folge uns für die neuesten Updates und Game-Reviews.",
+    "feedback_title": "Feedback",
+    "feedback_content": "Hast du einen Spielvorschlag oder einen Bug gefunden? Lass es uns wissen und wir schauen es uns an."
+  }
+}
+

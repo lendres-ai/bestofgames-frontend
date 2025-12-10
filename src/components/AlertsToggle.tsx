@@ -3,7 +3,11 @@
 import { useEffect, useState, useTransition } from 'react';
 import { getWishlistSlugs } from '@/lib/wishlist';
 
-export default function AlertsToggle() {
+type AlertsToggleProps = {
+  label?: string;
+};
+
+export default function AlertsToggle({ label }: AlertsToggleProps) {
   const [supported, setSupported] = useState<boolean>(false);
   const [enabled, setEnabled] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
@@ -59,6 +63,9 @@ export default function AlertsToggle() {
 
   if (!supported) return null;
 
+  const enabledText = label ? `${label} enabled` : 'Sale alerts enabled';
+  const disabledText = label ? `Enable ${label.toLowerCase()}` : 'Enable sale alerts';
+
   return (
     <button
       type="button"
@@ -66,7 +73,7 @@ export default function AlertsToggle() {
       disabled={isPending}
       className={`inline-flex items-center justify-center gap-2 rounded-2xl border px-5 py-2.5 text-sm font-semibold shadow-sm ring-1 ring-black/5 backdrop-blur transition-transform hover:scale-[1.02] focus:outline-none focus-visible:ring-2 ${enabled ? 'bg-emerald-600 text-white hover:brightness-110' : 'bg-white/60 text-gray-900 dark:bg-gray-900/60 dark:text-white'}`}
     >
-      {enabled ? 'Sale alerts enabled' : 'Enable sale alerts'}
+      {enabled ? enabledText : disabledText}
     </button>
   );
 }
@@ -82,4 +89,3 @@ function urlBase64ToUint8Array(base64String?: string) {
   }
   return outputArray;
 }
-

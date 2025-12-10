@@ -1,0 +1,106 @@
+{
+  "nav": {
+    "games": "Games",
+    "wishlist": "Wishlist",
+    "about": "About"
+  },
+  "home": {
+    "hero_title": "Fresh indie game reviews. Gorgeous cover art. No fluff.",
+    "hero_subtitle": "Handpicked indie gems with concise reads and honest scores.",
+    "browse_all": "Browse all reviews",
+    "top_rated": "Top-rated",
+    "read_review": "Read review",
+    "categories": {
+      "metroidvania": "Metroidvania",
+      "roguelike": "Roguelike",
+      "puzzle": "Puzzle",
+      "narrative": "Narrative"
+    }
+  },
+  "games": {
+    "all_games": "All Games",
+    "sort_by": "Sort by",
+    "sort_options": {
+      "publishedAt": "Newest",
+      "score": "Top Rated",
+      "title": "Title",
+      "releaseDate": "Release Date"
+    }
+  },
+  "game_detail": {
+    "read_review": "Read review",
+    "similar_games": "Similar Games",
+    "pros": "Pros",
+    "cons": "Cons",
+    "platforms": "Platforms",
+    "release_date": "Release Date",
+    "developer": "Developer",
+    "buy_on_steam": "Buy on Steam",
+    "add_to_wishlist": "Add to Wishlist",
+    "remove_from_wishlist": "Remove from Wishlist",
+    "player_opinion": "Player Opinion",
+    "by_developer": "by",
+    "critic_score": "Critic Score",
+    "score": "Score"
+  },
+  "wishlist": {
+    "title": "Your Wishlist",
+    "empty": "Your wishlist is empty.",
+    "loading": "Loading...",
+    "alerts": "Price Alerts"
+  },
+  "about": {
+    "title": "About",
+    "content_p1": "BestOfGames is a curated collection of indie game reviews. We focus on stylish, bite-sized insights that help you discover your next favorite title.",
+    "content_p2": "This project is built with the goal of showcasing modern web tooling and sharing passion for unique gaming experiences. All reviews are written with care and aim to highlight what makes each game special.",
+    "content_p3": "Want to get in touch? Feel free to reach out via our contact page or follow us on social media. We're always happy to hear your feedback and suggestions."
+  },
+  "footer": {
+    "about": "About",
+    "privacy": "Privacy",
+    "contact": "Contact"
+  },
+  "common": {
+    "score_label": "Score {score} out of 10",
+    "unscored": "Unscored",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "not_found": "Page not found",
+    "go_home": "Go to homepage"
+  },
+  "metadata": {
+    "site_title": "BestOfGames – Indie Game Reviews & Ratings",
+    "site_description": "Discover the best indie games with in-depth reviews, ratings, and recommendations. Fresh, stylish reviews with beautiful covers.",
+    "games_title": "All Games – Reviews",
+    "games_description": "Browse all reviewed indie games by rating, date, or title.",
+    "about_title": "About",
+    "about_description": "Learn more about BestOfGames and our mission.",
+    "privacy_title": "Privacy Policy",
+    "privacy_description": "Learn how we handle your data and protect your privacy.",
+    "contact_title": "Contact",
+    "contact_description": "Get in touch with the BestOfGames team."
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "intro": "Your privacy is important to us. This policy explains how we handle your data.",
+    "data_collection_title": "Data We Collect",
+    "data_collection_content": "We collect minimal data necessary to provide our services. This includes anonymous usage statistics and, if you enable push notifications, your subscription endpoint.",
+    "cookies_title": "Cookies",
+    "cookies_content": "We use essential cookies to remember your preferences like theme settings and wishlist items. These are stored locally in your browser.",
+    "third_party_title": "Third-Party Services",
+    "third_party_content": "We may link to external services like Steam for game purchases. These services have their own privacy policies.",
+    "contact_title": "Questions?",
+    "contact_content": "If you have any questions about our privacy practices, please contact us."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "intro": "We'd love to hear from you! Whether you have feedback, suggestions, or just want to say hi.",
+    "email_title": "Email",
+    "email_content": "For general inquiries, reach out to us at:",
+    "social_title": "Social Media",
+    "social_content": "Follow us for the latest updates and game reviews.",
+    "feedback_title": "Feedback",
+    "feedback_content": "Have a game suggestion or found a bug? Let us know and we'll look into it."
+  }
+}
+

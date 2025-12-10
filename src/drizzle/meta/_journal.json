@@ -29,6 +29,13 @@
       "when": 1757322949000,
       "tag": "0003_colossal_molten_man",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1765358102024,
+      "tag": "0004_lowly_bloodstrike",
+      "breakpoints": true
     }
   ]
 }

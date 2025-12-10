@@ -9,7 +9,9 @@ import {
   pgEnum,
   integer,
   index,
+  jsonb,
 } from 'drizzle-orm/pg-core';
+import { LocalizedField } from './i18n';
 
 export const games = pgTable('games', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -17,7 +19,7 @@ export const games = pgTable('games', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
   slug: text('slug').notNull().unique(),
   title: text('title').notNull(),
-  summary: text('summary'),
+  summary: jsonb('summary').$type<LocalizedField>(),  // Localized: { en: "...", de: "..." }
   releaseDate: timestamp('release_date', { withTimezone: true }),
   heroUrl: text('hero_url'),
   trailerUrl: text('trailer_url'),
@@ -53,12 +55,12 @@ export const gameImages = pgTable('game_images', {
 export const reviews = pgTable('reviews', {
   id: uuid('id').defaultRandom().primaryKey(),
   gameId: uuid('game_id').references(() => games.id, { onDelete: 'cascade' }).notNull(),
-  title: text('title').notNull(),
-  description: text('description').notNull(),
-  introduction: text('introduction').notNull(),
-  gameplayFeatures: text('gameplay_features').notNull(),
-  conclusion: text('conclusion').notNull(),
-  userOpinion: text('user_opinion'),
+  title: jsonb('title').$type<LocalizedField>().notNull(),              // Localized: { en: "...", de: "..." }
+  description: jsonb('description').$type<LocalizedField>().notNull(),  // Localized
+  introduction: jsonb('introduction').$type<LocalizedField>().notNull(), // Localized
+  gameplayFeatures: jsonb('gameplay_features').$type<LocalizedField>().notNull(), // Localized
+  conclusion: jsonb('conclusion').$type<LocalizedField>().notNull(),    // Localized
+  userOpinion: jsonb('user_opinion').$type<LocalizedField>(),           // Localized
   score: numeric('score', { precision: 3, scale: 1 }).notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
@@ -71,7 +73,7 @@ export const proConEnum = pgEnum('pro_con', ['pro', 'con']);
 export const reviewProsCons = pgTable('review_pros_cons', {
   id: uuid('id').defaultRandom().primaryKey(),
   reviewId: uuid('review_id').references(() => reviews.id, { onDelete: 'cascade' }).notNull(),
-  text: text('text').notNull(),
+  text: jsonb('text').$type<LocalizedField>().notNull(),  // Localized: { en: "...", de: "..." }
   type: proConEnum('type').notNull(),
 });
 

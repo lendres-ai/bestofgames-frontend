@@ -1,39 +1,45 @@
 import Link from "next/link";
 import Image from "next/image";
 import Script from "next/script";
-import ReviewCard, { ReviewCardProps } from "@/components/ReviewCard";
+import ReviewCard from "@/components/ReviewCard";
 import { getRecentReviews } from "@/lib/queries";
 import { scoreClasses, coverOf } from "@/lib/ui-helpers";
 import { generateWebsiteStructuredData, generateGameListStructuredData } from "@/lib/structured-data";
+import { Locale, getDictionary } from "@/lib/dictionaries";
+import { getLocalizedText } from "@/lib/i18n";
 
 // ISR: 1h
 export const revalidate = 3600;
 
-export const metadata = {
-  title: "BestOfGames – Indie Gems",
-  description: "Fresh, stylish indie reviews with beautiful covers and quick reads.",
-};
-
-type ReviewItem = ReviewCardProps & {
+type ReviewItem = {
+  slug: string;
+  title: string;
   summary?: string | null;
-  images?: string[] | null;
   heroUrl?: string | null;
+  score?: number | null;
+  releaseDate?: Date | null;
+  images?: string | null;
+  image: string;
   tags?: string[] | null;
   platforms?: string[] | null;
 };
 
-export default async function Page() {
+export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang: langParam } = await params;
+  const lang = (langParam as Locale) || 'en';
+  const dict = await getDictionary(lang);
   const rows = await getRecentReviews();
+  
   const items: ReviewItem[] = rows
     .filter((r) => r.slug && r.title)
     .map((r) => ({
       slug: r.slug as string,
-      title: r.title as string,
-      summary: r.summary,
+      title: getLocalizedText(r.title, lang),
+      summary: getLocalizedText(r.summary, lang),
       heroUrl: r.heroUrl,
       score: r.score != null ? Number(r.score) : null,
       releaseDate: r.releaseDate,
-      images: r.images ? [r.images] : null,
+      images: r.images ? r.images : null,
       image: coverOf(r),
     }));
   const [featured, ...rest] = items;
@@ -50,6 +56,13 @@ export default async function Page() {
       score: item.score,
     }))
   );
+
+  const categories = [
+    { key: "metroidvania", label: dict.home.categories.metroidvania },
+    { key: "roguelike", label: dict.home.categories.roguelike },
+    { key: "puzzle", label: dict.home.categories.puzzle },
+    { key: "narrative", label: dict.home.categories.narrative },
+  ];
 
   return (
     <>
@@ -71,25 +84,25 @@ export default async function Page() {
         {/* hero header */}
         <header className="mb-[var(--space-8)] sm:mb-[var(--space-10)]">
           <h1 className="bg-gradient-to-r from-indigo-600 via-sky-500 to-fuchsia-500 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
-            Fresh indie game reviews. Gorgeous cover art. No fluff.
+            {dict.home.hero_title}
           </h1>
           <p className="mt-2 text-gray-600 dark:text-gray-300">
-            Handpicked indie gems with concise reads and honest scores.
+            {dict.home.hero_subtitle}
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
-            <Link href="/games" className="rounded-full bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 dark:bg-sky-500 dark:hover:bg-sky-400">Browse all reviews</Link>
-            <Link href="/games?sort=score" className="rounded-full border bg-white/60 px-4 py-2 text-sm font-medium text-gray-800 shadow-sm ring-1 ring-black/5 hover:bg-white dark:bg-gray-900/60 dark:text-gray-200">Top‑rated</Link>
+            <Link href={`/${lang}/games`} className="rounded-full bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 dark:bg-sky-500 dark:hover:bg-sky-400">{dict.home.browse_all}</Link>
+            <Link href={`/${lang}/games?sort=score`} className="rounded-full border bg-white/60 px-4 py-2 text-sm font-medium text-gray-800 shadow-sm ring-1 ring-black/5 hover:bg-white dark:bg-gray-900/60 dark:text-gray-200">{dict.home.top_rated}</Link>
           </div>
 
           {/* category chips */}
           <div className="mt-4 flex flex-wrap gap-2">
-            {["Metroidvania", "Roguelike", "Puzzle", "Narrative"].map((c) => (
+            {categories.map((c) => (
               <Link
-                key={c}
-                href={`/tags/${encodeURIComponent(c.toLowerCase())}`}
+                key={c.key}
+                href={`/${lang}/tags/${encodeURIComponent(c.key)}`}
                 className="rounded-full border bg-white/60 px-3 py-1 text-xs font-medium text-gray-800 shadow-sm ring-1 ring-black/5 transition hover:bg-white dark:bg-gray-900/60 dark:text-gray-200"
               >
-                {c}
+                {c.label}
               </Link>
             ))}
           </div>
@@ -100,7 +113,7 @@ export default async function Page() {
           {/* FEATURED card */}
           {featured && (
             <article className="group">
-              <Link href={`/games/${featured.slug}`} className="block" aria-label={`Read review: ${featured.title}`}>
+              <Link href={`/${lang}/games/${featured.slug}`} className="block" aria-label={`${dict.home.read_review}: ${featured.title}`}>
                 <div className="relative overflow-hidden rounded-3xl border bg-white/60 shadow-md ring-1 ring-black/5 transition hover:shadow-xl dark:bg-gray-900/60">
                   <div className="relative">
                     <Image
@@ -122,7 +135,7 @@ export default async function Page() {
                     </div>
 
                     <span
-                      aria-label={typeof featured.score === 'number' ? `Score ${featured.score.toFixed(1)} out of 10` : 'Unscored'}
+                      aria-label={typeof featured.score === 'number' ? dict.common.score_label.replace('{score}', featured.score.toFixed(1)) : dict.common.unscored}
                       className={`absolute right-5 top-5 rounded-full px-3 py-1 text-xs font-semibold backdrop-blur ${scoreClasses(
                         featured.score
                       )}`}
@@ -135,14 +148,14 @@ export default async function Page() {
                     {(featured.tags ?? []).slice(0, 4).map((t) => (
                       <Link
                         key={t}
-                        href={`/tags/${encodeURIComponent(t.toLowerCase())}`}
+                        href={`/${lang}/tags/${encodeURIComponent(t.toLowerCase())}`}
                         className="rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-medium text-gray-800 dark:bg-gray-800 dark:text-gray-200"
                       >
                         {t}
                       </Link>
                     ))}
                     <span className="ml-auto inline-flex items-center gap-1 text-sm font-medium text-indigo-600 transition group-hover:translate-x-0.5 dark:text-sky-400">
-                      Read review
+                      {dict.home.read_review}
                       <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                         <path d="M5 12h14" />
                         <path d="m12 5 7 7-7 7" />
@@ -157,7 +170,7 @@ export default async function Page() {
           {/* RIGHT: two-up grid of smaller cards */}
           <ul className="grid grid-cols-2 gap-[var(--block-gap)]">
             {rightItems.map((x) => (
-              <ReviewCard key={x.slug} {...x} />
+              <ReviewCard key={x.slug} slug={x.slug} title={x.title} image={x.image} score={x.score} releaseDate={x.releaseDate} locale={lang} />
             ))}
           </ul>
         </div>
@@ -166,7 +179,7 @@ export default async function Page() {
         {remaining.length > 0 && (
           <ul className="mt-[var(--space-12)] grid gap-[var(--block-gap)] sm:grid-cols-2 lg:grid-cols-3">
             {remaining.map((x) => (
-              <ReviewCard key={x.slug} {...x} />
+              <ReviewCard key={x.slug} slug={x.slug} title={x.title} image={x.image} score={x.score} releaseDate={x.releaseDate} locale={lang} />
             ))}
           </ul>
         )}
@@ -175,3 +188,4 @@ export default async function Page() {
     </>
   );
 }
+
