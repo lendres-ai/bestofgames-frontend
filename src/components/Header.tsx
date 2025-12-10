@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { Gamepad2, Menu, X } from "lucide-react";
 import { useState } from "react";
-import ThemeToggle from "./ThemeToggle";
-import LanguageSwitcher from "./LanguageSwitcher";
 import { Locale, Dictionary } from "@/lib/dictionaries";
 
 type HeaderProps = {
@@ -51,8 +49,6 @@ export default function Header({ locale, dict }: HeaderProps) {
                 {dict.nav.about}
               </Link>
             </nav>
-            <LanguageSwitcher currentLocale={locale} />
-            <ThemeToggle />
           </div>
 
           {/* Mobile toggle */}
@@ -92,14 +88,6 @@ export default function Header({ locale, dict }: HeaderProps) {
               >
                 {dict.nav.about}
               </Link>
-              <div className="flex items-center justify-between rounded px-3 py-2">
-                <span className="text-white/95 text-sm">Language</span>
-                <LanguageSwitcher currentLocale={locale} />
-              </div>
-              <div className="flex items-center justify-between rounded px-3 py-2">
-                <span className="text-white/95 text-sm">Theme</span>
-                <ThemeToggle />
-              </div>
             </div>
           </nav>
         )}
