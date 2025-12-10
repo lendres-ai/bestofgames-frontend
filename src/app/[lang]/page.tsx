@@ -123,6 +123,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
                       height={900}
                       sizes="(max-width: 1024px) 100vw, 640px"
                       className="h-[320px] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      referrerPolicy="no-referrer"
                       priority
                     />
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent p-6 sm:p-8">

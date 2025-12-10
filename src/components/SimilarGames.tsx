@@ -38,6 +38,7 @@ export default function SimilarGames({ games, locale, dict }: SimilarGamesProps)
                     height={45}
                     sizes="96px"
                     className="h-16 w-24 flex-none rounded-md object-cover"
+                    referrerPolicy="no-referrer"
                   />
                 )}
                 <span className="self-center text-sm font-medium leading-tight">

@@ -35,6 +35,7 @@ export default function ReviewCard({
             height={675}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="h-40 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            referrerPolicy="no-referrer"
           />
           <span
             aria-label={typeof score === 'number' ? `Score ${score.toFixed(1)} out of 10` : 'Unscored'}

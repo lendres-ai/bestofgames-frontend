@@ -83,6 +83,7 @@ export default function MainArticle({
                   height={720}
                   sizes="(max-width: 768px) 100vw, 800px"
                   className="h-auto w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                  referrerPolicy="no-referrer"
                 />
                 {lightboxImages[idx].caption && (
                   <figcaption className="bg-black/60 p-2 text-xs text-white">
@@ -109,6 +110,7 @@ export default function MainArticle({
                   height={360}
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 256px"
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  referrerPolicy="no-referrer"
                 />
                 {img.caption && (
                   <figcaption className="bg-black/60 p-2 text-xs text-white">

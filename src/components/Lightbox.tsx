@@ -44,8 +44,8 @@ export default function Lightbox({ images, startIndex, onClose }: LightboxProps)
           alt={img.caption ?? `Screenshot ${index + 1}`}
           width={1280}
           height={720}
-          unoptimized
           className="h-auto max-h-full w-auto max-w-full"
+          referrerPolicy="no-referrer"
         />
         {img.caption && (
           <figcaption className="mt-2 text-center text-sm text-white">{img.caption}</figcaption>
