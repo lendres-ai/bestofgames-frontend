@@ -27,13 +27,32 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "www.nintendo.com",
       },
+      // Steam CDN domains
       {
         protocol: "https",
         hostname: "shared.akamai.steamstatic.com",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.akamai.steamstatic.com",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.cloudflare.steamstatic.com",
+      },
+      {
+        protocol: "https",
+        hostname: "media.steampowered.com",
+      },
+      {
+        protocol: "https",
+        hostname: "steamcdn-a.akamaihd.net",
+      },
+      {
+        protocol: "https",
+        hostname: "store.steampowered.com",
+      },
     ],
-    // Disable Vercel image optimization (uses Steam/Nintendo CDNs directly)
-    unoptimized: true,
   },
   
   // Security headers
