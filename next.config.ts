@@ -32,8 +32,8 @@ const nextConfig: NextConfig = {
         hostname: "shared.akamai.steamstatic.com",
       },
     ],
-    // Enable image optimization for external domains
-    unoptimized: false,
+    // Disable Vercel image optimization (uses Steam/Nintendo CDNs directly)
+    unoptimized: true,
   },
   
   // Security headers
