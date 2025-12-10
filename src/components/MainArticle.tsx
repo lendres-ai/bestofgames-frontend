@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import Lightbox from './Lightbox';
-import { Locale, Dictionary } from '@/lib/dictionaries';
+import { Dictionary } from '@/lib/dictionaries';
 
 interface MainArticleProps {
   reviewTitle: string | null;
@@ -17,7 +17,6 @@ interface MainArticleProps {
   pros?: string[];
   cons?: string[];
   className?: string;
-  locale: Locale;
   dict: Dictionary;
 }
 
@@ -33,8 +32,6 @@ export default function MainArticle({
   pros = [],
   cons = [],
   className,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  locale,
   dict,
 }: MainArticleProps) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);

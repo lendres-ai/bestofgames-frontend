@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-export const locales = ['en', 'de'] as const;
-export type Locale = (typeof locales)[number];
-export const defaultLocale: Locale = 'en';
+import { locales, defaultLocale, type Locale } from '@/lib/i18n/config';
 
 function getLocaleFromHeaders(request: NextRequest): Locale {
   const acceptLanguage = request.headers.get('accept-language');

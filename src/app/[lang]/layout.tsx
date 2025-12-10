@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Locale, locales, getDictionary } from "@/lib/dictionaries";
+import { SITE_URL, SITE_NAME, METADATA } from "@/lib/constants";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,16 +28,16 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const dict = await getDictionary(lang);
 
   return {
-    metadataBase: new URL('https://bestof.games'),
+    metadataBase: new URL(SITE_URL),
     title: {
-      template: '%s | BestOfGames',
+      template: `%s | ${SITE_NAME}`,
       default: dict.metadata.site_title
     },
     description: dict.metadata.site_description,
-    keywords: ['indie games', 'game reviews', 'gaming', 'video games', 'game ratings', 'indie gaming'],
-    authors: [{ name: 'BestOfGames Team' }],
-    creator: 'BestOfGames',
-    publisher: 'BestOfGames',
+    keywords: METADATA.KEYWORDS,
+    authors: [{ name: `${SITE_NAME} Team` }],
+    creator: SITE_NAME,
+    publisher: SITE_NAME,
     formatDetection: {
       email: false,
       address: false,
@@ -46,11 +47,11 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     openGraph: {
       type: 'website',
       locale: lang === 'de' ? 'de_DE' : 'en_US',
-      url: 'https://bestof.games',
-      siteName: 'BestOfGames',
+      url: SITE_URL,
+      siteName: SITE_NAME,
       title: dict.metadata.site_title,
       description: dict.metadata.site_description,
-      images: [{ url: '/logo.png', width: 1200, height: 630, alt: 'BestOfGames' }],
+      images: [{ url: '/logo.png', width: 1200, height: 630, alt: SITE_NAME }],
     },
     twitter: {
       card: 'summary_large_image',
@@ -70,10 +71,10 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       },
     },
     alternates: {
-      canonical: `https://bestof.games/${lang}`,
+      canonical: `${SITE_URL}/${lang}`,
       languages: {
-        'en': 'https://bestof.games/en',
-        'de': 'https://bestof.games/de',
+        'en': `${SITE_URL}/en`,
+        'de': `${SITE_URL}/de`,
       },
     },
   };
@@ -94,12 +95,12 @@ export default async function LocaleLayout({
     <html lang={lang} suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#4f46e5" />
+        <meta name="theme-color" content={METADATA.THEME_COLOR} />
         <meta name="color-scheme" content="light dark" />
         <link rel="icon" href="/favicon.ico" />
-        <link rel="alternate" hrefLang="en" href="https://bestof.games/en" />
-        <link rel="alternate" hrefLang="de" href="https://bestof.games/de" />
-        <link rel="alternate" hrefLang="x-default" href="https://bestof.games/en" />
+        <link rel="alternate" hrefLang="en" href={`${SITE_URL}/en`} />
+        <link rel="alternate" hrefLang="de" href={`${SITE_URL}/de`} />
+        <link rel="alternate" hrefLang="x-default" href={`${SITE_URL}/en`} />
         <script
           dangerouslySetInnerHTML={{
             __html: `

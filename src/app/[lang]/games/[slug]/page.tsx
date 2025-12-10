@@ -7,15 +7,17 @@ import SimilarGames from '@/components/SimilarGames';
 import { generateGameReviewStructuredData, generateBreadcrumbStructuredData } from '@/lib/structured-data';
 import { Locale, getDictionary } from '@/lib/dictionaries';
 import { getLocalizedText, formatLocalizedDate } from '@/lib/i18n';
+import { SITE_URL } from '@/lib/constants';
 
-export const revalidate = 86400;      // 1 day
+// ISR: 1 day
+export const revalidate = 86400;
 export const dynamicParams = true;
 
 async function getSteamPriceText(appId: number): Promise<string | null> {
   try {
     const res = await fetch(
       `https://store.steampowered.com/api/appdetails?appids=${appId}&cc=DE&l=en`,
-      { next: { revalidate: 3600 } }
+      { next: { revalidate: 3600 } } // 1 hour
     );
     if (!res.ok) return null;
     const json = await res.json();
@@ -60,8 +62,8 @@ export default async function Page({ params }: { params: Promise<{ lang: string;
   if (!game) return notFound();
   
   const similarGames = await getSimilarGames(slug);
-  const steamPriceText = typeof (game as { steamAppId?: unknown }).steamAppId === 'number'
-    ? await getSteamPriceText((game as { steamAppId?: number }).steamAppId as number)
+  const steamPriceText = game.steamAppId
+    ? await getSteamPriceText(game.steamAppId)
     : null;
 
   // Get localized content
@@ -89,9 +91,9 @@ export default async function Page({ params }: { params: Promise<{ lang: string;
   });
 
   const breadcrumbStructuredData = generateBreadcrumbStructuredData([
-    { name: 'Home', url: `https://bestof.games/${lang}` },
-    { name: dict.nav.games, url: `https://bestof.games/${lang}/games` },
-    { name: title, url: `https://bestof.games/${lang}/games/${slug}` },
+    { name: 'Home', url: `${SITE_URL}/${lang}` },
+    { name: dict.nav.games, url: `${SITE_URL}/${lang}/games` },
+    { name: title, url: `${SITE_URL}/${lang}/games/${slug}` },
   ]);
 
   const formattedReleaseDate = game.releaseDate 
@@ -113,14 +115,14 @@ export default async function Page({ params }: { params: Promise<{ lang: string;
       <GameHero
         title={title}
         developer={game.developer}
-        tags={game.tags ?? []}
-        platforms={game.platforms ?? []}
+        tags={(game.tags ?? []).filter((t): t is string => t !== null)}
+        platforms={(game.platforms ?? []).filter((p): p is string => p !== null)}
         score={game.score ? Number(game.score) : null}
         heroUrl={game.heroUrl ?? undefined}
-        images={game.images ?? []}
+        images={(game.images ?? []).filter((i): i is string => i !== null)}
         slug={game.slug}
         releaseDate={formattedReleaseDate}
-        steamAppId={typeof (game as { steamAppId?: unknown }).steamAppId === 'number' ? (game as { steamAppId?: number }).steamAppId : undefined}
+        steamAppId={game.steamAppId ?? undefined}
         steamPriceText={steamPriceText}
         locale={lang}
         dict={dict}
@@ -134,13 +136,23 @@ export default async function Page({ params }: { params: Promise<{ lang: string;
           conclusion={conclusion}
           score={game.score ? Number(game.score) : null}
           userOpinion={userOpinion}
-          images={game.images ?? []}
+          images={(game.images ?? []).filter((i): i is string => i !== null)}
           pros={localizedPros}
           cons={localizedCons}
-          locale={lang}
           dict={dict}
         />
-        {similarGames.length > 0 && <SimilarGames games={similarGames} locale={lang} dict={dict} />}
+        {similarGames.length > 0 && (
+          <SimilarGames
+            games={similarGames.map(g => ({
+              slug: g.slug,
+              title: getLocalizedText(g.title, lang),
+              heroUrl: g.heroUrl,
+              images: g.images,
+            }))}
+            locale={lang}
+            dict={dict}
+          />
+        )}
       </div>
     </>
   );

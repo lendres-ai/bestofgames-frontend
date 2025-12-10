@@ -10,17 +10,70 @@ import {
     reviewProsCons,
 } from './schema';
 import {and, desc, eq, inArray, ne, sql} from 'drizzle-orm';
+import { LocalizedField } from './i18n';
 
-export async function getRecentReviews(limit = 8) {
-    // Select a single cover image per game via correlated subquery to avoid duplicating rows
-    const coverImageSubquery = sql<string>`(
-        select gi.url
-        from game_images as gi
-        where gi.game_id = ${games.id}
-        order by gi.sort_order nulls last, gi.id
-        limit 1
-    )`;
+/**
+ * Helper: correlated subquery to get the first cover image for a game
+ * Avoids duplicating rows when joining with game_images
+ */
+const coverImageSubquery = sql<string>`(
+    select gi.url
+    from game_images as gi
+    where gi.game_id = ${games.id}
+    order by gi.sort_order nulls last, gi.id
+    limit 1
+)`;
 
+// ============================================================================
+// Types
+// ============================================================================
+
+export type ReviewListItem = {
+    slug: string | null;
+    title: LocalizedField;
+    summary?: LocalizedField;
+    heroUrl: string | null;
+    score: string | null;
+    publishedAt: Date | null;
+    releaseDate: Date | null;
+    images: string | null;
+};
+
+export type GameDetail = {
+    id: string;
+    slug: string;
+    title: LocalizedField;
+    summary: LocalizedField;
+    heroUrl: string | null;
+    steamAppId: number | null;
+    description: LocalizedField;
+    introduction: LocalizedField;
+    gameplayFeatures: LocalizedField;
+    conclusion: LocalizedField;
+    score: string | null;
+    developer: string | null;
+    releaseDate: Date | null;
+    reviewTitle: LocalizedField;
+    userOpinion: LocalizedField;
+    tags: (string | null)[];
+    platforms: (string | null)[];
+    images: (string | null)[];
+    pros: LocalizedField[];
+    cons: LocalizedField[];
+};
+
+export type SimilarGame = {
+    slug: string;
+    title: LocalizedField;
+    heroUrl: string | null;
+    images: string | null;
+};
+
+// ============================================================================
+// Queries
+// ============================================================================
+
+export async function getRecentReviews(limit = 8): Promise<ReviewListItem[]> {
     return db.select({
         slug: games.slug,
         title: games.title,
@@ -38,7 +91,7 @@ export async function getRecentReviews(limit = 8) {
         .limit(limit);
 }
 
-export async function getGameBySlug(slug: string) {
+export async function getGameBySlug(slug: string): Promise<GameDetail | null> {
     // First, get the main game and review data
     const gameData = await db
         .select({
@@ -119,7 +172,7 @@ export async function getGameBySlug(slug: string) {
     };
 }
 
-export async function getSimilarGames(slug: string, limit = 4) {
+export async function getSimilarGames(slug: string, limit = 4): Promise<SimilarGame[]> {
     const tagRows = await db
         .select({tagId: reviewTags.tagId})
         .from(reviews)
@@ -129,14 +182,6 @@ export async function getSimilarGames(slug: string, limit = 4) {
 
     const tagIds = tagRows.map((r) => r.tagId);
     if (tagIds.length === 0) return [];
-
-    const coverImageSubquery = sql<string>`(
-        select gi.url
-        from game_images as gi
-        where gi.game_id = ${games.id}
-        order by gi.sort_order nulls last, gi.id
-        limit 1
-    )`;
 
     const matchCount = sql<number>`count(distinct ${reviewTags.tagId})`;
 
@@ -162,9 +207,9 @@ export async function getSimilarGames(slug: string, limit = 4) {
         .limit(limit);
 }
 
-export async function getAllReviews(
-    orderBy: 'score' | 'publishedAt' | 'title' | 'releaseDate' = 'publishedAt'
-) {
+export type SortOrder = 'score' | 'publishedAt' | 'title' | 'releaseDate';
+
+export async function getAllReviews(orderBy: SortOrder = 'publishedAt'): Promise<ReviewListItem[]> {
     const orderColumn =
         orderBy === 'score'
             ? reviews.score
@@ -173,14 +218,6 @@ export async function getAllReviews(
             : orderBy === 'releaseDate'
             ? games.releaseDate
             : reviews.publishedAt;
-
-    const coverImageSubquery = sql<string>`(
-        select gi.url
-        from game_images as gi
-        where gi.game_id = ${games.id}
-        order by gi.sort_order nulls last, gi.id
-        limit 1
-    )`;
 
     return db
         .select({
@@ -200,8 +237,8 @@ export async function getAllReviews(
 
 export async function getReviewsByTag(
     tag: string,
-    orderBy: 'score' | 'publishedAt' | 'title' | 'releaseDate' = 'publishedAt'
-) {
+    orderBy: SortOrder = 'publishedAt'
+): Promise<ReviewListItem[]> {
     const orderColumn =
         orderBy === 'score'
             ? reviews.score
@@ -210,14 +247,6 @@ export async function getReviewsByTag(
             : orderBy === 'releaseDate'
             ? games.releaseDate
             : reviews.publishedAt;
-
-    const coverImageSubquery = sql<string>`(
-        select gi.url
-        from game_images as gi
-        where gi.game_id = ${games.id}
-        order by gi.sort_order nulls last, gi.id
-        limit 1
-    )`;
 
     // Perform case-insensitive tag matching by lowercasing both sides
     const loweredTag = tag.toLowerCase();

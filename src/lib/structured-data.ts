@@ -1,22 +1,24 @@
+import { SITE_URL, SITE_NAME } from './constants';
+
 export function generateWebsiteStructuredData() {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'BestOfGames',
+    name: SITE_NAME,
     description: 'Discover the best indie games with in-depth reviews, ratings, and recommendations.',
-    url: 'https://bestof.games',
+    url: SITE_URL,
     potentialAction: {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: 'https://bestof.games/search?q={search_term_string}',
+        urlTemplate: `${SITE_URL}/search?q={search_term_string}`,
       },
       'query-input': 'required name=search_term_string',
     },
     publisher: {
       '@type': 'Organization',
-      name: 'BestOfGames',
-      url: 'https://bestof.games',
+      name: SITE_NAME,
+      url: SITE_URL,
     },
   };
 }
@@ -30,8 +32,6 @@ export function generateGameReviewStructuredData(game: {
   releaseDate?: Date | null;
   slug: string;
 }) {
-  const baseUrl = 'https://bestof.games';
-  
   return {
     '@context': 'https://schema.org',
     '@type': 'Review',
@@ -39,7 +39,7 @@ export function generateGameReviewStructuredData(game: {
       '@type': 'VideoGame',
       name: game.title,
       description: game.summary || `Review of ${game.title}`,
-      image: game.heroUrl || `${baseUrl}/placeholder-game.jpg`,
+      image: game.heroUrl || `${SITE_URL}/placeholder-game.jpg`,
       applicationCategory: 'Game',
       operatingSystem: 'Windows, macOS, Linux',
       ...(game.developer && {
@@ -54,15 +54,15 @@ export function generateGameReviewStructuredData(game: {
     },
     author: {
       '@type': 'Organization',
-      name: 'BestOfGames',
-      url: baseUrl,
+      name: SITE_NAME,
+      url: SITE_URL,
     },
     publisher: {
       '@type': 'Organization',
-      name: 'BestOfGames',
-      url: baseUrl,
+      name: SITE_NAME,
+      url: SITE_URL,
     },
-    url: `${baseUrl}/games/${game.slug}`,
+    url: `${SITE_URL}/games/${game.slug}`,
     ...(game.score && {
       reviewRating: {
         '@type': 'Rating',
@@ -93,19 +93,17 @@ export function generateGameListStructuredData(games: Array<{
   summary?: string | null;
   score?: number | null;
 }>) {
-  const baseUrl = 'https://bestof.games';
-  
   return {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: 'Latest Game Reviews',
     description: 'Latest indie game reviews and ratings',
-    url: baseUrl,
+    url: SITE_URL,
     numberOfItems: games.length,
     itemListElement: games.map((game, index) => ({
       '@type': 'ListItem',
       position: index + 1,
-      url: `${baseUrl}/games/${game.slug}`,
+      url: `${SITE_URL}/games/${game.slug}`,
       name: game.title,
       description: game.summary || `Review of ${game.title}`,
     })),

@@ -3,23 +3,10 @@ import { db } from '@/lib/db';
 import { games, priceSnapshots, pushSubscriptions, sentNotifications, subscriptionGames } from '@/lib/schema';
 import { and, desc, eq, gt, inArray, sql } from 'drizzle-orm';
 import { sendPush } from '@/lib/push';
-
-// Simple helper to require a secret header
-function authorize(req: NextRequest) {
-  const expected = process.env.CRON_SECRET;
-  if (!expected) return false;
-
-  // Vercel Cron sends: Authorization: Bearer <CRON_SECRET>
-  const authHeader = req.headers.get('authorization');
-  if (authHeader && authHeader === `Bearer ${expected}`) return true;
-
-  // Fallback for manual/local triggering with a custom header
-  const provided = req.headers.get('x-cron-secret');
-  return provided === expected;
-}
+import { verifyCronSecret } from '@/lib/api/auth';
 
 export async function GET(req: NextRequest) {
-  if (!authorize(req)) {
+  if (!verifyCronSecret(req)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

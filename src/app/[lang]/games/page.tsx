@@ -1,10 +1,10 @@
 import SortSelect from '@/components/SortSelect';
 import ReviewCard from '@/components/ReviewCard';
-import { getAllReviews } from '@/lib/queries';
+import { getAllReviews, type SortOrder } from '@/lib/queries';
 import { coverOf } from '@/lib/ui-helpers';
 import { Locale, getDictionary } from '@/lib/dictionaries';
 import { getLocalizedText } from '@/lib/i18n';
-
+// ISR: 1 hour
 export const revalidate = 3600;
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
@@ -30,20 +30,21 @@ export default async function Page({
   const lang = (langParam as Locale) || 'en';
   const dict = await getDictionary(lang);
   
-  const order = ['score', 'publishedAt', 'title', 'releaseDate'].includes(
-    sort ?? ''
-  )
-    ? (sort as 'score' | 'publishedAt' | 'title' | 'releaseDate')
+  const validSortOrders: SortOrder[] = ['score', 'publishedAt', 'title', 'releaseDate'];
+  const order: SortOrder = validSortOrders.includes(sort as SortOrder)
+    ? (sort as SortOrder)
     : 'publishedAt';
 
   const rows = await getAllReviews(order);
-  const items = rows.map((r) => ({
-    slug: r.slug,
-    title: getLocalizedText(r.title, lang),
-    image: coverOf(r),
-    score: r.score != null ? Number(r.score) : null,
-    releaseDate: r.releaseDate,
-  }));
+  const items = rows
+    .filter((r) => r.slug !== null)
+    .map((r) => ({
+      slug: r.slug as string,
+      title: getLocalizedText(r.title, lang),
+      image: coverOf(r),
+      score: r.score != null ? Number(r.score) : null,
+      releaseDate: r.releaseDate,
+    }));
   const totalGames = items.length;
 
   return (

@@ -105,3 +105,100 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   white-space: nowrap;
   border: 0;
 }
+
+/* ============================================================================
+   Reusable Component Styles
+   ============================================================================ */
+
+/* Card base styles */
+.card-base {
+  border-radius: 1.5rem; /* rounded-3xl */
+  border-width: 1px;
+  background-color: rgb(255 255 255 / 0.6);
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  --tw-ring-color: rgb(0 0 0 / 0.05);
+}
+
+.dark .card-base {
+  background-color: rgb(17 24 39 / 0.6);
+}
+
+/* Interactive card with hover effect */
+.card-interactive {
+  transition-property: box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.card-interactive:hover {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+/* Primary button */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem; /* rounded-2xl */
+  background-image: linear-gradient(to right, #4f46e5, #0ea5e9);
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  transition: transform 150ms;
+}
+
+.btn-primary:hover {
+  transform: scale(1.02);
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid #818cf8;
+  outline-offset: 2px;
+}
+
+/* Secondary button */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 1rem;
+  border-width: 1px;
+  background-color: rgb(255 255 255 / 0.6);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --tw-ring-color: rgb(0 0 0 / 0.05);
+  backdrop-filter: blur(8px);
+  transition: background-color 150ms;
+}
+
+.btn-secondary:hover {
+  background-color: rgb(255 255 255 / 0.8);
+}
+
+.dark .btn-secondary {
+  background-color: rgb(17 24 39 / 0.6);
+}
+
+/* Tag/chip styles */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  background-color: #f3f4f6;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.dark .tag {
+  background-color: #1f2937;
+  color: #e5e7eb;
+}

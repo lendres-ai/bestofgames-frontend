@@ -1,4 +1,4 @@
-import { Locale, defaultLocale } from './dictionaries';
+import { type Locale, defaultLocale, getLocaleCode } from './i18n/config';
 
 /**
  * Represents a localized text field that can be either:
@@ -61,9 +61,7 @@ export function formatLocalizedDate(
   if (!date) return '';
 
   const dateObj = typeof date === 'string' ? new Date(date) : date;
-  const localeCode = locale === 'de' ? 'de-DE' : 'en-US';
-
-  return dateObj.toLocaleDateString(localeCode, options);
+  return dateObj.toLocaleDateString(getLocaleCode(locale), options);
 }
 
 /**

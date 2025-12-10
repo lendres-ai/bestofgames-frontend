@@ -1,3 +1,5 @@
+import { PLACEHOLDER_IMAGE } from './constants';
+
 export function scoreClasses(score?: number | null) {
   if (typeof score !== 'number')
     return 'bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300';
@@ -13,7 +15,7 @@ export function coverOf(x: {
   heroUrl?: string | null;
 }) {
   if (Array.isArray(x.images)) {
-    return x.images[0] || x.heroUrl || 'https://placehold.co/1200x675.png';
+    return x.images[0] || x.heroUrl || PLACEHOLDER_IMAGE;
   }
-  return x.images || x.heroUrl || 'https://placehold.co/1200x675.png';
+  return x.images || x.heroUrl || PLACEHOLDER_IMAGE;
 }
