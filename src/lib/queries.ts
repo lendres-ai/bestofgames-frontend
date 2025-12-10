@@ -283,6 +283,21 @@ export async function getReviewsByTag(
  * Search games by title, developer, or tags (case-insensitive)
  * Returns distinct games with a matched tag if applicable
  */
+/**
+ * Get a random published game for the "Surprise me!" feature
+ */
+export async function getRandomGame(): Promise<{ slug: string } | null> {
+    const result = await db
+        .select({ slug: games.slug })
+        .from(reviews)
+        .innerJoin(games, eq(reviews.gameId, games.id))
+        .where(eq(reviews.isPublished, true))
+        .orderBy(sql`random()`)
+        .limit(1);
+
+    return result[0] ?? null;
+}
+
 export async function searchGames(
     query: string,
     limit = 20

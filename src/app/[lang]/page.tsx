@@ -2,6 +2,7 @@ import Link from "next/link";
 import Script from "next/script";
 import ReviewCard from "@/components/ReviewCard";
 import FeaturedGameCard from "@/components/FeaturedGameCard";
+import RandomGameButton from "@/components/RandomGameButton";
 import { getRecentReviews } from "@/lib/queries";
 import { coverOf } from "@/lib/ui-helpers";
 import { generateWebsiteStructuredData, generateGameListStructuredData } from "@/lib/structured-data";
@@ -91,6 +92,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
           <div className="mt-4 flex flex-wrap gap-2">
             <Link href={`/${lang}/games`} className="rounded-full bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 dark:bg-sky-500 dark:hover:bg-sky-400">{dict.home.browse_all}</Link>
             <Link href={`/${lang}/games?sort=score`} className="rounded-full border bg-white/60 px-4 py-2 text-sm font-medium text-gray-800 shadow-sm ring-1 ring-black/5 hover:bg-white dark:bg-gray-900/60 dark:text-gray-200">{dict.home.top_rated}</Link>
+            <RandomGameButton locale={lang} label={dict.home.surprise_me} />
           </div>
 
           {/* category chips */}
