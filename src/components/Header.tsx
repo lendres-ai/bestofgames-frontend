@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Gamepad2, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Locale, Dictionary } from "@/lib/dictionaries";
+import SearchBar from "./SearchBar";
 
 type HeaderProps = {
   locale: Locale;
@@ -29,6 +30,7 @@ export default function Header({ locale, dict }: HeaderProps) {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
+            <SearchBar locale={locale} dict={dict} />
             <nav className="flex items-center gap-8 text-sm font-medium" role="navigation" aria-label="Main navigation">
               <Link 
                 href={`/${locale}/games`} 
@@ -67,6 +69,10 @@ export default function Header({ locale, dict }: HeaderProps) {
         {open && (
           <nav id="mobile-menu" className="md:hidden pb-4" role="navigation" aria-label="Mobile navigation">
             <div className="flex flex-col gap-2 rounded-lg bg-white/20 p-3 ring-1 ring-white/20 backdrop-blur">
+              {/* Mobile Search */}
+              <div className="mb-2">
+                <SearchBar locale={locale} dict={dict} />
+              </div>
               <Link 
                 onClick={() => setOpen(false)} 
                 href={`/${locale}/games`} 

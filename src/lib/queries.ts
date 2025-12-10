@@ -9,7 +9,7 @@ import {
     gameImages,
     reviewProsCons,
 } from './schema';
-import {and, desc, eq, inArray, ne, sql} from 'drizzle-orm';
+import {and, desc, eq, inArray, ilike, ne, or, sql} from 'drizzle-orm';
 import { LocalizedField } from './i18n';
 
 /**
@@ -67,6 +67,16 @@ export type SimilarGame = {
     title: LocalizedField;
     heroUrl: string | null;
     images: string | null;
+};
+
+export type SearchResult = {
+    slug: string;
+    title: string;
+    heroUrl: string | null;
+    images: string | null;
+    score: string | null;
+    developer: string | null;
+    matchedTag: string | null;
 };
 
 // ============================================================================
@@ -267,4 +277,69 @@ export async function getReviewsByTag(
         .innerJoin(games, eq(reviews.gameId, games.id))
         .where(sql`lower(${tags.name}) = ${loweredTag}`)
         .orderBy(orderBy === 'title' ? orderColumn : desc(orderColumn));
+}
+
+/**
+ * Search games by title, developer, or tags (case-insensitive)
+ * Returns distinct games with a matched tag if applicable
+ */
+export async function searchGames(
+    query: string,
+    limit = 20
+): Promise<SearchResult[]> {
+    const trimmed = query.trim();
+    if (!trimmed || trimmed.length < 2) return [];
+
+    const searchTerm = `%${trimmed}%`;
+
+    const results = await db
+        .select({
+            slug: games.slug,
+            title: games.title,
+            heroUrl: games.heroUrl,
+            images: coverImageSubquery,
+            score: reviews.score,
+            developer: games.developer,
+            tagName: tags.name,
+        })
+        .from(games)
+        .innerJoin(reviews, eq(reviews.gameId, games.id))
+        .leftJoin(reviewTags, eq(reviewTags.reviewId, reviews.id))
+        .leftJoin(tags, eq(reviewTags.tagId, tags.id))
+        .where(
+            and(
+                eq(reviews.isPublished, true),
+                or(
+                    ilike(games.title, searchTerm),
+                    ilike(games.developer, searchTerm),
+                    ilike(tags.name, searchTerm)
+                )
+            )
+        )
+        .limit(limit * 3); // Fetch extra rows since we dedupe by slug
+
+    // Dedupe by slug and capture matched tags
+    const seen = new Map<string, SearchResult>();
+    const lowerQuery = trimmed.toLowerCase();
+
+    for (const row of results) {
+        if (!row.slug) continue;
+
+        const existing = seen.get(row.slug);
+        if (!existing) {
+            seen.set(row.slug, {
+                slug: row.slug,
+                title: row.title,
+                heroUrl: row.heroUrl,
+                images: row.images,
+                score: row.score,
+                developer: row.developer,
+                matchedTag: row.tagName?.toLowerCase().includes(lowerQuery) ? row.tagName : null,
+            });
+        } else if (!existing.matchedTag && row.tagName?.toLowerCase().includes(lowerQuery)) {
+            existing.matchedTag = row.tagName;
+        }
+    }
+
+    return Array.from(seen.values()).slice(0, limit);
 }

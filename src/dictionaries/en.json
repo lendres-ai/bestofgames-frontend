@@ -4,6 +4,12 @@
     "wishlist": "Wishlist",
     "about": "About"
   },
+  "search": {
+    "placeholder": "Search games...",
+    "aria_label": "Search games by title, developer, or tag",
+    "clear": "Clear search",
+    "no_results": "No games found"
+  },
   "home": {
     "hero_title": "Fresh indie game reviews. Gorgeous cover art. No fluff.",
     "hero_subtitle": "Handpicked indie gems with concise reads and honest scores.",

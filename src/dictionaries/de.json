@@ -4,6 +4,12 @@
     "wishlist": "Wunschliste",
     "about": "Über uns"
   },
+  "search": {
+    "placeholder": "Spiele suchen...",
+    "aria_label": "Spiele nach Titel, Entwickler oder Tag suchen",
+    "clear": "Suche löschen",
+    "no_results": "Keine Spiele gefunden"
+  },
   "home": {
     "hero_title": "Frische Indie-Game Reviews. Wunderschöne Cover. Kein Schnickschnack.",
     "hero_subtitle": "Handverlesene Indie-Perlen mit prägnanten Texten und ehrlichen Bewertungen.",
