@@ -97,6 +97,7 @@ export default async function LocaleLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content={METADATA.THEME_COLOR} />
         <meta name="color-scheme" content="light dark" />
+        <meta name="google-adsense-account" content="ca-pub-5062516219814161" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="alternate" hrefLang="en" href={`${SITE_URL}/en`} />
         <link rel="alternate" hrefLang="de" href={`${SITE_URL}/de`} />
