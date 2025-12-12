@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { CalendarDays, Gamepad2, ExternalLink } from 'lucide-react';
 import WishlistButton from './WishlistButton';
+import ShareButtons from './ShareButtons';
 import { Locale, Dictionary } from '@/lib/dictionaries';
 
 interface GameHeroProps {
@@ -151,6 +152,19 @@ export default function GameHero({
                 </div>
               )}
             </div>
+
+            {/* Share buttons */}
+            {slug && (
+              <div className="mt-4">
+                <ShareButtons
+                  title={title}
+                  slug={slug}
+                  score={score}
+                  locale={locale}
+                  dict={dict}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

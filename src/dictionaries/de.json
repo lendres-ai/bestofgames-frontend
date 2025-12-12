@@ -108,6 +108,14 @@
     "social_content": "Folge uns für die neuesten Updates und Game-Reviews.",
     "feedback_title": "Feedback",
     "feedback_content": "Hast du einen Spielvorschlag oder einen Bug gefunden? Lass es uns wissen und wir schauen es uns an."
+  },
+  "share": {
+    "check_out": "Schau dir an:",
+    "share_on_twitter": "Auf X/Twitter teilen",
+    "share_on_facebook": "Auf Facebook teilen",
+    "share_on_reddit": "Auf Reddit teilen",
+    "copy_link": "Link kopieren",
+    "link_copied": "Link kopiert!"
   }
 }
 
