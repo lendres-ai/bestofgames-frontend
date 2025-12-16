@@ -187,9 +187,8 @@ export default function SearchBar({ locale, dict }: SearchBarProps) {
           <Link
             href={`/${locale}/games/${result.slug}`}
             onClick={handleResultClick}
-            className={`flex items-center gap-3 px-4 py-3 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 ${
-              index === selectedIndex ? "bg-gray-100 dark:bg-gray-800" : ""
-            }`}
+            className={`flex items-center gap-3 px-4 py-3 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 ${index === selectedIndex ? "bg-gray-100 dark:bg-gray-800" : ""
+              }`}
           >
             <Image
               src={getCoverImage(result)}
@@ -197,7 +196,6 @@ export default function SearchBar({ locale, dict }: SearchBarProps) {
               width={48}
               height={48}
               className="h-12 w-12 rounded-lg object-cover"
-              unoptimized
             />
             <div className="min-w-0 flex-1">
               <p className="truncate font-medium text-gray-900 dark:text-white">
