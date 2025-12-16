@@ -48,7 +48,8 @@
     "player_opinion": "Player Opinion",
     "by_developer": "by",
     "critic_score": "Critic Score",
-    "score": "Score"
+    "score": "Score",
+    "read_time": "min read"
   },
   "wishlist": {
     "title": "Your Wishlist",

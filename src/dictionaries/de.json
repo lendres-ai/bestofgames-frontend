@@ -48,7 +48,8 @@
     "player_opinion": "Spielermeinung",
     "by_developer": "von",
     "critic_score": "Bewertung",
-    "score": "Bewertung"
+    "score": "Bewertung",
+    "read_time": "Min. Lesezeit"
   },
   "wishlist": {
     "title": "Deine Wunschliste",

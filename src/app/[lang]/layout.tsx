@@ -4,6 +4,7 @@ import "../globals.css";
 import Script from 'next/script';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Locale, locales, getDictionary } from "@/lib/dictionaries";
 import { SITE_URL, SITE_NAME, METADATA } from "@/lib/constants";
@@ -102,23 +103,15 @@ export default async function LocaleLayout({
         <link rel="alternate" hrefLang="en" href={`${SITE_URL}/en`} />
         <link rel="alternate" hrefLang="de" href={`${SITE_URL}/de`} />
         <link rel="alternate" hrefLang="x-default" href={`${SITE_URL}/en`} />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  const theme = localStorage.getItem('theme');
-                  if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                    document.documentElement.classList.add('dark');
-                  }
-                } catch (e) {}
-              })();
-            `,
-          }}
-        />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} min-h-dvh flex flex-col`} suppressHydrationWarning>
-        <a href="#main" className="sr-only focus:not-sr-only">Skip to content</a>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <a href="#main" className="sr-only focus:not-sr-only">Skip to content</a>
         {process.env.VERCEL_ENV === 'production' && (
           <Script
             src="https://umami.mountdoom.space/script.js"
@@ -143,10 +136,11 @@ export default async function LocaleLayout({
             }}
           />
         )}
-        <Header locale={lang} dict={dict} />
-        <main id="main" className="flex-1">{children}</main>
-        <Footer locale={lang} dict={dict} />
-        <SpeedInsights />
+          <Header locale={lang} dict={dict} />
+          <main id="main" className="flex-1">{children}</main>
+          <Footer locale={lang} dict={dict} />
+          <SpeedInsights />
+        </ThemeProvider>
       </body>
     </html>
   );

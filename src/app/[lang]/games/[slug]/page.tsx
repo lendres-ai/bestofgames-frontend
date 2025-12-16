@@ -8,6 +8,7 @@ import { generateGameReviewStructuredData, generateBreadcrumbStructuredData } fr
 import { Locale, getDictionary } from '@/lib/dictionaries';
 import { getLocalizedText, formatLocalizedDate } from '@/lib/i18n';
 import { SITE_URL } from '@/lib/constants';
+import { getReadingTime } from '@/lib/reading-time';
 
 // ISR: 1 day
 export const revalidate = 86400;
@@ -80,6 +81,12 @@ export default async function Page({ params }: { params: Promise<{ lang: string;
   const localizedPros = (game.pros ?? []).map(p => getLocalizedText(p, lang));
   const localizedCons = (game.cons ?? []).map(c => getLocalizedText(c, lang));
 
+  // Calculate reading time
+  const readingTime = getReadingTime(
+    [game.introduction, game.gameplayFeatures, game.conclusion],
+    lang
+  );
+
   const reviewStructuredData = generateGameReviewStructuredData({
     title,
     summary,
@@ -140,6 +147,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string;
           pros={localizedPros}
           cons={localizedCons}
           dict={dict}
+          readingTime={readingTime}
         />
         {similarGames.length > 0 && (
           <SimilarGames

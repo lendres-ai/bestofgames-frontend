@@ -5,6 +5,7 @@ import { Gamepad2, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Locale, Dictionary } from "@/lib/dictionaries";
 import SearchBar from "./SearchBar";
+import ThemeToggle from "./ThemeToggle";
 
 type HeaderProps = {
   locale: Locale;
@@ -50,6 +51,7 @@ export default function Header({ locale, dict }: HeaderProps) {
               >
                 {dict.nav.about}
               </Link>
+              <ThemeToggle />
             </nav>
           </div>
 
@@ -94,6 +96,9 @@ export default function Header({ locale, dict }: HeaderProps) {
               >
                 {dict.nav.about}
               </Link>
+              <div className="px-3 pt-2">
+                <ThemeToggle />
+              </div>
             </div>
           </nav>
         )}

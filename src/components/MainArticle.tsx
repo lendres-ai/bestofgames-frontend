@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import Lightbox from './Lightbox';
 import { Dictionary } from '@/lib/dictionaries';
+import { Clock } from 'lucide-react';
 
 interface MainArticleProps {
   reviewTitle: string | null;
@@ -18,6 +19,7 @@ interface MainArticleProps {
   cons?: string[];
   className?: string;
   dict: Dictionary;
+  readingTime?: number;
 }
 
 export default function MainArticle({
@@ -33,6 +35,7 @@ export default function MainArticle({
   cons = [],
   className,
   dict,
+  readingTime,
 }: MainArticleProps) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
@@ -56,9 +59,19 @@ export default function MainArticle({
         <h2 className="mb-3 bg-gradient-to-r from-indigo-600 via-sky-500 to-fuchsia-500 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
           {reviewTitle}
         </h2>
-        {description && (
-          <p className="text-lg text-gray-600 dark:text-gray-300">{description}</p>
-        )}
+        <div className="flex flex-col gap-3">
+          {description && (
+            <p className="text-lg text-gray-600 dark:text-gray-300">{description}</p>
+          )}
+          {readingTime && (
+            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+              <Clock className="h-4 w-4" />
+              <span>
+                {readingTime} {dict.game_detail.read_time || "min read"}
+              </span>
+            </div>
+          )}
+        </div>
       </header>
 
       <div className="space-y-8">
