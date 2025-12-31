@@ -187,6 +187,7 @@ export default function SearchBar({ locale, dict }: SearchBarProps) {
           <Link
             href={`/${locale}/games/${result.slug}`}
             onClick={handleResultClick}
+            data-umami-event="Search Result Click" data-umami-event-game={result.slug}
             className={`flex items-center gap-3 px-4 py-3 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 ${index === selectedIndex ? "bg-gray-100 dark:bg-gray-800" : ""
               }`}
           >

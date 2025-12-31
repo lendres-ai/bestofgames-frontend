@@ -58,6 +58,7 @@ export default function FeaturedGameCard({
         href={`/${locale}/games/${slug}`}
         className="block"
         aria-label={`${dict.home.read_review}: ${title}`}
+        data-umami-event="Featured Game Click" data-umami-event-game={slug}
       >
         <div
           ref={cardRef}
