@@ -4,6 +4,7 @@ import ReviewCard from "@/components/ReviewCard";
 import FeaturedGameCard from "@/components/FeaturedGameCard";
 import HeroCoverGrid from "@/components/HeroCoverGrid";
 import RandomGameButton from "@/components/RandomGameButton";
+import NewsletterSignup from "@/components/NewsletterSignup";
 import { getRecentReviews, getReviewCount } from "@/lib/queries";
 import { coverOf } from "@/lib/ui-helpers";
 import { generateWebsiteStructuredData, generateGameListStructuredData } from "@/lib/structured-data";
@@ -146,6 +147,11 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
                 <ReviewCard key={x.slug} slug={x.slug} title={x.title} image={x.image} score={x.score} releaseDate={x.releaseDate} locale={lang} />
               ))}
             </ul>
+          </div>
+
+          {/* Newsletter signup - strategically placed after featured content */}
+          <div className="mt-[var(--space-12)]">
+            <NewsletterSignup locale={lang} dict={dict} />
           </div>
 
           {/* remaining items */}

@@ -117,5 +117,13 @@
     "share_on_reddit": "Share on Reddit",
     "copy_link": "Copy link",
     "link_copied": "Link copied!"
+  },
+  "newsletter": {
+    "title": "Stay in the loop",
+    "subtitle": "Get the top 3 indie games delivered weekly. No spam.",
+    "placeholder": "your@email.com",
+    "button": "Subscribe",
+    "success": "You're subscribed! Check your email.",
+    "error": "Something went wrong. Please try again."
   }
 }
