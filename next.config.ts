@@ -94,12 +94,11 @@ const nextConfig: NextConfig = {
           {
             key: 'Content-Security-Policy',
             value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://umami.mountdoom.space https://www.googletagmanager.com",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://umami.mountdoom.space https://*.googletagmanager.com https://*.google-analytics.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "img-src 'self' data: https: blob: https://www.google-analytics.com https://www.googletagmanager.com",
+              "img-src 'self' data: https: blob: https://*.google-analytics.com https://*.googletagmanager.com https://*.google.com https://*.google.de",
               "font-src 'self' https://fonts.gstatic.com",
-              "connect-src 'self' https://umami.mountdoom.space https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net",
+              "connect-src 'self' https://umami.mountdoom.space https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.de",
               "worker-src 'self'",
               "manifest-src 'self'",
               "media-src 'self'",
