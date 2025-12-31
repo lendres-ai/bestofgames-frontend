@@ -11,8 +11,8 @@
     "no_results": "No games found"
   },
   "home": {
-    "hero_title": "Fresh indie game reviews. Gorgeous cover art. No fluff.",
-    "hero_subtitle": "Handpicked indie gems with concise reads and honest scores.",
+    "hero_title": "Find your next favorite indie game.",
+    "hero_subtitle": "Curated reviews every week. Honest scores. No filler.",
     "browse_all": "Browse all reviews",
     "top_rated": "Top-rated",
     "surprise_me": "Surprise me!",
@@ -118,4 +118,3 @@
     "link_copied": "Link copied!"
   }
 }
-

@@ -11,8 +11,8 @@
     "no_results": "Keine Spiele gefunden"
   },
   "home": {
-    "hero_title": "Frische Indie-Game Reviews. Wunderschöne Cover. Kein Schnickschnack.",
-    "hero_subtitle": "Handverlesene Indie-Perlen mit prägnanten Texten und ehrlichen Bewertungen.",
+    "hero_title": "Finde dein nächstes Lieblings-Indie-Game.",
+    "hero_subtitle": "Neue Reviews jede Woche. Ehrliche Bewertungen. Kein Füllmaterial.",
     "browse_all": "Alle Reviews ansehen",
     "top_rated": "Bestbewertet",
     "surprise_me": "Überrasch mich!",
@@ -118,4 +118,3 @@
     "link_copied": "Link kopiert!"
   }
 }
-
