@@ -13,6 +13,7 @@ export default function NewsletterSignup({ locale, dict, variant = 'default' }: 
     const [email, setEmail] = useState('');
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState('');
+    const conversionSentRef = useRef(false);
     const cardRef = useRef<HTMLDivElement>(null);
     const [transform, setTransform] = useState('');
     const [glarePosition, setGlarePosition] = useState({ x: 50, y: 50 });
@@ -57,8 +58,9 @@ export default function NewsletterSignup({ locale, dict, variant = 'default' }: 
             setStatus('success');
             setEmail('');
 
-            // Track Google Ads Conversion
-            if (typeof window !== 'undefined' && (window as any).gtag) {
+            // Track Google Ads Conversion (only once)
+            if (!conversionSentRef.current && typeof window !== 'undefined' && (window as any).gtag) {
+                conversionSentRef.current = true;
                 (window as any).gtag('event', 'conversion', {
                     'send_to': 'AW-17843649268/bnkJCKW_mNobEPT1wbxC',
                     'value': 0.1,
