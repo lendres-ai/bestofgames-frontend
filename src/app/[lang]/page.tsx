@@ -109,13 +109,13 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
             <div className="mt-3 flex flex-wrap items-center gap-2 sm:mt-4">
               <a
                 href="#newsletter"
-                className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-fuchsia-500 via-indigo-500 to-sky-500 px-4 py-2 text-xs font-bold text-white shadow-lg transition hover:scale-[1.03] hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-indigo-400/50 sm:px-5 sm:py-2.5 sm:text-sm"
+                className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-fuchsia-500 via-indigo-500 to-sky-500 px-5 py-2.5 text-sm font-bold text-white shadow-lg transition hover:scale-[1.03] hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-indigo-400/50 sm:px-6 sm:py-3"
               >
                 {dict.home.newsletter_cta}
               </a>
               <RandomGameButton locale={lang} label={dict.home.surprise_me} />
-              <Link href={`/${lang}/games`} className="rounded-full border bg-white/60 px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm ring-1 ring-black/5 hover:bg-white dark:bg-gray-900/60 dark:text-gray-300 sm:px-4 sm:py-2 sm:text-sm">{dict.home.browse_all}</Link>
-              <Link href={`/${lang}/games?sort=score`} className="rounded-full border bg-white/60 px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm ring-1 ring-black/5 hover:bg-white dark:bg-gray-900/60 dark:text-gray-300 sm:px-4 sm:py-2 sm:text-sm">{dict.home.top_rated}</Link>
+              <Link href={`/${lang}/games`} className="rounded-full border bg-white/60 px-4 py-2 text-sm font-medium text-gray-700 shadow-sm ring-1 ring-black/5 hover:bg-white dark:bg-gray-900/60 dark:text-gray-300 sm:px-5 sm:py-2.5">{dict.home.browse_all}</Link>
+              <Link href={`/${lang}/games?sort=score`} className="rounded-full border bg-white/60 px-4 py-2 text-sm font-medium text-gray-700 shadow-sm ring-1 ring-black/5 hover:bg-white dark:bg-gray-900/60 dark:text-gray-300 sm:px-5 sm:py-2.5">{dict.home.top_rated}</Link>
             </div>
 
             {/* category chips */}
@@ -124,7 +124,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
                 <Link
                   key={c.key}
                   href={`/${lang}/tags/${encodeURIComponent(c.key)}`}
-                  className="rounded-full border bg-white/60 px-2 py-0.5 text-[10px] font-medium text-gray-700 shadow-sm ring-1 ring-black/5 transition hover:bg-white dark:bg-gray-900/60 dark:text-gray-300 sm:px-3 sm:py-1 sm:text-xs"
+                  className="rounded-full border bg-white/60 px-3 py-1 text-xs font-medium text-gray-700 shadow-sm ring-1 ring-black/5 transition hover:bg-white dark:bg-gray-900/60 dark:text-gray-300 sm:px-4 sm:py-1.5 sm:text-sm"
                 >
                   {c.label}
                 </Link>

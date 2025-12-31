@@ -257,7 +257,7 @@ export default function SearchBar({ locale, dict }: SearchBarProps) {
             query.length >= 2 && results.length > 0 && setIsOpen(true)
           }
           placeholder={dict.search?.placeholder || "Search..."}
-          className="w-40 rounded-lg bg-white/10 py-2 pl-9 pr-8 text-sm text-white placeholder:text-white/50 backdrop-blur-sm transition-all duration-200 focus:w-56 focus:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/30 sm:w-48 sm:focus:w-64"
+          className="w-40 rounded-lg bg-white/10 py-2 pl-9 pr-8 text-base text-white placeholder:text-white/50 backdrop-blur-sm transition-all duration-200 focus:w-56 focus:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/30 sm:w-48 sm:text-sm sm:focus:w-64"
           aria-label={dict.search?.aria_label || "Search games"}
           aria-expanded={isOpen}
           aria-controls="search-results"

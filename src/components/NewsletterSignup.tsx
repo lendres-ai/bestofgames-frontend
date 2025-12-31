@@ -94,7 +94,7 @@ export default function NewsletterSignup({ locale, dict, variant = 'default' }: 
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder={t.placeholder}
                             required
-                            className="flex-1 rounded-full border border-gray-200/50 bg-white/60 px-4 py-2 text-sm backdrop-blur-sm transition placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/20 dark:border-gray-700/50 dark:bg-gray-800/60 dark:placeholder:text-gray-500"
+                            className="flex-1 rounded-full border border-gray-200/50 bg-white/60 px-4 py-2.5 text-base backdrop-blur-sm transition placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/20 dark:border-gray-700/50 dark:bg-gray-800/60 dark:placeholder:text-gray-500 sm:text-sm"
                         />
                         <button
                             type="submit"
@@ -147,7 +147,7 @@ export default function NewsletterSignup({ locale, dict, variant = 'default' }: 
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder={t.placeholder}
                                     required
-                                    className="flex-1 rounded-full border border-gray-200/50 bg-white/70 px-4 py-2 text-sm backdrop-blur-sm transition placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/20 dark:border-gray-700/50 dark:bg-gray-800/70 dark:placeholder:text-gray-500"
+                                    className="flex-1 rounded-full border border-gray-200/50 bg-white/70 px-4 py-2.5 text-base backdrop-blur-sm transition placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/20 dark:border-gray-700/50 dark:bg-gray-800/70 dark:placeholder:text-gray-500 sm:text-sm"
                                 />
                                 <button
                                     type="submit"
@@ -220,7 +220,7 @@ export default function NewsletterSignup({ locale, dict, variant = 'default' }: 
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder={t.placeholder}
                             required
-                            className="flex-1 rounded-full border border-white/30 bg-white/70 px-5 py-3 text-sm shadow-inner backdrop-blur-sm transition placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/30 dark:border-gray-700/50 dark:bg-gray-800/70 dark:placeholder:text-gray-500"
+                            className="flex-1 rounded-full border border-white/30 bg-white/70 px-5 py-3 text-base shadow-inner backdrop-blur-sm transition placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/30 dark:border-gray-700/50 dark:bg-gray-800/70 dark:placeholder:text-gray-500 sm:text-sm"
                         />
                         <button
                             type="submit"
