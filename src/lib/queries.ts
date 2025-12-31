@@ -89,8 +89,8 @@ export type SearchResult = {
  * then fill remaining slots with top-rated games from all time.
  */
 export async function getRecentReviews(limit = 8): Promise<ReviewListItem[]> {
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
     // First: get top-scored games released in the last 7 days
     const recentTopRated = await db.select({
@@ -107,7 +107,7 @@ export async function getRecentReviews(limit = 8): Promise<ReviewListItem[]> {
         .leftJoin(games, eq(reviews.gameId, games.id))
         .where(and(
             eq(reviews.isPublished, true),
-            gte(games.releaseDate, sevenDaysAgo)
+            gte(games.releaseDate, thirtyDaysAgo)
         ))
         .orderBy(desc(reviews.score))
         .limit(limit);
