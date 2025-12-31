@@ -116,6 +116,23 @@ export default async function LocaleLayout({
             `,
           }}
         />
+        {/* Google tag (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17843649268"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="google-gtag"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'AW-17843649268');
+            `,
+          }}
+        />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} min-h-dvh flex flex-col`} suppressHydrationWarning>
         <a href="#main" className="sr-only focus:not-sr-only">Skip to content</a>
