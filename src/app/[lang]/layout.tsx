@@ -116,6 +116,9 @@ export default async function LocaleLayout({
             `,
           }}
         />
+
+      </head>
+      <body className={`${geistSans.variable} ${geistMono.variable} min-h-dvh flex flex-col`} suppressHydrationWarning>
         {/* Google tag (gtag.js) */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=AW-17843649268"
@@ -133,8 +136,6 @@ export default async function LocaleLayout({
             `,
           }}
         />
-      </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} min-h-dvh flex flex-col`} suppressHydrationWarning>
         <a href="#main" className="sr-only focus:not-sr-only">Skip to content</a>
         {process.env.VERCEL_ENV === 'production' && (
           <Script
