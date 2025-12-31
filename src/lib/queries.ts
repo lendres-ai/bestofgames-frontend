@@ -347,6 +347,18 @@ export async function getRandomGame(): Promise<{ slug: string } | null> {
     return result[0] ?? null;
 }
 
+/**
+ * Get the total count of published reviews for social proof
+ */
+export async function getReviewCount(): Promise<number> {
+    const result = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(reviews)
+        .where(eq(reviews.isPublished, true));
+
+    return result[0]?.count ?? 0;
+}
+
 export async function searchGames(
     query: string,
     limit = 20

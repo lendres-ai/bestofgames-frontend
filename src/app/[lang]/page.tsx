@@ -4,7 +4,7 @@ import ReviewCard from "@/components/ReviewCard";
 import FeaturedGameCard from "@/components/FeaturedGameCard";
 import HeroCoverGrid from "@/components/HeroCoverGrid";
 import RandomGameButton from "@/components/RandomGameButton";
-import { getRecentReviews } from "@/lib/queries";
+import { getRecentReviews, getReviewCount } from "@/lib/queries";
 import { coverOf } from "@/lib/ui-helpers";
 import { generateWebsiteStructuredData, generateGameListStructuredData } from "@/lib/structured-data";
 import { Locale, getDictionary } from "@/lib/dictionaries";
@@ -29,7 +29,10 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
   const { lang: langParam } = await params;
   const lang = (langParam as Locale) || 'en';
   const dict = await getDictionary(lang);
-  const rows = await getRecentReviews();
+  const [rows, reviewCount] = await Promise.all([
+    getRecentReviews(),
+    getReviewCount()
+  ]);
 
   const items: ReviewItem[] = rows
     .filter((r) => r.slug && r.title)
@@ -90,26 +93,31 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
 
         <section className="mx-auto max-w-screen-xl px-[var(--container-x)] pt-[var(--section-pt)] pb-[var(--section-pb)] 2xl:px-0">
           {/* hero header */}
-          <header className="mb-[var(--space-8)] sm:mb-[var(--space-10)]">
-            <h1 className="bg-gradient-to-r from-indigo-600 via-sky-500 to-fuchsia-500 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-5xl">
+          <header className="mb-[var(--space-4)] sm:mb-[var(--space-6)]">
+            <h1 className="bg-gradient-to-r from-indigo-600 via-sky-500 to-fuchsia-500 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-5xl">
               {dict.home.hero_title}
             </h1>
-            <p className="mt-2 text-gray-600 dark:text-gray-300">
+            <p className="mt-1 text-gray-600 dark:text-gray-300 sm:mt-2">
               {dict.home.hero_subtitle}
             </p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <Link href={`/${lang}/games`} className="rounded-full bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 dark:bg-sky-500 dark:hover:bg-sky-400">{dict.home.browse_all}</Link>
-              <Link href={`/${lang}/games?sort=score`} className="rounded-full border bg-white/60 px-4 py-2 text-sm font-medium text-gray-800 shadow-sm ring-1 ring-black/5 hover:bg-white dark:bg-gray-900/60 dark:text-gray-200">{dict.home.top_rated}</Link>
+            {/* Social proof */}
+            <p className="mt-2 text-xs font-medium text-gray-500 dark:text-gray-400 sm:text-sm">
+              ✨ {Math.floor(reviewCount / 10) * 10}+ {lang === 'de' ? 'kuratierte Indie-Game Reviews' : 'curated indie game reviews'}
+            </p>
+            {/* Primary CTA first */}
+            <div className="mt-3 flex flex-wrap items-center gap-2 sm:mt-4">
               <RandomGameButton locale={lang} label={dict.home.surprise_me} />
+              <Link href={`/${lang}/games`} className="rounded-full border bg-white/60 px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm ring-1 ring-black/5 hover:bg-white dark:bg-gray-900/60 dark:text-gray-300 sm:px-4 sm:py-2 sm:text-sm">{dict.home.browse_all}</Link>
+              <Link href={`/${lang}/games?sort=score`} className="rounded-full border bg-white/60 px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm ring-1 ring-black/5 hover:bg-white dark:bg-gray-900/60 dark:text-gray-300 sm:px-4 sm:py-2 sm:text-sm">{dict.home.top_rated}</Link>
             </div>
 
             {/* category chips */}
-            <div className="mt-4 flex flex-wrap gap-2">
+            <div className="mt-2 flex flex-wrap gap-1.5 sm:mt-3 sm:gap-2">
               {categories.map((c) => (
                 <Link
                   key={c.key}
                   href={`/${lang}/tags/${encodeURIComponent(c.key)}`}
-                  className="rounded-full border bg-white/60 px-3 py-1 text-xs font-medium text-gray-800 shadow-sm ring-1 ring-black/5 transition hover:bg-white dark:bg-gray-900/60 dark:text-gray-200"
+                  className="rounded-full border bg-white/60 px-2 py-0.5 text-[10px] font-medium text-gray-700 shadow-sm ring-1 ring-black/5 transition hover:bg-white dark:bg-gray-900/60 dark:text-gray-300 sm:px-3 sm:py-1 sm:text-xs"
                 >
                   {c.label}
                 </Link>
