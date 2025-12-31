@@ -85,14 +85,14 @@ export type SearchResult = {
 
 /**
  * Get featured reviews for the homepage.
- * Strategy: Show top-scored reviews from the last 7 days first,
- * then fill remaining slots with top-rated reviews from all time.
+ * Strategy: Show top-scored games released in the last 7 days first,
+ * then fill remaining slots with top-rated games from all time.
  */
 export async function getRecentReviews(limit = 8): Promise<ReviewListItem[]> {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    // First: get top-scored reviews from the last 7 days
+    // First: get top-scored games released in the last 7 days
     const recentTopRated = await db.select({
         slug: games.slug,
         title: games.title,
@@ -107,7 +107,7 @@ export async function getRecentReviews(limit = 8): Promise<ReviewListItem[]> {
         .leftJoin(games, eq(reviews.gameId, games.id))
         .where(and(
             eq(reviews.isPublished, true),
-            gte(reviews.publishedAt, sevenDaysAgo)
+            gte(games.releaseDate, sevenDaysAgo)
         ))
         .orderBy(desc(reviews.score))
         .limit(limit);
