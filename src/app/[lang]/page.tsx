@@ -107,6 +107,12 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
             </p>
             {/* Primary CTA first */}
             <div className="mt-3 flex flex-wrap items-center gap-2 sm:mt-4">
+              <a
+                href="#newsletter"
+                className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-fuchsia-500 via-indigo-500 to-sky-500 px-4 py-2 text-xs font-bold text-white shadow-lg transition hover:scale-[1.03] hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-indigo-400/50 sm:px-5 sm:py-2.5 sm:text-sm"
+              >
+                {dict.home.newsletter_cta}
+              </a>
               <RandomGameButton locale={lang} label={dict.home.surprise_me} />
               <Link href={`/${lang}/games`} className="rounded-full border bg-white/60 px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm ring-1 ring-black/5 hover:bg-white dark:bg-gray-900/60 dark:text-gray-300 sm:px-4 sm:py-2 sm:text-sm">{dict.home.browse_all}</Link>
               <Link href={`/${lang}/games?sort=score`} className="rounded-full border bg-white/60 px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm ring-1 ring-black/5 hover:bg-white dark:bg-gray-900/60 dark:text-gray-300 sm:px-4 sm:py-2 sm:text-sm">{dict.home.top_rated}</Link>
@@ -150,7 +156,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
           </div>
 
           {/* Newsletter signup - strategically placed after featured content */}
-          <div className="mt-[var(--space-12)]">
+          <div id="newsletter" className="mt-[var(--space-12)] scroll-mt-24">
             <NewsletterSignup locale={lang} dict={dict} />
           </div>
 
