@@ -1,4 +1,4 @@
-import {db} from './db';
+import { db } from './db';
 import {
     games,
     reviews,
@@ -9,7 +9,7 @@ import {
     gameImages,
     reviewProsCons,
 } from './schema';
-import {and, desc, eq, inArray, ilike, ne, or, sql} from 'drizzle-orm';
+import { and, desc, eq, gte, inArray, ilike, ne, notInArray, or, sql } from 'drizzle-orm';
 import { LocalizedField } from './i18n';
 
 /**
@@ -83,8 +83,17 @@ export type SearchResult = {
 // Queries
 // ============================================================================
 
+/**
+ * Get featured reviews for the homepage.
+ * Strategy: Show top-scored reviews from the last 7 days first,
+ * then fill remaining slots with top-rated reviews from all time.
+ */
 export async function getRecentReviews(limit = 8): Promise<ReviewListItem[]> {
-    return db.select({
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    // First: get top-scored reviews from the last 7 days
+    const recentTopRated = await db.select({
         slug: games.slug,
         title: games.title,
         summary: games.summary,
@@ -96,9 +105,49 @@ export async function getRecentReviews(limit = 8): Promise<ReviewListItem[]> {
     })
         .from(reviews)
         .leftJoin(games, eq(reviews.gameId, games.id))
-        .where(eq(reviews.isPublished, true))
-        .orderBy(desc(reviews.publishedAt))
+        .where(and(
+            eq(reviews.isPublished, true),
+            gte(reviews.publishedAt, sevenDaysAgo)
+        ))
+        .orderBy(desc(reviews.score))
         .limit(limit);
+
+    // If we have enough, return early
+    if (recentTopRated.length >= limit) {
+        return recentTopRated;
+    }
+
+    // Otherwise, fill remaining slots with top-rated from all time
+    const remaining = limit - recentTopRated.length;
+    const existingSlugs = recentTopRated
+        .map(r => r.slug)
+        .filter((slug): slug is string => slug !== null);
+
+    const fillQuery = db.select({
+        slug: games.slug,
+        title: games.title,
+        summary: games.summary,
+        heroUrl: games.heroUrl,
+        score: reviews.score,
+        publishedAt: reviews.publishedAt,
+        releaseDate: games.releaseDate,
+        images: coverImageSubquery,
+    })
+        .from(reviews)
+        .leftJoin(games, eq(reviews.gameId, games.id))
+        .where(existingSlugs.length > 0
+            ? and(
+                eq(reviews.isPublished, true),
+                notInArray(games.slug, existingSlugs)
+            )
+            : eq(reviews.isPublished, true)
+        )
+        .orderBy(desc(reviews.score))
+        .limit(remaining);
+
+    const allTimeTopRated = await fillQuery;
+
+    return [...recentTopRated, ...allTimeTopRated];
 }
 
 export async function getGameBySlug(slug: string): Promise<GameDetail | null> {
@@ -139,19 +188,19 @@ export async function getGameBySlug(slug: string): Promise<GameDetail | null> {
             .from(reviewTags)
             .innerJoin(tags, eq(reviewTags.tagId, tags.id))
             .where(eq(reviewTags.reviewId, game.reviewId)),
-        
+
         // Get platforms
         db.select({ name: platforms.name })
             .from(gamePlatforms)
             .innerJoin(platforms, eq(gamePlatforms.platformId, platforms.id))
             .where(eq(gamePlatforms.gameId, game.id)),
-        
+
         // Get images
         db.select({ url: gameImages.url })
             .from(gameImages)
             .where(eq(gameImages.gameId, game.id))
             .orderBy(gameImages.sortOrder),
-        
+
         // Get pros and cons
         db.select({ text: reviewProsCons.text, type: reviewProsCons.type })
             .from(reviewProsCons)
@@ -184,7 +233,7 @@ export async function getGameBySlug(slug: string): Promise<GameDetail | null> {
 
 export async function getSimilarGames(slug: string, limit = 4): Promise<SimilarGame[]> {
     const tagRows = await db
-        .select({tagId: reviewTags.tagId})
+        .select({ tagId: reviewTags.tagId })
         .from(reviews)
         .innerJoin(games, eq(reviews.gameId, games.id))
         .innerJoin(reviewTags, eq(reviewTags.reviewId, reviews.id))
@@ -224,10 +273,10 @@ export async function getAllReviews(orderBy: SortOrder = 'publishedAt'): Promise
         orderBy === 'score'
             ? reviews.score
             : orderBy === 'title'
-            ? games.title
-            : orderBy === 'releaseDate'
-            ? games.releaseDate
-            : reviews.publishedAt;
+                ? games.title
+                : orderBy === 'releaseDate'
+                    ? games.releaseDate
+                    : reviews.publishedAt;
 
     return db
         .select({
@@ -253,10 +302,10 @@ export async function getReviewsByTag(
         orderBy === 'score'
             ? reviews.score
             : orderBy === 'title'
-            ? games.title
-            : orderBy === 'releaseDate'
-            ? games.releaseDate
-            : reviews.publishedAt;
+                ? games.title
+                : orderBy === 'releaseDate'
+                    ? games.releaseDate
+                    : reviews.publishedAt;
 
     // Perform case-insensitive tag matching by lowercasing both sides
     const loweredTag = tag.toLowerCase();
