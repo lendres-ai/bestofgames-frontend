@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
     // Limit generated sizes to reduce transformations
     deviceSizes: [640, 1080, 1920],
     imageSizes: [96, 256, 384],
-    
+
     // Remote patterns are the new way instead of `domains`
     remotePatterns: [
       {
@@ -54,7 +54,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  
+
   // Security headers
   async headers() {
     return [
@@ -95,11 +95,11 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://umami.mountdoom.space",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://umami.mountdoom.space https://www.googletagmanager.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "img-src 'self' data: https: blob:",
+              "img-src 'self' data: https: blob: https://www.google-analytics.com https://www.googletagmanager.com",
               "font-src 'self' https://fonts.gstatic.com",
-              "connect-src 'self' https://umami.mountdoom.space",
+              "connect-src 'self' https://umami.mountdoom.space https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net",
               "worker-src 'self'",
               "manifest-src 'self'",
               "media-src 'self'",
