@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { type Locale, type Dictionary } from '@/lib/dictionaries';
 import { type HeroVariant } from '@/lib/ab-test';
 import FeaturedGameCard from './FeaturedGameCard';
@@ -27,6 +27,21 @@ export default function FeaturedCarousel({ games, locale, dict, heroVariant }: F
     const [isPaused, setIsPaused] = useState(false);
     const [touchStart, setTouchStart] = useState<number | null>(null);
     const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+    // Track hero impression ONCE per page load - this ref persists across carousel rotations
+    const hasTrackedHeroImpression = useRef(false);
+
+    // Track hero impression once on initial mount
+    useEffect(() => {
+        if (!hasTrackedHeroImpression.current && games.length > 0 && typeof window !== 'undefined' && window.umami) {
+            hasTrackedHeroImpression.current = true;
+            window.umami.track('Hero Impression', {
+                game_id: games[0].slug,
+                variant: heroVariant,
+                position: 0,
+            });
+        }
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps -- intentionally only run on mount
 
     // Auto-rotate
     useEffect(() => {

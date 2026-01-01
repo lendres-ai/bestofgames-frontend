@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRef, useState, useCallback, useEffect } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import { scoreClasses } from '@/lib/ui-helpers';
 import { type Locale, type Dictionary } from '@/lib/dictionaries';
 import { type HeroVariant } from '@/lib/ab-test';
@@ -56,25 +56,6 @@ export default function FeaturedGameCard({
 
   // Determine if score is high (8+) for pulsing glow
   const isHighScore = typeof score === 'number' && score >= 8;
-
-  // Track hero impression ONLY on initial mount when this is the first hero (position 0)
-  // Use ref to ensure we only fire once per page load
-  const hasTrackedImpression = useRef(false);
-  useEffect(() => {
-    if (
-      position === 0 &&
-      !hasTrackedImpression.current &&
-      typeof window !== 'undefined' &&
-      window.umami
-    ) {
-      hasTrackedImpression.current = true;
-      window.umami.track('Hero Impression', {
-        game_id: slug,
-        variant: heroVariant,
-        position: 0,
-      });
-    }
-  }, []); // Empty deps - only run on mount
 
   return (
     <article className="group">
