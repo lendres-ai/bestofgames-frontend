@@ -2,11 +2,8 @@ import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV !== "production";
 
-// Bundle analyzer for performance monitoring
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-});
-
+// Disable Next.js telemetry
+process.env.NEXT_TELEMETRY_DISABLED = '1';
 
 const nextConfig: NextConfig = {
   images: {
@@ -55,9 +52,29 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // Security headers
+  // Security + Cache headers
   async headers() {
     return [
+      // Static assets with hashes - cache forever (immutable)
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable'
+          }
+        ]
+      },
+      // HTML pages - always revalidate to get fresh chunk references
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, must-revalidate'
+          }
+        ]
+      },
       {
         source: '/(.*)',
         headers: [
@@ -115,6 +132,14 @@ const nextConfig: NextConfig = {
   }
 };
 
+// Bundle analyzer - only load when ANALYZE=true (avoids MODULE_NOT_FOUND in production)
+let config = nextConfig;
+if (process.env.ANALYZE === 'true') {
+  const withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: true,
+  });
+  config = withBundleAnalyzer(nextConfig);
+}
 
+export default config;
 
-export default withBundleAnalyzer(nextConfig);
