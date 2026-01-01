@@ -58,6 +58,11 @@ export default function NewsletterSignup({ locale, dict, variant = 'default' }: 
             setStatus('success');
             setEmail('');
 
+            // Track successful signup in Umami
+            if (typeof window !== 'undefined' && window.umami) {
+                window.umami.track('Newsletter Signup Success', { variant });
+            }
+
             // Track Google Ads Conversion (only once)
             if (!conversionSentRef.current && typeof window !== 'undefined' && (window as any).gtag) {
                 conversionSentRef.current = true;
@@ -99,8 +104,6 @@ export default function NewsletterSignup({ locale, dict, variant = 'default' }: 
                         <button
                             type="submit"
                             disabled={status === 'loading'}
-                            data-umami-event="Newsletter Signup"
-                            data-umami-event-variant="footer"
                             className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-fuchsia-500 to-indigo-500 px-5 py-2 text-sm font-semibold text-white shadow-md transition hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-400/50 disabled:opacity-50"
                         >
                             {status === 'loading' ? (
@@ -152,8 +155,6 @@ export default function NewsletterSignup({ locale, dict, variant = 'default' }: 
                                 <button
                                     type="submit"
                                     disabled={status === 'loading'}
-                                    data-umami-event="Newsletter Signup"
-                                    data-umami-event-variant="compact"
                                     className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-fuchsia-500 to-indigo-500 px-5 py-2 text-sm font-semibold text-white shadow-md transition hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-400/50 disabled:opacity-50"
                                 >
                                     {status === 'loading' ? (
@@ -225,8 +226,6 @@ export default function NewsletterSignup({ locale, dict, variant = 'default' }: 
                         <button
                             type="submit"
                             disabled={status === 'loading'}
-                            data-umami-event="Newsletter Signup"
-                            data-umami-event-variant="default"
                             className="group inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-fuchsia-500 via-indigo-500 to-sky-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:scale-[1.03] hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-indigo-400/50 disabled:opacity-50"
                         >
                             {status === 'loading' ? (
