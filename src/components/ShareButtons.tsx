@@ -56,7 +56,7 @@ export default function ShareButtons({
       <span className="mr-1 text-sm font-medium text-gray-600 dark:text-gray-400">
         <Share2 className="inline-block h-4 w-4" />
       </span>
-      
+
       {/* Twitter/X */}
       <a
         href={twitterUrl}
@@ -65,6 +65,7 @@ export default function ShareButtons({
         aria-label={dict.share.share_on_twitter}
         className={`${buttonBaseClass} bg-black text-white hover:bg-gray-800`}
         title={dict.share.share_on_twitter}
+        data-umami-event="Share" data-umami-event-platform="Twitter"
       >
         <Twitter className="h-4 w-4" />
       </a>
@@ -77,6 +78,7 @@ export default function ShareButtons({
         aria-label={dict.share.share_on_facebook}
         className={`${buttonBaseClass} bg-[#1877F2] text-white hover:bg-[#166FE5]`}
         title={dict.share.share_on_facebook}
+        data-umami-event="Share" data-umami-event-platform="Facebook"
       >
         <Facebook className="h-4 w-4" />
       </a>
@@ -89,6 +91,7 @@ export default function ShareButtons({
         aria-label={dict.share.share_on_reddit}
         className={`${buttonBaseClass} bg-[#FF4500] text-white hover:bg-[#E03D00]`}
         title={dict.share.share_on_reddit}
+        data-umami-event="Share" data-umami-event-platform="Reddit"
       >
         <svg
           className="h-4 w-4"
@@ -105,11 +108,11 @@ export default function ShareButtons({
         type="button"
         onClick={copyToClipboard}
         aria-label={copied ? dict.share.link_copied : dict.share.copy_link}
-        className={`${buttonBaseClass} ${
-          copied
+        className={`${buttonBaseClass} ${copied
             ? "bg-green-500 text-white"
             : "bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
-        }`}
+          }`}
+        data-umami-event="Share" data-umami-event-platform="Copy Link"
         title={copied ? dict.share.link_copied : dict.share.copy_link}
       >
         {copied ? <Check className="h-4 w-4" /> : <Link className="h-4 w-4" />}

@@ -11,12 +11,14 @@
     "no_results": "Keine Spiele gefunden"
   },
   "home": {
-    "hero_title": "Frische Indie-Game Reviews. Wunderschöne Cover. Kein Schnickschnack.",
-    "hero_subtitle": "Handverlesene Indie-Perlen mit prägnanten Texten und ehrlichen Bewertungen.",
+    "hero_title": "Finde dein nächstes Lieblings-Indie-Game.",
+    "hero_subtitle": "Neue Reviews jede Woche. Ehrliche Bewertungen. Kein Füllmaterial.",
     "browse_all": "Alle Reviews ansehen",
     "top_rated": "Bestbewertet",
     "surprise_me": "Überrasch mich!",
+    "newsletter_cta": "Wöchentliche Tipps 📬",
     "read_review": "Review lesen",
+    "social_proof": "150+ kuratierte Indie-Game Reviews",
     "categories": {
       "metroidvania": "Metroidvania",
       "roguelike": "Roguelike",
@@ -116,6 +118,13 @@
     "share_on_reddit": "Auf Reddit teilen",
     "copy_link": "Link kopieren",
     "link_copied": "Link kopiert!"
+  },
+  "newsletter": {
+    "title": "Bleib auf dem Laufenden",
+    "subtitle": "Erhalte wöchentlich die Top 3 Indie-Games. Kein Spam.",
+    "placeholder": "deine@email.de",
+    "button": "Abonnieren",
+    "success": "Du bist dabei! Check deine E-Mails.",
+    "error": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
   }
 }
-

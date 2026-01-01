@@ -4,6 +4,7 @@ import Script from 'next/script';
 import GameHero from '@/components/GameHero';
 import MainArticle from '@/components/MainArticle';
 import SimilarGames from '@/components/SimilarGames';
+import NewsletterSignup from '@/components/NewsletterSignup';
 import { generateGameReviewStructuredData, generateBreadcrumbStructuredData } from '@/lib/structured-data';
 import { Locale, getDictionary } from '@/lib/dictionaries';
 import { getLocalizedText, formatLocalizedDate } from '@/lib/i18n';
@@ -39,11 +40,11 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const slug = decodeURIComponent(rawSlug);
   const game = await getGameBySlug(slug);
   if (!game) return {};
-  
+
   const title = getLocalizedText(game.title, lang);
   const summary = getLocalizedText(game.summary, lang);
   const ogImage = (game.images && game.images.length > 0 && game.images[0]) || game.heroUrl || '/logo.png';
-  
+
   return {
     title: `${title} – Review & Score`,
     description: summary || undefined,
@@ -57,10 +58,10 @@ export default async function Page({ params }: { params: Promise<{ lang: string;
   const lang = (langParam as Locale) || 'en';
   const slug = decodeURIComponent(rawSlug);
   const dict = await getDictionary(lang);
-  
+
   const game = await getGameBySlug(slug);
   if (!game) return notFound();
-  
+
   const similarGames = await getSimilarGames(slug);
   const steamPriceText = game.steamAppId
     ? await getSteamPriceText(game.steamAppId)
@@ -75,7 +76,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string;
   const conclusion = getLocalizedText(game.conclusion, lang);
   const reviewTitle = getLocalizedText(game.reviewTitle, lang);
   const userOpinion = getLocalizedText(game.userOpinion, lang);
-  
+
   // Localize pros and cons (they're stored as JSONB {de, en} objects)
   const localizedPros = (game.pros ?? []).map(p => getLocalizedText(p, lang));
   const localizedCons = (game.cons ?? []).map(c => getLocalizedText(c, lang));
@@ -96,7 +97,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string;
     { name: title, url: `${SITE_URL}/${lang}/games/${slug}` },
   ]);
 
-  const formattedReleaseDate = game.releaseDate 
+  const formattedReleaseDate = game.releaseDate
     ? formatLocalizedDate(game.releaseDate, lang)
     : undefined;
 
@@ -128,19 +129,23 @@ export default async function Page({ params }: { params: Promise<{ lang: string;
         dict={dict}
       />
       <div className={`mx-auto grid gap-8 px-4 ${similarGames.length ? 'lg:grid-cols-[minmax(0,1fr)_300px]' : ''}`}>
-        <MainArticle
-          reviewTitle={reviewTitle}
-          description={description}
-          introduction={introduction}
-          gameplayFeatures={gameplayFeatures}
-          conclusion={conclusion}
-          score={game.score ? Number(game.score) : null}
-          userOpinion={userOpinion}
-          images={(game.images ?? []).filter((i): i is string => i !== null)}
-          pros={localizedPros}
-          cons={localizedCons}
-          dict={dict}
-        />
+        <div className="space-y-8">
+          <MainArticle
+            reviewTitle={reviewTitle}
+            description={description}
+            introduction={introduction}
+            gameplayFeatures={gameplayFeatures}
+            conclusion={conclusion}
+            score={game.score ? Number(game.score) : null}
+            userOpinion={userOpinion}
+            images={(game.images ?? []).filter((i): i is string => i !== null)}
+            pros={localizedPros}
+            cons={localizedCons}
+            dict={dict}
+          />
+          {/* Newsletter - shown after reading the review */}
+          <NewsletterSignup locale={lang} dict={dict} variant="compact" />
+        </div>
         {similarGames.length > 0 && (
           <SimilarGames
             games={similarGames.map(g => ({

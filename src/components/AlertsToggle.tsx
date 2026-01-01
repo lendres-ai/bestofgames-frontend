@@ -71,6 +71,7 @@ export default function AlertsToggle({ label }: AlertsToggleProps) {
       type="button"
       onClick={onToggle}
       disabled={isPending}
+      data-umami-event="Sale Alerts" data-umami-event-action={enabled ? "disable" : "enable"}
       className={`inline-flex items-center justify-center gap-2 rounded-2xl border px-5 py-2.5 text-sm font-semibold shadow-sm ring-1 ring-black/5 backdrop-blur transition-transform hover:scale-[1.02] focus:outline-none focus-visible:ring-2 ${enabled ? 'bg-emerald-600 text-white hover:brightness-110' : 'bg-white/60 text-gray-900 dark:bg-gray-900/60 dark:text-white'}`}
     >
       {enabled ? enabledText : disabledText}
