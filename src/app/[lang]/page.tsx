@@ -10,6 +10,7 @@ import { coverOf } from "@/lib/ui-helpers";
 import { generateWebsiteStructuredData, generateGameListStructuredData } from "@/lib/structured-data";
 import { Locale, getDictionary } from "@/lib/dictionaries";
 import { getLocalizedText } from "@/lib/i18n";
+import { getHeroVariant, applyHeroVariant } from "@/lib/ab-test";
 
 // ISR: 1 hour
 export const revalidate = 3600;
@@ -31,9 +32,10 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
   const { lang: langParam } = await params;
   const lang = (langParam as Locale) || 'en';
   const dict = await getDictionary(lang);
-  const [rows, reviewCount] = await Promise.all([
+  const [rows, reviewCount, heroVariant] = await Promise.all([
     getRecentReviews(12), // Increased limit for carousel
-    getReviewCount()
+    getReviewCount(),
+    getHeroVariant()
   ]);
 
   const items: ReviewItem[] = rows
@@ -47,20 +49,14 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
       releaseDate: r.releaseDate,
       images: r.images ? r.images : null,
       image: coverOf(r),
-      // Need tags ideally, but getRecentReviews might not fetch them all? 
-      // FeaturedGameCard expects tags. 
-      // getRecentReviews query doesn't seem to fetch tags in the snippet I saw?
-      // Wait, let me check queries.ts again.
-      // logic in page.tsx line 144: tags={featured.tags ?? []}
-      // ReviewItem type has tags?: string[] | null
     }));
 
   // Logic: 
-  // Carousel gets top 5
+  // Carousel gets top 5 (reordered by A/B variant)
   // Right side gets next 4
   // Remaining items get the rest
 
-  const carouselItems = items.slice(0, 5);
+  const carouselItems = applyHeroVariant(items.slice(0, 5), heroVariant);
   const rightItems = items.slice(5, 9);
   const remaining = items.slice(9);
 
@@ -150,6 +146,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
               games={carouselItems}
               locale={lang}
               dict={dict}
+              heroVariant={heroVariant}
             />
 
             {/* RIGHT: two-up grid of smaller cards */}

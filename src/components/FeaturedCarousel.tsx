@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { type Locale, type Dictionary } from '@/lib/dictionaries';
+import { type HeroVariant } from '@/lib/ab-test';
 import FeaturedGameCard from './FeaturedGameCard';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -18,9 +19,10 @@ interface FeaturedCarouselProps {
     games: GameData[];
     locale: Locale;
     dict: Dictionary;
+    heroVariant: HeroVariant;
 }
 
-export default function FeaturedCarousel({ games, locale, dict }: FeaturedCarouselProps) {
+export default function FeaturedCarousel({ games, locale, dict, heroVariant }: FeaturedCarouselProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
     const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -97,6 +99,8 @@ export default function FeaturedCarousel({ games, locale, dict }: FeaturedCarous
                         {...currentGame}
                         locale={locale}
                         dict={dict}
+                        heroVariant={heroVariant}
+                        position={currentIndex}
                     />
                 </div>
             </div>

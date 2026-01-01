@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { locales, defaultLocale, type Locale } from '@/lib/i18n/config';
 
+const AB_COOKIE_NAME = 'ab_hero_variant';
+const AB_COOKIE_MAX_AGE = 60 * 60 * 24; // 24 hours
+
 function getLocaleFromHeaders(request: NextRequest): Locale {
     const acceptLanguage = request.headers.get('accept-language');
     if (!acceptLanguage) return defaultLocale;
@@ -21,6 +24,26 @@ function getLocaleFromHeaders(request: NextRequest): Locale {
     }
 
     return defaultLocale;
+}
+
+/**
+ * Assigns A/B test variant cookie if not already present
+ */
+function assignABVariant(request: NextRequest, response: NextResponse): NextResponse {
+    const existingVariant = request.cookies.get(AB_COOKIE_NAME)?.value;
+
+    if (existingVariant !== 'A' && existingVariant !== 'B') {
+        // Assign new variant: 50/50 split
+        const variant = Math.random() < 0.5 ? 'A' : 'B';
+        response.cookies.set(AB_COOKIE_NAME, variant, {
+            maxAge: AB_COOKIE_MAX_AGE,
+            httpOnly: false, // Allow client-side read for tracking
+            sameSite: 'lax',
+            path: '/',
+        });
+    }
+
+    return response;
 }
 
 export function proxy(request: NextRequest) {
@@ -44,7 +67,9 @@ export function proxy(request: NextRequest) {
     );
 
     if (pathnameHasLocale) {
-        return NextResponse.next();
+        // Add A/B variant cookie if needed, then continue
+        const response = NextResponse.next();
+        return assignABVariant(request, response);
     }
 
     // Detect locale from headers and redirect
@@ -54,7 +79,9 @@ export function proxy(request: NextRequest) {
     // Preserve search params
     newUrl.search = request.nextUrl.search;
 
-    return NextResponse.redirect(newUrl);
+    // Add A/B variant cookie to redirect response
+    const redirectResponse = NextResponse.redirect(newUrl);
+    return assignABVariant(request, redirectResponse);
 }
 
 export const config = {
