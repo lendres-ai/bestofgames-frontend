@@ -5,6 +5,7 @@ import { Gamepad2, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Locale, Dictionary } from "@/lib/dictionaries";
 import SearchBar from "./SearchBar";
+import ThemeToggle from "./ThemeToggle";
 
 type HeaderProps = {
   locale: Locale;
@@ -13,7 +14,7 @@ type HeaderProps = {
 
 export default function Header({ locale, dict }: HeaderProps) {
   const [open, setOpen] = useState(false);
-  
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-gradient-to-r from-indigo-600 via-sky-500 to-fuchsia-500 shadow-lg dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="mx-auto max-w-screen-xl px-6 lg:px-8">
@@ -32,25 +33,26 @@ export default function Header({ locale, dict }: HeaderProps) {
           <div className="hidden md:flex items-center gap-6">
             <SearchBar locale={locale} dict={dict} />
             <nav className="flex items-center gap-8 text-sm font-medium" role="navigation" aria-label="Main navigation">
-              <Link 
-                href={`/${locale}/games`} 
+              <Link
+                href={`/${locale}/games`}
                 className="text-white/90 transition-colors hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:rounded"
               >
                 {dict.nav.games}
               </Link>
-              <Link 
-                href={`/${locale}/wishlist`} 
+              <Link
+                href={`/${locale}/wishlist`}
                 className="text-white/90 transition-colors hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:rounded"
               >
                 {dict.nav.wishlist}
               </Link>
-              <Link 
-                href={`/${locale}/about`} 
+              <Link
+                href={`/${locale}/about`}
                 className="text-white/90 transition-colors hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:rounded"
               >
                 {dict.nav.about}
               </Link>
             </nav>
+            <ThemeToggle />
           </div>
 
           {/* Mobile toggle */}
@@ -73,27 +75,30 @@ export default function Header({ locale, dict }: HeaderProps) {
               <div className="mb-2">
                 <SearchBar locale={locale} dict={dict} />
               </div>
-              <Link 
-                onClick={() => setOpen(false)} 
-                href={`/${locale}/games`} 
+              <Link
+                onClick={() => setOpen(false)}
+                href={`/${locale}/games`}
                 className="rounded px-3 py-2 text-white/95 transition-colors hover:bg-white/10 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50"
               >
                 {dict.nav.games}
               </Link>
-              <Link 
-                onClick={() => setOpen(false)} 
-                href={`/${locale}/wishlist`} 
+              <Link
+                onClick={() => setOpen(false)}
+                href={`/${locale}/wishlist`}
                 className="rounded px-3 py-2 text-white/95 transition-colors hover:bg-white/10 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50"
               >
                 {dict.nav.wishlist}
               </Link>
-              <Link 
-                onClick={() => setOpen(false)} 
-                href={`/${locale}/about`} 
+              <Link
+                onClick={() => setOpen(false)}
+                href={`/${locale}/about`}
                 className="rounded px-3 py-2 text-white/95 transition-colors hover:bg-white/10 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50"
               >
                 {dict.nav.about}
               </Link>
+              <div className="mt-2 flex justify-center">
+                <ThemeToggle />
+              </div>
             </div>
           </nav>
         )}
