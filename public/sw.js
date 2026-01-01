@@ -14,7 +14,7 @@ self.addEventListener('install', (event) => {
         try {
           // Use cache 'reload' to bypass HTTP cache in dev
           await cache.add(new Request(url, { cache: 'reload' }));
-        } catch (e) {
+        } catch {
           // Ignore individual failures (e.g., favicon on https://localhost)
         }
       }
@@ -109,7 +109,7 @@ self.addEventListener('push', (event) => {
     if (event.data) {
       payload = event.data.json();
     }
-  } catch (e) {}
+  } catch {}
 
   const { title = 'Game on sale!', body = 'A wishlisted game is discounted.', icon = '/logo.png', url = '/' } = payload;
   event.waitUntil(
@@ -132,7 +132,7 @@ self.addEventListener('notificationclick', (event) => {
       if ('focus' in client) {
         await client.focus();
         if ('navigate' in client && client.url !== targetUrl) {
-          try { await client.navigate(targetUrl); } catch (e) {}
+          try { await client.navigate(targetUrl); } catch {}
         }
         return;
       }

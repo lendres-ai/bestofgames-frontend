@@ -1,4 +1,4 @@
-import { db } from './db';
+import { db, isDatabaseAvailable } from './db';
 import {
     games,
     reviews,
@@ -89,6 +89,9 @@ export type SearchResult = {
  * then fill remaining slots with top-rated games from all time.
  */
 export async function getRecentReviews(limit = 8): Promise<ReviewListItem[]> {
+    // Return empty during build if no database available
+    if (!isDatabaseAvailable()) return [];
+
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
@@ -151,6 +154,9 @@ export async function getRecentReviews(limit = 8): Promise<ReviewListItem[]> {
 }
 
 export async function getGameBySlug(slug: string): Promise<GameDetail | null> {
+    // Return null during build if no database available
+    if (!isDatabaseAvailable()) return null;
+
     // First, get the main game and review data
     const gameData = await db
         .select({
@@ -232,6 +238,9 @@ export async function getGameBySlug(slug: string): Promise<GameDetail | null> {
 }
 
 export async function getSimilarGames(slug: string, limit = 4): Promise<SimilarGame[]> {
+    // Return empty during build if no database available
+    if (!isDatabaseAvailable()) return [];
+
     const tagRows = await db
         .select({ tagId: reviewTags.tagId })
         .from(reviews)
@@ -269,6 +278,9 @@ export async function getSimilarGames(slug: string, limit = 4): Promise<SimilarG
 export type SortOrder = 'score' | 'publishedAt' | 'title' | 'releaseDate';
 
 export async function getAllReviews(orderBy: SortOrder = 'publishedAt'): Promise<ReviewListItem[]> {
+    // Return empty during build if no database available
+    if (!isDatabaseAvailable()) return [];
+
     const orderColumn =
         orderBy === 'score'
             ? reviews.score
@@ -298,6 +310,9 @@ export async function getReviewsByTag(
     tag: string,
     orderBy: SortOrder = 'publishedAt'
 ): Promise<ReviewListItem[]> {
+    // Return empty during build if no database available
+    if (!isDatabaseAvailable()) return [];
+
     const orderColumn =
         orderBy === 'score'
             ? reviews.score
@@ -336,6 +351,9 @@ export async function getReviewsByTag(
  * Get a random published game for the "Surprise me!" feature
  */
 export async function getRandomGame(): Promise<{ slug: string } | null> {
+    // Return null during build if no database available
+    if (!isDatabaseAvailable()) return null;
+
     const result = await db
         .select({ slug: games.slug })
         .from(reviews)
@@ -351,6 +369,9 @@ export async function getRandomGame(): Promise<{ slug: string } | null> {
  * Get the total count of published reviews for social proof
  */
 export async function getReviewCount(): Promise<number> {
+    // Return 0 during build if no database available
+    if (!isDatabaseAvailable()) return 0;
+
     const result = await db
         .select({ count: sql<number>`count(*)` })
         .from(reviews)
@@ -363,6 +384,9 @@ export async function searchGames(
     query: string,
     limit = 20
 ): Promise<SearchResult[]> {
+    // Return empty during build if no database available
+    if (!isDatabaseAvailable()) return [];
+
     const trimmed = query.trim();
     if (!trimmed || trimmed.length < 2) return [];
 
