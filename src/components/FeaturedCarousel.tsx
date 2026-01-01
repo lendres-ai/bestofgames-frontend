@@ -23,6 +23,8 @@ interface FeaturedCarouselProps {
 export default function FeaturedCarousel({ games, locale, dict }: FeaturedCarouselProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
+    const [touchStart, setTouchStart] = useState<number | null>(null);
+    const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
     // Auto-rotate
     useEffect(() => {
@@ -43,15 +45,45 @@ export default function FeaturedCarousel({ games, locale, dict }: FeaturedCarous
         setCurrentIndex((prev) => (prev - 1 + games.length) % games.length);
     }, [games.length]);
 
+    const handleTouchStart = (e: React.TouchEvent) => {
+        setIsPaused(true);
+        setTouchStart(e.targetTouches[0].clientX);
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        setTouchEnd(e.targetTouches[0].clientX);
+    };
+
+    const handleTouchEnd = () => {
+        setIsPaused(false);
+        if (!touchStart || !touchEnd) return;
+
+        const distance = touchStart - touchEnd;
+        const isLeftSwipe = distance > 50;
+        const isRightSwipe = distance < -50;
+
+        if (isLeftSwipe) {
+            goToNext();
+        } else if (isRightSwipe) {
+            goToPrev();
+        }
+
+        setTouchEnd(null);
+        setTouchStart(null);
+    };
+
     if (!games.length) return null;
 
     const currentGame = games[currentIndex];
 
     return (
         <div
-            className="group relative"
+            className="group relative touch-pan-y"
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
             aria-roledescription="carousel"
         >
             <div className="relative overflow-hidden rounded-3xl">
