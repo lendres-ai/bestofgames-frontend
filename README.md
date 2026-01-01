@@ -6,7 +6,7 @@ Eine schlanke Next.js‑App, die kuratierte Spiele‑Reviews präsentiert. Start
 - **Framework**: Next.js 15 (App Router) mit React 19
 - **Datenbank**: PostgreSQL via drizzle‑orm und postgres‑js
 - **Styles**: Tailwind CSS 4
-- **Analytics**: Optional Plausible (nur in Production geladen)
+- **Analytics**: Umami (selbst gehostet, nur in Production geladen)
 
 ### Features
 - **Übersicht**: Neueste Reviews mit Titel, Kurzbeschreibung und Score
@@ -82,7 +82,7 @@ npm test
 - **Schema**: Ein `review` pro `game` (Unique‑Constraint auf `reviews.game_id`).
 - **SEO**: Dynamische `generateMetadata` für Spielseiten, inkl. Open‑Graph.
 - **ISR**: `revalidate` auf Start‑ und Detailseiten konfiguriert.
-- **Plausible**: Wird nur in `NODE_ENV=production` geladen. Domain in `src/app/layout.tsx` anpassbar.
+- **Umami**: Wird nur in `NODE_ENV=production` geladen. Selbst gehostet.
 
 ## Deployment
 - Ideal über Vercel. Setze `DATABASE_URL` als Projekt‑Environment‑Variable.
