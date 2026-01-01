@@ -32,7 +32,7 @@ export default function FeaturedCarousel({ games, locale, dict }: FeaturedCarous
 
         const interval = setInterval(() => {
             setCurrentIndex((prev) => (prev + 1) % games.length);
-        }, 6000); // 6 seconds per slide
+        }, 3000); // 6 seconds per slide
 
         return () => clearInterval(interval);
     }, [games.length, isPaused]);
