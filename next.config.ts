@@ -65,16 +65,6 @@ const nextConfig: NextConfig = {
           }
         ]
       },
-      // HTML pages - always revalidate to get fresh chunk references
-      {
-        source: '/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=0, must-revalidate'
-          }
-        ]
-      },
       {
         source: '/(.*)',
         headers: [
