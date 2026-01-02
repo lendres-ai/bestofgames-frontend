@@ -29,7 +29,13 @@ export default function SimilarGames({ games, locale, dict }: SimilarGamesProps)
               key={game.slug}
               className="overflow-hidden rounded-xl border bg-white/60 shadow-sm ring-1 ring-black/5 dark:bg-gray-900/60"
             >
-              <Link href={`/${locale}/games/${game.slug}`} className="flex gap-3 p-3">
+              <Link
+                href={`/${locale}/games/${game.slug}`}
+                className="flex gap-3 p-3"
+                data-umami-event="game_card_click"
+                data-umami-event-game={game.slug}
+                data-umami-event-source="similar_games"
+              >
                 {imageUrl && (
                   <Image
                     src={imageUrl}

@@ -26,6 +26,8 @@ export default function ReviewCard({
       <Link
         href={`/${locale}/games/${slug}`}
         className="block overflow-hidden rounded-3xl border bg-white/60 shadow-sm ring-1 ring-black/5 transition hover:shadow-lg dark:bg-gray-900/60"
+        data-umami-event="game_card_click"
+        data-umami-event-game={slug}
       >
         <div className="relative">
           <Image
