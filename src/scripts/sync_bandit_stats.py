@@ -117,7 +117,13 @@ def get_events_by_game(
             return get_event_metrics_fallback(base_url, website_id, token, event_name, start_at, end_at)
         
         response.raise_for_status()
-        events = response.json()
+        data = response.json()
+        
+        # Handle paginated response: {data: [...], count: N, page: N, ...}
+        if isinstance(data, dict):
+            events = data.get("data", [])
+        else:
+            events = data
     
     # Aggregate by game_id from event data
     counts = defaultdict(int)
