@@ -92,11 +92,13 @@ def get_events_by_game(
     end_at: datetime
 ) -> dict[str, int]:
     """
-    Fetch events and group by game_id from event data.
-    Uses the /events endpoint to get detailed event data.
+    Fetch events and group by game from event data.
+    Uses the /event-data/values endpoint to get aggregated counts per game.
+    
+    Per Umami docs: GET /api/websites/:websiteId/event-data/values
+    Returns: [{ "value": "game-slug", "total": 28 }, ...]
     """
-    # First try to get event series which might have more detail
-    url = f"{base_url}/api/websites/{website_id}/events"
+    url = f"{base_url}/api/websites/{website_id}/event-data/values"
     
     headers = {
         "Authorization": f"Bearer {token}",
@@ -106,46 +108,40 @@ def get_events_by_game(
     params = {
         "startAt": int(start_at.timestamp() * 1000),
         "endAt": int(end_at.timestamp() * 1000),
+        "event": event_name,
+        "propertyName": "game",  # The property we track for hero events
     }
     
     with httpx.Client(timeout=30) as client:
         response = client.get(url, headers=headers, params=params)
         
-        # If events endpoint doesn't exist, fall back to metrics
+        # If event-data endpoint doesn't exist, fall back to metrics
         if response.status_code == 404:
-            print(f"    /events endpoint not available, using /metrics fallback")
+            print(f"    /event-data/values endpoint not available, using /metrics fallback")
             return get_event_metrics_fallback(base_url, website_id, token, event_name, start_at, end_at)
         
         response.raise_for_status()
         data = response.json()
-        
-        # Handle paginated response: {data: [...], count: N, page: N, ...}
-        if isinstance(data, dict):
-            events = data.get("data", [])
-        else:
-            events = data
     
-    # Aggregate by game_id from event data
-    counts = defaultdict(int)
+    # The response is a list: [{"value": "game-slug", "total": N}, ...]
+    counts = {}
     
-    for event in events:
-        # Check if this is our event
-        name = event.get("eventName") or event.get("event_name") or event.get("name")
-        if name != event_name:
-            continue
-        
-        # Extract game_id from event data
-        game_id = None
-        data = event.get("eventData") or event.get("data") or {}
-        
-        if isinstance(data, dict):
-            # Try different possible field names
-            game_id = data.get("game_id") or data.get("game") or data.get("gameId")
-        
-        if game_id:
-            counts[game_id] += 1
+    if isinstance(data, list):
+        for item in data:
+            value = item.get("value")
+            total = item.get("total", 0)
+            if value:
+                counts[value] = total
+    elif isinstance(data, dict):
+        # Handle paginated response if the API returns one
+        items = data.get("data", [])
+        for item in items:
+            value = item.get("value")
+            total = item.get("total", 0)
+            if value:
+                counts[value] = total
     
-    return dict(counts)
+    return counts
 
 
 def get_event_metrics_fallback(
