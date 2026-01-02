@@ -89,7 +89,8 @@ def get_events_by_game(
     token: str,
     event_name: str,
     start_at: datetime,
-    end_at: datetime
+    end_at: datetime,
+    property_name: str = "game"
 ) -> dict[str, int]:
     """
     Fetch events and group by game from event data.
@@ -97,6 +98,9 @@ def get_events_by_game(
     
     Per Umami docs: GET /api/websites/:websiteId/event-data/values
     Returns: [{ "value": "game-slug", "total": 28 }, ...]
+    
+    Args:
+        property_name: The event data property to group by (e.g., "game" or "game_id")
     """
     url = f"{base_url}/api/websites/{website_id}/event-data/values"
     
@@ -109,7 +113,7 @@ def get_events_by_game(
         "startAt": int(start_at.timestamp() * 1000),
         "endAt": int(end_at.timestamp() * 1000),
         "event": event_name,
-        "propertyName": "game",  # The property we track for hero events
+        "propertyName": property_name,
     }
     
     with httpx.Client(timeout=30) as client:
@@ -317,8 +321,9 @@ def main():
         sys.exit(1)
     
     # Fetch events from Umami
+    # Note: hero_impression uses "game_id" property, hero_click uses "game" property
     print("  Fetching hero_impression events...")
-    impressions = get_events_by_game(UMAMI_URL, UMAMI_WEBSITE_ID, token, "hero_impression", start_at, end_at)
+    impressions = get_events_by_game(UMAMI_URL, UMAMI_WEBSITE_ID, token, "hero_impression", start_at, end_at, property_name="game_id")
     print(f"    Found impressions for {len(impressions)} games")
     
     print("  Fetching hero_click events...")
