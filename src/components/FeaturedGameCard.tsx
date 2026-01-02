@@ -63,7 +63,7 @@ export default function FeaturedGameCard({
         href={`/${locale}/games/${slug}`}
         className="block"
         aria-label={`${dict.home.read_review}: ${title}`}
-        data-umami-event="Hero Click"
+        data-umami-event="hero_click"
         data-umami-event-game={slug}
         data-umami-event-variant={heroVariant}
         data-umami-event-position={position}

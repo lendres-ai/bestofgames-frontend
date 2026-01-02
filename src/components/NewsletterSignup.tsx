@@ -60,7 +60,7 @@ export default function NewsletterSignup({ locale, dict, variant = 'default' }: 
 
             // Track successful signup in Umami
             if (typeof window !== 'undefined' && window.umami) {
-                window.umami.track('Newsletter Signup Success', { variant });
+                window.umami.track('newsletter_signup_success', { variant });
             }
 
             // Track Google Ads Conversion (only once)

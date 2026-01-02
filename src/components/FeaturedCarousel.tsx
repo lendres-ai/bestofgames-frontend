@@ -35,7 +35,7 @@ export default function FeaturedCarousel({ games, locale, dict, heroVariant }: F
     useEffect(() => {
         if (!hasTrackedHeroImpression.current && games.length > 0 && typeof window !== 'undefined' && window.umami) {
             hasTrackedHeroImpression.current = true;
-            window.umami.track('Hero Impression', {
+            window.umami.track('hero_impression', {
                 game_id: games[0].slug,
                 variant: heroVariant,
                 position: 0,

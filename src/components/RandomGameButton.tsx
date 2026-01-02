@@ -34,7 +34,7 @@ export default function RandomGameButton({ locale, label }: Props) {
         <button
             onClick={handleClick}
             disabled={loading}
-            data-umami-event="Surprise me button"
+            data-umami-event="surprise_me_click"
             className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-fuchsia-500 to-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-md transition-all hover:scale-105 hover:shadow-lg hover:shadow-fuchsia-500/25 focus:outline-none focus:ring-2 focus:ring-fuchsia-400 focus:ring-offset-2 disabled:opacity-70 disabled:hover:scale-100"
         >
             <Dice5
