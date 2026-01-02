@@ -154,3 +154,12 @@ export const sentNotifications = pgTable(
   }),
 );
 
+// Hero Game Bandit Stats for Thompson Sampling optimization
+export const heroBanditStats = pgTable('hero_bandit_stats', {
+  gameId: uuid('game_id').primaryKey().references(() => games.id, { onDelete: 'cascade' }),
+  impressions10d: integer('impressions_10d').notNull().default(0),
+  clicks10d: integer('clicks_10d').notNull().default(0),
+  priorAlpha: numeric('prior_alpha', { precision: 5, scale: 2 }).notNull().default('1.0'),
+  priorBeta: numeric('prior_beta', { precision: 5, scale: 2 }).notNull().default('1.0'),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+});
