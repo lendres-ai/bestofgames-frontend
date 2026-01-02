@@ -134,6 +134,8 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
                 <Link
                   key={c.key}
                   href={`/${lang}/tags/${encodeURIComponent(c.key)}`}
+                  data-umami-event="Category Chip Click"
+                  data-umami-event-tag={c.key}
                   className="rounded-full border bg-white/60 px-3 py-1 text-xs font-medium text-gray-700 shadow-sm ring-1 ring-black/5 transition hover:bg-white dark:bg-gray-900/60 dark:text-gray-300 sm:px-4 sm:py-1.5 sm:text-sm"
                 >
                   {c.label}
