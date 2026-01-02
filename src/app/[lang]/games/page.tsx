@@ -1,5 +1,6 @@
 import SortSelect from '@/components/SortSelect';
 import ReviewCard from '@/components/ReviewCard';
+import ListViewTracker from '@/components/ListViewTracker';
 import { getAllReviews, type SortOrder } from '@/lib/queries';
 import { coverOf } from '@/lib/ui-helpers';
 import { Locale, getDictionary } from '@/lib/dictionaries';
@@ -49,6 +50,7 @@ export default async function Page({
 
   return (
     <main className="mx-auto max-w-screen-xl px-[var(--container-x)] pt-[var(--section-pt)] pb-[var(--section-pb)] 2xl:px-0">
+      <ListViewTracker listType="games" itemCount={totalGames} sortOrder={order} />
       <header className="mb-[var(--space-8)] flex items-center gap-4">
         <h1 className="text-3xl font-bold tracking-tight">
           {dict.games.all_games} ({totalGames})

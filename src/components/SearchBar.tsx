@@ -81,9 +81,18 @@ export default function SearchBar({ locale, dict }: SearchBarProps) {
           `/api/search?q=${encodeURIComponent(query)}&limit=8`
         );
         const data = await res.json();
-        setResults(data.results || []);
+        const resultsList = data.results || [];
+        setResults(resultsList);
         setIsOpen(true);
         setSelectedIndex(-1);
+
+        // Track search_used event
+        if (typeof window !== 'undefined' && window.umami) {
+          window.umami.track('search_used', {
+            query: query,
+            results_count: resultsList.length,
+          });
+        }
       } catch (error) {
         console.error("Search error:", error);
         setResults([]);

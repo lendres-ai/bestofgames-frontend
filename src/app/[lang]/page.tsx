@@ -5,6 +5,7 @@ import FeaturedCarousel from "@/components/FeaturedCarousel";
 import HeroCoverGrid from "@/components/HeroCoverGrid";
 import RandomGameButton from "@/components/RandomGameButton";
 import NewsletterSignup from "@/components/NewsletterSignup";
+import ListViewTracker from "@/components/ListViewTracker";
 import { getRecentReviews, getReviewCount } from "@/lib/queries";
 import { coverOf } from "@/lib/ui-helpers";
 import { generateWebsiteStructuredData, generateGameListStructuredData } from "@/lib/structured-data";
@@ -97,6 +98,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(gameListStructuredData) }}
       />
       <main className="relative isolate">
+        <ListViewTracker listType="home" itemCount={items.length} />
         {/* Animated cover grid background */}
         <HeroCoverGrid covers={heroCovers} />
 
