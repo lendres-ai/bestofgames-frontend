@@ -141,8 +141,10 @@ export default function GameHero({
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-2xl border bg-white/60 px-4 py-2 text-sm shadow-sm ring-1 ring-black/5 backdrop-blur hover:bg-white/80 dark:bg-gray-900/60"
-                  data-umami-event="Steam Link Click"
-                  data-umami-event-game={title}
+                  data-umami-event="outbound_click"
+                  data-umami-event-destination="steam"
+                  data-umami-event-game={slug}
+                  data-umami-event-steam-id={steamAppId}
                 >
                   <ExternalLink className="h-4 w-4" />
                   <span>{dict.game_detail.buy_on_steam}{steamPriceText ? ` • ${steamPriceText}` : ''}</span>

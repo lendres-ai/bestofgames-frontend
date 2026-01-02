@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Enable selector-based dark mode (responds to .dark class on html) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   /* Colors */
   --background: #ffffff;

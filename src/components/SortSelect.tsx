@@ -24,9 +24,19 @@ export default function SortSelect({ dict }: SortSelectProps) {
     <select
       value={current}
       onChange={(e) => {
+        const newSort = e.target.value;
         const params = new URLSearchParams(searchParams.toString());
-        params.set('sort', e.target.value);
+        params.set('sort', newSort);
         router.replace(`?${params.toString()}`);
+
+        // Track filter_applied event
+        if (typeof window !== 'undefined' && window.umami) {
+          window.umami.track('filter_applied', {
+            filter_type: 'sort',
+            filter_value: newSort,
+            previous_value: current,
+          });
+        }
       }}
       className="rounded-md border p-2 text-sm"
       aria-label={dict.games.sort_by}

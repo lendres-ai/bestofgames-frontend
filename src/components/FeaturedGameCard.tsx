@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRef, useState, useCallback } from 'react';
 import { scoreClasses } from '@/lib/ui-helpers';
 import { type Locale, type Dictionary } from '@/lib/dictionaries';
+import { type HeroVariant } from '@/lib/ab-test';
 
 interface FeaturedGameCardProps {
   slug: string;
@@ -15,6 +16,8 @@ interface FeaturedGameCardProps {
   tags?: string[];
   locale: Locale;
   dict: Dictionary;
+  heroVariant: HeroVariant;
+  position: number;
 }
 
 export default function FeaturedGameCard({
@@ -26,6 +29,8 @@ export default function FeaturedGameCard({
   tags = [],
   locale,
   dict,
+  heroVariant,
+  position,
 }: FeaturedGameCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [transform, setTransform] = useState('');
@@ -58,7 +63,10 @@ export default function FeaturedGameCard({
         href={`/${locale}/games/${slug}`}
         className="block"
         aria-label={`${dict.home.read_review}: ${title}`}
-        data-umami-event="Featured Game Click" data-umami-event-game={slug}
+        data-umami-event="Hero Click"
+        data-umami-event-game={slug}
+        data-umami-event-variant={heroVariant}
+        data-umami-event-position={position}
       >
         <div
           ref={cardRef}

@@ -4,7 +4,7 @@ import "../globals.css";
 import Script from 'next/script';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+
 import { Locale, locales, getDictionary } from "@/lib/dictionaries";
 import { SITE_URL, SITE_NAME, METADATA } from "@/lib/constants";
 
@@ -165,7 +165,7 @@ export default async function LocaleLayout({
         <Header locale={lang} dict={dict} />
         <main id="main" className="flex-1">{children}</main>
         <Footer locale={lang} dict={dict} />
-        <SpeedInsights />
+
       </body>
     </html>
   );

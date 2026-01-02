@@ -1,15 +1,18 @@
 import Link from "next/link";
 import Script from "next/script";
 import ReviewCard from "@/components/ReviewCard";
-import FeaturedGameCard from "@/components/FeaturedGameCard";
+import FeaturedCarousel from "@/components/FeaturedCarousel";
 import HeroCoverGrid from "@/components/HeroCoverGrid";
 import RandomGameButton from "@/components/RandomGameButton";
 import NewsletterSignup from "@/components/NewsletterSignup";
+import ListViewTracker from "@/components/ListViewTracker";
 import { getRecentReviews, getReviewCount } from "@/lib/queries";
 import { coverOf } from "@/lib/ui-helpers";
 import { generateWebsiteStructuredData, generateGameListStructuredData } from "@/lib/structured-data";
 import { Locale, getDictionary } from "@/lib/dictionaries";
 import { getLocalizedText } from "@/lib/i18n";
+import { getHeroVariant, applyHeroVariant } from "@/lib/ab-test";
+
 // ISR: 1 hour
 export const revalidate = 3600;
 
@@ -22,7 +25,7 @@ type ReviewItem = {
   releaseDate?: Date | null;
   images?: string | null;
   image: string;
-  tags?: string[] | null;
+  tags?: string[];
   platforms?: string[] | null;
 };
 
@@ -30,9 +33,10 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
   const { lang: langParam } = await params;
   const lang = (langParam as Locale) || 'en';
   const dict = await getDictionary(lang);
-  const [rows, reviewCount] = await Promise.all([
-    getRecentReviews(),
-    getReviewCount()
+  const [rows, reviewCount, heroVariant] = await Promise.all([
+    getRecentReviews(12), // Increased limit for carousel
+    getReviewCount(),
+    getHeroVariant()
   ]);
 
   const items: ReviewItem[] = rows
@@ -47,10 +51,15 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
       images: r.images ? r.images : null,
       image: coverOf(r),
     }));
-  const [featured, ...rest] = items;
 
-  const rightItems = (featured ? rest : items).slice(0, 4);
-  const remaining = (featured ? rest : items).slice(4);
+  // Logic: 
+  // Carousel gets top 5 (reordered by A/B variant)
+  // Right side gets next 4
+  // Remaining items get the rest
+
+  const carouselItems = applyHeroVariant(items.slice(0, 5), heroVariant);
+  const rightItems = items.slice(5, 9);
+  const remaining = items.slice(9);
 
   const websiteStructuredData = generateWebsiteStructuredData();
   const gameListStructuredData = generateGameListStructuredData(
@@ -89,6 +98,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(gameListStructuredData) }}
       />
       <main className="relative isolate">
+        <ListViewTracker listType="home" itemCount={items.length} />
         {/* Animated cover grid background */}
         <HeroCoverGrid covers={heroCovers} />
 
@@ -132,20 +142,14 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
             </div>
           </header>
 
-          {/* top grid: 2 columns on lg - featured left, two-up right */}
+          {/* top grid: 2 columns on lg - featured carousel left, two-up right */}
           <div className="grid gap-[var(--block-gap)] lg:grid-cols-2">
-            {featured && (
-              <FeaturedGameCard
-                slug={featured.slug}
-                title={featured.title}
-                summary={featured.summary}
-                image={featured.image}
-                score={featured.score}
-                tags={featured.tags ?? []}
-                locale={lang}
-                dict={dict}
-              />
-            )}
+            <FeaturedCarousel
+              games={carouselItems}
+              locale={lang}
+              dict={dict}
+              heroVariant={heroVariant}
+            />
 
             {/* RIGHT: two-up grid of smaller cards */}
             <ul className="grid grid-cols-2 gap-[var(--block-gap)]">
@@ -154,7 +158,6 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
               ))}
             </ul>
           </div>
-
           {/* Newsletter signup - strategically placed after featured content */}
           <div id="newsletter" className="mt-[var(--space-12)] scroll-mt-24">
             <NewsletterSignup locale={lang} dict={dict} />
