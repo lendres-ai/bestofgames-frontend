@@ -11,12 +11,14 @@ import { coverOf } from "@/lib/ui-helpers";
 import { generateWebsiteStructuredData, generateGameListStructuredData } from "@/lib/structured-data";
 import { Locale, getDictionary } from "@/lib/dictionaries";
 import { getLocalizedText } from "@/lib/i18n";
-import { getHeroVariant, applyHeroVariant } from "@/lib/ab-test";
+import { getHeroVariant, applyHeroVariant, USE_BANDIT } from "@/lib/ab-test";
+import { selectHeroGame, reorderWithHero } from "@/lib/bandit";
 
 // ISR: 1 hour
 export const revalidate = 3600;
 
 type ReviewItem = {
+  id: string;
   slug: string;
   title: string;
   summary?: string | null;
@@ -40,8 +42,9 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
   ]);
 
   const items: ReviewItem[] = rows
-    .filter((r) => r.slug && r.title)
+    .filter((r) => r.slug && r.title && r.id)
     .map((r) => ({
+      id: r.id as string,
       slug: r.slug as string,
       title: getLocalizedText(r.title, lang),
       summary: getLocalizedText(r.summary, lang),
@@ -53,11 +56,20 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
     }));
 
   // Logic: 
-  // Carousel gets top 5 (reordered by A/B variant)
+  // Carousel gets top 5 (reordered by bandit or A/B variant)
   // Right side gets next 4
   // Remaining items get the rest
 
-  const carouselItems = applyHeroVariant(items.slice(0, 5), heroVariant);
+  let carouselItems: ReviewItem[];
+  if (USE_BANDIT && items.length > 1) {
+    // Bandit-based selection: pick the best hero dynamically
+    const candidates = items.slice(0, 5);
+    const heroSlug = await selectHeroGame(candidates.map(g => ({ id: g.id, slug: g.slug, score: g.score })));
+    carouselItems = reorderWithHero(candidates, heroSlug);
+  } else {
+    // Legacy A/B test selection
+    carouselItems = applyHeroVariant(items.slice(0, 5), heroVariant);
+  }
   const rightItems = items.slice(5, 9);
   const remaining = items.slice(9);
 

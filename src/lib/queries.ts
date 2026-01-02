@@ -29,6 +29,7 @@ const coverImageSubquery = sql<string>`(
 // ============================================================================
 
 export type ReviewListItem = {
+    id: string | null;
     slug: string | null;
     title: LocalizedField;
     summary?: LocalizedField;
@@ -94,6 +95,7 @@ export async function getRecentReviews(limit = 8): Promise<ReviewListItem[]> {
 
     // First: get top-scored games released in the last 7 days
     const recentTopRated = await db.select({
+        id: games.id,
         slug: games.slug,
         title: games.title,
         summary: games.summary,
@@ -124,6 +126,7 @@ export async function getRecentReviews(limit = 8): Promise<ReviewListItem[]> {
         .filter((slug): slug is string => slug !== null);
 
     const fillQuery = db.select({
+        id: games.id,
         slug: games.slug,
         title: games.title,
         summary: games.summary,
@@ -280,6 +283,7 @@ export async function getAllReviews(orderBy: SortOrder = 'publishedAt'): Promise
 
     return db
         .select({
+            id: games.id,
             slug: games.slug,
             title: games.title,
             heroUrl: games.heroUrl,
@@ -312,6 +316,7 @@ export async function getReviewsByTag(
 
     return db
         .select({
+            id: games.id,
             slug: games.slug,
             title: games.title,
             heroUrl: games.heroUrl,
