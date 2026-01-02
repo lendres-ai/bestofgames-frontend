@@ -1,4 +1,4 @@
-import { db } from '@/lib/db';
+import { db, isDatabaseAvailable } from '@/lib/db';
 import { games, reviews } from '@/lib/schema';
 import { eq } from 'drizzle-orm';
 import { locales } from '@/lib/dictionaries';
@@ -8,15 +8,17 @@ export const revalidate = 86400;
 export default async function sitemap() {
   const base = 'https://bestof.games';
   
-  // Get games with their last update times
-  const gameRows = await db
-    .select({ 
-      slug: games.slug, 
-      updatedAt: games.updatedAt,
-      reviewUpdatedAt: reviews.updatedAt
-    })
-    .from(games)
-    .leftJoin(reviews, eq(reviews.gameId, games.id));
+  // Get games with their last update times (empty during build without database)
+  const gameRows = isDatabaseAvailable()
+    ? await db
+        .select({ 
+          slug: games.slug, 
+          updatedAt: games.updatedAt,
+          reviewUpdatedAt: reviews.updatedAt
+        })
+        .from(games)
+        .leftJoin(reviews, eq(reviews.gameId, games.id))
+    : [];
 
   const sitemapEntries = [];
 

@@ -1,7 +1,5 @@
 import type { NextConfig } from "next";
 
-const isDev = process.env.NODE_ENV !== "production";
-
 // Disable Next.js telemetry
 process.env.NEXT_TELEMETRY_DISABLED = '1';
 
@@ -122,14 +120,5 @@ const nextConfig: NextConfig = {
   }
 };
 
-// Bundle analyzer - only load when ANALYZE=true (avoids MODULE_NOT_FOUND in production)
-let config = nextConfig;
-if (process.env.ANALYZE === 'true') {
-  const withBundleAnalyzer = require('@next/bundle-analyzer')({
-    enabled: true,
-  });
-  config = withBundleAnalyzer(nextConfig);
-}
-
-export default config;
+export default nextConfig;
 

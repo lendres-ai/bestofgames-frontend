@@ -64,13 +64,13 @@ export default function NewsletterSignup({ locale, dict, variant = 'default' }: 
             }
 
             // Track Google Ads Conversion (only once)
-            if (!conversionSentRef.current && typeof window !== 'undefined' && (window as any).gtag) {
+            if (!conversionSentRef.current && typeof window !== 'undefined' && window.gtag) {
                 conversionSentRef.current = true;
-                (window as any).gtag('event', 'conversion', {
-                    'send_to': 'AW-17843649268/bnkJCKW_mNobEPT1wbxC',
-                    'value': 0.1,
-                    'currency': 'EUR',
-                    'event_callback': () => {
+                window.gtag('event', 'conversion', {
+                    send_to: 'AW-17843649268/bnkJCKW_mNobEPT1wbxC',
+                    value: 0.1,
+                    currency: 'EUR',
+                    event_callback: () => {
                         // Conversion reported
                     }
                 });
