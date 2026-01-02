@@ -321,13 +321,13 @@ def main():
         sys.exit(1)
     
     # Fetch events from Umami
-    # Note: hero_impression uses "game_id" property, hero_click uses "game" property
+    # Both hero_impression and hero_click now use consistent "game" property
     print("  Fetching hero_impression events...")
-    impressions = get_events_by_game(UMAMI_URL, UMAMI_WEBSITE_ID, token, "hero_impression", start_at, end_at, property_name="game_id")
+    impressions = get_events_by_game(UMAMI_URL, UMAMI_WEBSITE_ID, token, "hero_impression", start_at, end_at, property_name="game")
     print(f"    Found impressions for {len(impressions)} games")
     
     print("  Fetching hero_click events...")
-    clicks = get_events_by_game(UMAMI_URL, UMAMI_WEBSITE_ID, token, "hero_click", start_at, end_at)
+    clicks = get_events_by_game(UMAMI_URL, UMAMI_WEBSITE_ID, token, "hero_click", start_at, end_at, property_name="game")
     print(f"    Found clicks for {len(clicks)} games")
     
     if impressions:

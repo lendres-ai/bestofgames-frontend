@@ -28,20 +28,24 @@ export default function FeaturedCarousel({ games, locale, dict, heroVariant }: F
     const [touchStart, setTouchStart] = useState<number | null>(null);
     const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
-    // Track hero impression ONCE per page load - this ref persists across carousel rotations
-    const hasTrackedHeroImpression = useRef(false);
+    // Track which games have received impressions this session (persists across carousel rotations)
+    const trackedImpressions = useRef<Set<string>>(new Set());
 
-    // Track hero impression once on initial mount
+    // Track hero impression when a game becomes visible (either on mount or on carousel rotation)
     useEffect(() => {
-        if (!hasTrackedHeroImpression.current && games.length > 0 && typeof window !== 'undefined' && window.umami) {
-            hasTrackedHeroImpression.current = true;
-            window.umami.track('hero_impression', {
-                game_id: games[0].slug,
-                variant: heroVariant,
-                position: 0,
-            });
-        }
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps -- intentionally only run on mount
+        if (games.length === 0 || typeof window === 'undefined' || !window.umami) return;
+
+        const currentGame = games[currentIndex];
+        if (!currentGame || trackedImpressions.current.has(currentGame.slug)) return;
+
+        // Mark as tracked and fire the impression event
+        trackedImpressions.current.add(currentGame.slug);
+        window.umami.track('hero_impression', {
+            game: currentGame.slug,  // Use 'game' to match hero_click property name
+            variant: heroVariant,
+            position: currentIndex,
+        });
+    }, [currentIndex, games, heroVariant]);
 
     // Auto-rotate
     useEffect(() => {

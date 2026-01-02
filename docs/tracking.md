@@ -9,7 +9,7 @@ These events are tracked via `window.umami.track(eventName, payload)` or declara
 | Event Name | Description | Trigger | Payload / Properties | File Location |
 | :--- | :--- | :--- | :--- | :--- |
 | **`filter_applied`** | Tracks when a user changes the sort order of a game list. | User selects a new option in the sort dropdown. | • `filter_type`: 'sort'<br>• `filter_value`: New sort value (e.g., 'score')<br>• `previous_value`: Previous sort value | `SortSelect.tsx` |
-| **`hero_impression`** | Tracks views of the featured game carousel. | Once per page load when the featured carousel mounts and has games. | • `game_id`: Slug of the first game<br>• `variant`: Hero variant name<br>• `position`: 0 | `FeaturedCarousel.tsx` |
+| **`hero_impression`** | Tracks views of games in the featured carousel. | When each game becomes visible in the carousel (once per game per page load). | • `game`: Game slug<br>• `variant`: Hero variant name<br>• `position`: Index in carousel | `FeaturedCarousel.tsx` |
 | **`hero_click`** | Tracks clicks on the featured game card. | User clicks on a game in the featured carousel. | • `game`: Game slug<br>• `variant`: Hero variant<br>• `position`: Index in carousel | `FeaturedGameCard.tsx` |
 | **`search_used`** | Tracks usage of the search bar. | When a search query is executed (debounced) and results are returned. | • `query`: The search text<br>• `results_count`: Number of results found | `SearchBar.tsx` |
 | **`search_result_click`** | Tracks clicks on search results. | User clicks on a game in the search dropdown. | • `game`: Game slug | `SearchBar.tsx` |
