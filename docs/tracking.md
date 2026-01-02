@@ -24,15 +24,10 @@ These events are tracked via `window.umami.track(eventName, payload)` or declara
 
 ## Google Ads (gtag)
 
-These events are tracked via `gtag('event', ...)` or `gtag('config', ...)` for Google Ads conversion tracking.
+The Google Tag (gtag.js) is loaded to enable Google Ads tracking and attribution.
 
 ### Configuration
 *   **ID**: `AW-17843649268`
 *   **Location**: `src/app/[lang]/layout.tsx`
 
-### Events
-
-| Event Type | Description | Trigger | Send To / Label | Payload | File Location |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **`conversion`** (Page View) | General conversion page view tracking. | Triggers on every page load within the main layout. | `AW-17843649268/sii-CMm39dkbEPT1wbxC` | N/A | `src/app/[lang]/layout.tsx` |
-| **`conversion`** (Newsletter) | Tracks successful newsletter signups. | When the newsletter API returns a success response. | `AW-17843649268/bnkJCKW_mNobEPT1wbxC` | • `value`: 0.1<br>• `currency`: 'EUR' | `NewsletterSignup.tsx` |
+> **Note**: Conversion events have been removed. Only the base gtag configuration is maintained for Google Ads attribution tracking.

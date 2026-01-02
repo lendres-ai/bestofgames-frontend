@@ -133,7 +133,6 @@ export default async function LocaleLayout({
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
               gtag('config', 'AW-17843649268');
-              gtag('event', 'conversion', {'send_to': 'AW-17843649268/sii-CMm39dkbEPT1wbxC'});
             `,
           }}
         />

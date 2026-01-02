@@ -13,7 +13,6 @@ export default function NewsletterSignup({ locale, dict, variant = 'default' }: 
     const [email, setEmail] = useState('');
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState('');
-    const conversionSentRef = useRef(false);
     const cardRef = useRef<HTMLDivElement>(null);
     const [transform, setTransform] = useState('');
     const [glarePosition, setGlarePosition] = useState({ x: 50, y: 50 });
@@ -61,19 +60,6 @@ export default function NewsletterSignup({ locale, dict, variant = 'default' }: 
             // Track successful signup in Umami
             if (typeof window !== 'undefined' && window.umami) {
                 window.umami.track('newsletter_signup_success', { variant });
-            }
-
-            // Track Google Ads Conversion (only once)
-            if (!conversionSentRef.current && typeof window !== 'undefined' && (window as any).gtag) {
-                conversionSentRef.current = true;
-                (window as any).gtag('event', 'conversion', {
-                    'send_to': 'AW-17843649268/bnkJCKW_mNobEPT1wbxC',
-                    'value': 0.1,
-                    'currency': 'EUR',
-                    'event_callback': () => {
-                        // Conversion reported
-                    }
-                });
             }
         } catch (err) {
             setStatus('error');
