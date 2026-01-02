@@ -6,7 +6,7 @@ import HeroCoverGrid from "@/components/HeroCoverGrid";
 import RandomGameButton from "@/components/RandomGameButton";
 import NewsletterSignup from "@/components/NewsletterSignup";
 import ListViewTracker from "@/components/ListViewTracker";
-import { getRecentReviews, getReviewCount } from "@/lib/queries";
+import { getRecentReviews, getReviewCount, getTopTags } from "@/lib/queries";
 import { coverOf } from "@/lib/ui-helpers";
 import { generateWebsiteStructuredData, generateGameListStructuredData } from "@/lib/structured-data";
 import { Locale, getDictionary } from "@/lib/dictionaries";
@@ -33,10 +33,11 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
   const { lang: langParam } = await params;
   const lang = (langParam as Locale) || 'en';
   const dict = await getDictionary(lang);
-  const [rows, reviewCount, heroVariant] = await Promise.all([
+  const [rows, reviewCount, heroVariant, topTags] = await Promise.all([
     getRecentReviews(12), // Increased limit for carousel
     getReviewCount(),
-    getHeroVariant()
+    getHeroVariant(),
+    getTopTags(4)
   ]);
 
   const items: ReviewItem[] = rows
@@ -71,12 +72,11 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
     }))
   );
 
-  const categories = [
-    { key: "metroidvania", label: dict.home.categories.metroidvania },
-    { key: "roguelike", label: dict.home.categories.roguelike },
-    { key: "puzzle", label: dict.home.categories.puzzle },
-    { key: "narrative", label: dict.home.categories.narrative },
-  ];
+  // Use dynamically fetched top tags instead of hardcoded categories
+  const categories = topTags.map(tag => ({
+    key: tag.name.toLowerCase(),
+    label: tag.name,
+  }));
 
   // Prepare covers for the animated hero background (top 12 scored)
   const heroCovers = items.slice(0, 12).map(item => ({

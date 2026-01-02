@@ -359,6 +359,29 @@ export async function getReviewCount(): Promise<number> {
     return result[0]?.count ?? 0;
 }
 
+/**
+ * Get the top tags by number of associated published games
+ */
+export async function getTopTags(limit = 4): Promise<{ name: string; count: number }[]> {
+    const gameCount = sql<number>`count(distinct ${games.id})`;
+
+    const result = await db
+        .select({
+            name: tags.name,
+            count: gameCount,
+        })
+        .from(tags)
+        .innerJoin(reviewTags, eq(reviewTags.tagId, tags.id))
+        .innerJoin(reviews, eq(reviewTags.reviewId, reviews.id))
+        .innerJoin(games, eq(reviews.gameId, games.id))
+        .where(eq(reviews.isPublished, true))
+        .groupBy(tags.id, tags.name)
+        .orderBy(desc(gameCount))
+        .limit(limit);
+
+    return result;
+}
+
 export async function searchGames(
     query: string,
     limit = 20
