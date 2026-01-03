@@ -114,6 +114,10 @@ export default async function Page({ params }: { params: Promise<{ lang: string;
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData) }}
       />
+      {/* Google Ads conversion tracking for game page views */}
+      <Script id="gtag-conversion" strategy="afterInteractive">
+        {`gtag('event', 'conversion', {'send_to': 'AW-17843649268/DU2JCPKv6tsbEPT1wbxC'});`}
+      </Script>
       <GameHero
         title={title}
         developer={game.developer}
