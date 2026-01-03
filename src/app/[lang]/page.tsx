@@ -14,8 +14,10 @@ import { getLocalizedText } from "@/lib/i18n";
 import { getHeroVariant, applyHeroVariant, USE_BANDIT } from "@/lib/ab-test";
 import { selectCarouselGames, reorderBySelection, RECOMMENDED_POOL_SIZE } from "@/lib/bandit";
 
-// ISR: 5 minutes - allows Thompson Sampling to re-sample frequently for faster learning
-export const revalidate = 300;
+// ISR: 2 minutes - landing page changes often (game rotation, bandit learning)
+// Cloudflare edge caches for 2 min with 30 min stale-while-revalidate
+// Use POST /api/revalidate to force immediate refresh after content changes
+export const revalidate = 120;
 
 type ReviewItem = {
   id: string;

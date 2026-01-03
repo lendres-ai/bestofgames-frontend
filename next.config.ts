@@ -65,41 +65,90 @@ const nextConfig: NextConfig = {
           }
         ]
       },
-      // HTML pages - tell Cloudflare to cache at edge but let browsers revalidate
-      // s-maxage = edge cache TTL, stale-while-revalidate = serve stale while fetching fresh
+      // ===========================================
+      // Landing pages (change often, need fast global delivery)
+      // Strategy: Short edge cache + long stale-while-revalidate
+      // ===========================================
       {
         source: '/:lang(en|de)',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=0, s-maxage=300, stale-while-revalidate=600'
+            // Edge: 2 min, SWR: 30 min - users always get fast response
+            value: 'public, max-age=0, s-maxage=120, stale-while-revalidate=1800'
+          },
+          {
+            key: 'CDN-Cache-Control',
+            // Cloudflare-specific: same as s-maxage
+            value: 'max-age=120, stale-while-revalidate=1800'
           }
         ]
       },
+      // ===========================================
+      // Game list pages (change occasionally)
+      // ===========================================
       {
         source: '/:lang(en|de)/games',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=0, s-maxage=3600, stale-while-revalidate=7200'
+            // Edge: 1 hour, SWR: 4 hours
+            value: 'public, max-age=0, s-maxage=3600, stale-while-revalidate=14400'
+          },
+          {
+            key: 'CDN-Cache-Control',
+            value: 'max-age=3600, stale-while-revalidate=14400'
           }
         ]
       },
+      // ===========================================
+      // Game detail pages (rarely change after publish)
+      // Strategy: Cache aggressively at edge (7 days)
+      // ===========================================
       {
         source: '/:lang(en|de)/games/:slug*',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=0, s-maxage=86400, stale-while-revalidate=172800'
+            // Edge: 7 days, SWR: 14 days - these pages are nearly immutable
+            value: 'public, max-age=0, s-maxage=604800, stale-while-revalidate=1209600'
+          },
+          {
+            key: 'CDN-Cache-Control',
+            value: 'max-age=604800, stale-while-revalidate=1209600'
           }
         ]
       },
+      // ===========================================
+      // Tag pages (similar to game list)
+      // ===========================================
       {
         source: '/:lang(en|de)/tags/:tag*',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=0, s-maxage=3600, stale-while-revalidate=7200'
+            value: 'public, max-age=0, s-maxage=3600, stale-while-revalidate=14400'
+          },
+          {
+            key: 'CDN-Cache-Control',
+            value: 'max-age=3600, stale-while-revalidate=14400'
+          }
+        ]
+      },
+      // ===========================================
+      // Static pages (about, privacy, contact)
+      // ===========================================
+      {
+        source: '/:lang(en|de)/(about|privacy|contact)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            // Edge: 1 day, SWR: 7 days
+            value: 'public, max-age=0, s-maxage=86400, stale-while-revalidate=604800'
+          },
+          {
+            key: 'CDN-Cache-Control',
+            value: 'max-age=86400, stale-while-revalidate=604800'
           }
         ]
       },
