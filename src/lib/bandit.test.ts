@@ -33,6 +33,24 @@ function reorderWithHero<T extends { slug: string }>(games: T[], heroSlug: strin
     return reordered;
 }
 
+// Copied from bandit.ts for testing purposes
+function reorderBySelection<T extends { slug: string }>(
+    games: T[],
+    selectedSlugs: string[]
+): T[] {
+    const gameMap = new Map(games.map(g => [g.slug, g]));
+    const result: T[] = [];
+
+    for (const slug of selectedSlugs) {
+        const game = gameMap.get(slug);
+        if (game) {
+            result.push(game);
+        }
+    }
+
+    return result;
+}
+
 describe('bandit pure functions', () => {
     describe('convertScoreToPrior', () => {
         it('returns neutral prior for null score', () => {
@@ -101,6 +119,53 @@ describe('bandit pure functions', () => {
         it('does not mutate original array', () => {
             const original = [...games];
             reorderWithHero(games, 'game-c');
+            assert.deepStrictEqual(games.map(g => g.slug), original.map(g => g.slug));
+        });
+    });
+
+    describe('reorderBySelection', () => {
+        const games = [
+            { slug: 'game-a', title: 'Game A' },
+            { slug: 'game-b', title: 'Game B' },
+            { slug: 'game-c', title: 'Game C' },
+            { slug: 'game-d', title: 'Game D' },
+            { slug: 'game-e', title: 'Game E' },
+        ];
+
+        it('returns games in the order specified by selectedSlugs', () => {
+            const selected = ['game-c', 'game-a', 'game-e'];
+            const result = reorderBySelection(games, selected);
+            assert.deepStrictEqual(result.map(g => g.slug), ['game-c', 'game-a', 'game-e']);
+        });
+
+        it('returns subset of games matching selected slugs', () => {
+            const selected = ['game-b', 'game-d'];
+            const result = reorderBySelection(games, selected);
+            assert.strictEqual(result.length, 2);
+            assert.deepStrictEqual(result.map(g => g.slug), ['game-b', 'game-d']);
+        });
+
+        it('preserves all properties of the games', () => {
+            const selected = ['game-b'];
+            const result = reorderBySelection(games, selected);
+            assert.strictEqual(result[0].title, 'Game B');
+        });
+
+        it('ignores slugs that are not in the games array', () => {
+            const selected = ['game-b', 'game-nonexistent', 'game-c'];
+            const result = reorderBySelection(games, selected);
+            assert.strictEqual(result.length, 2);
+            assert.deepStrictEqual(result.map(g => g.slug), ['game-b', 'game-c']);
+        });
+
+        it('returns empty array for empty selection', () => {
+            const result = reorderBySelection(games, []);
+            assert.strictEqual(result.length, 0);
+        });
+
+        it('does not mutate original array', () => {
+            const original = [...games];
+            reorderBySelection(games, ['game-c', 'game-a']);
             assert.deepStrictEqual(games.map(g => g.slug), original.map(g => g.slug));
         });
     });

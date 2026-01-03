@@ -1,16 +1,30 @@
 import { db } from './db';
-import { heroBanditStats, reviews, games } from './schema';
-import { eq, inArray } from 'drizzle-orm';
+import { heroBanditStats } from './schema';
+import { inArray } from 'drizzle-orm';
 
 /**
- * Thompson Sampling Bandit for Hero Game Selection
+ * Thompson Sampling Bandit for Carousel Game Selection
+ * 
+ * Enhanced bandit that selects multiple games for the carousel from a larger pool.
+ * 
+ * Strategy:
+ * - Position 1 (Hero): Full Thompson Sampling with aggressive exploration
+ *   This is the most visible position on the landing page
+ * - Positions 2-5: Thompson Sampling from remaining candidates, less exploration
+ *   These positions are less visible but still contribute to engagement
  * 
  * Uses Beta distribution sampling to balance exploration vs exploitation.
  * Each game has a Beta(alpha + clicks, beta + impressions - clicks) distribution.
- * The game with the highest sample is selected as hero.
  */
 
+/** Minimum impressions before we trust the data for exploitation */
 const MIN_IMPRESSIONS_FOR_EXPLOIT = 10;
+
+/** How many games to select for the carousel */
+const CAROUSEL_SIZE = 5;
+
+/** Recommended pool size for candidate games */
+export const RECOMMENDED_POOL_SIZE = 20;
 
 interface GameCandidate {
     id: string;
@@ -24,6 +38,11 @@ interface BanditStats {
     clicks10d: number;
     priorAlpha: string;
     priorBeta: string;
+}
+
+interface ScoredCandidate extends GameCandidate {
+    sample: number;
+    hasData: boolean;
 }
 
 /**
@@ -113,10 +132,54 @@ function randomNormal(): number {
 }
 
 /**
+ * Score all candidates using Thompson Sampling.
+ * Returns candidates sorted by their sampled scores (best first).
+ * 
+ * @param candidates - Array of game candidates
+ * @param statsMap - Map of game ID to bandit stats
+ * @param forceExploration - If true, give maximum exploration bonus to cold-start games
+ * @returns Array of scored candidates, sorted by sample (descending)
+ */
+function scoreAndSortCandidates(
+    candidates: GameCandidate[],
+    statsMap: Map<string, BanditStats>,
+    forceExploration: boolean = true
+): ScoredCandidate[] {
+    const scored: ScoredCandidate[] = candidates.map(candidate => {
+        const stat = statsMap.get(candidate.id);
+        let sample: number;
+        let hasData = false;
+
+        if (!stat || stat.impressions10d < MIN_IMPRESSIONS_FOR_EXPLOIT) {
+            // Cold start: force exploration
+            if (forceExploration) {
+                // High random sample to ensure new games get tested
+                sample = 0.9 + Math.random() * 0.1; // Random between 0.9 and 1.0
+            } else {
+                // Moderate exploration for secondary positions
+                sample = 0.5 + Math.random() * 0.4; // Random between 0.5 and 0.9
+            }
+        } else {
+            // Exploit: sample from Beta distribution
+            hasData = true;
+            const alpha = Number(stat.priorAlpha) + stat.clicks10d;
+            const beta = Number(stat.priorBeta) + stat.impressions10d - stat.clicks10d;
+            sample = sampleBeta(alpha, beta);
+        }
+
+        return { ...candidate, sample, hasData };
+    });
+
+    // Sort by sample descending
+    return scored.sort((a, b) => b.sample - a.sample);
+}
+
+/**
  * Select the hero game using Thompson Sampling.
  * 
  * @param candidates - Array of game candidates (must have id, slug, and optionally score)
  * @returns The slug of the selected hero game
+ * @deprecated Use selectCarouselGames for enhanced multi-position selection
  */
 export async function selectHeroGame(candidates: GameCandidate[]): Promise<string> {
     if (candidates.length === 0) {
@@ -147,32 +210,76 @@ export async function selectHeroGame(candidates: GameCandidate[]): Promise<strin
         statsMap.set(s.gameId, s);
     }
 
-    // Sample from each candidate's distribution
-    let bestSlug = candidates[0].slug;
-    let bestSample = -1;
+    const sorted = scoreAndSortCandidates(candidates, statsMap, true);
+    return sorted[0].slug;
+}
 
-    for (const candidate of candidates) {
-        const stat = statsMap.get(candidate.id);
-        let sample: number;
-
-        if (!stat || stat.impressions10d < MIN_IMPRESSIONS_FOR_EXPLOIT) {
-            // Cold start: force exploration with high sample
-            // This ensures new games get shown at least MIN_IMPRESSIONS times
-            sample = 0.9 + Math.random() * 0.1; // Random between 0.9 and 1.0
-        } else {
-            // Exploit: sample from Beta distribution
-            const alpha = Number(stat.priorAlpha) + stat.clicks10d;
-            const beta = Number(stat.priorBeta) + stat.impressions10d - stat.clicks10d;
-            sample = sampleBeta(alpha, beta);
-        }
-
-        if (sample > bestSample) {
-            bestSample = sample;
-            bestSlug = candidate.slug;
-        }
+/**
+ * Select multiple games for the carousel using Thompson Sampling.
+ * 
+ * This enhanced function selects games for all carousel positions:
+ * - Position 1 (Hero): Most aggressive exploration/exploitation
+ * - Positions 2-5: Selected from remaining candidates with moderate exploration
+ * 
+ * @param candidates - Array of game candidates (should be ~20 for best results)
+ * @param count - Number of games to select (default: 5)
+ * @returns Array of slugs in carousel order (hero first)
+ */
+export async function selectCarouselGames(
+    candidates: GameCandidate[],
+    count: number = CAROUSEL_SIZE
+): Promise<string[]> {
+    if (candidates.length === 0) {
+        throw new Error('No candidates provided for carousel selection');
     }
 
-    return bestSlug;
+    // If we have fewer candidates than requested, return all of them
+    if (candidates.length <= count) {
+        return candidates.map(c => c.slug);
+    }
+
+    const candidateIds = candidates.map(c => c.id);
+
+    // Fetch bandit stats for all candidates
+    const stats = await db
+        .select({
+            gameId: heroBanditStats.gameId,
+            impressions10d: heroBanditStats.impressions10d,
+            clicks10d: heroBanditStats.clicks10d,
+            priorAlpha: heroBanditStats.priorAlpha,
+            priorBeta: heroBanditStats.priorBeta,
+        })
+        .from(heroBanditStats)
+        .where(inArray(heroBanditStats.gameId, candidateIds));
+
+    // Create a map for quick lookup
+    const statsMap = new Map<string, BanditStats>();
+    for (const s of stats) {
+        statsMap.set(s.gameId, s);
+    }
+
+    const selected: string[] = [];
+    let remainingCandidates = [...candidates];
+
+    // Position 1 (Hero): Full Thompson Sampling with aggressive exploration
+    // This is the most important position - what users see first
+    const heroSorted = scoreAndSortCandidates(remainingCandidates, statsMap, true);
+    const hero = heroSorted[0];
+    selected.push(hero.slug);
+    remainingCandidates = remainingCandidates.filter(c => c.id !== hero.id);
+
+    // Positions 2-5: Thompson Sampling from remaining candidates
+    // Less aggressive exploration since these positions are less visible
+    for (let i = 1; i < count && remainingCandidates.length > 0; i++) {
+        // Re-sample for each position to add variety
+        // Use moderate exploration (forceExploration = false) for secondary positions
+        const sorted = scoreAndSortCandidates(remainingCandidates, statsMap, false);
+        const pick = sorted[0];
+        selected.push(pick.slug);
+        remainingCandidates = remainingCandidates.filter(c => c.id !== pick.id);
+    }
+
+    return selected;
 }
 
 /**
@@ -181,6 +288,7 @@ export async function selectHeroGame(candidates: GameCandidate[]): Promise<strin
  * @param games - Array of games
  * @param heroSlug - Slug of the game to put first
  * @returns Reordered array with hero game first
+ * @deprecated Use selectCarouselGames which returns games in order
  */
 export function reorderWithHero<T extends { slug: string }>(games: T[], heroSlug: string): T[] {
     const heroIndex = games.findIndex(g => g.slug === heroSlug);
@@ -192,6 +300,30 @@ export function reorderWithHero<T extends { slug: string }>(games: T[], heroSlug
     const [hero] = reordered.splice(heroIndex, 1);
     reordered.unshift(hero);
     return reordered;
+}
+
+/**
+ * Reorder games array to match the order of selected slugs.
+ * 
+ * @param games - Array of games (the full candidate pool)
+ * @param selectedSlugs - Array of slugs in desired order
+ * @returns Array of games matching the selected slugs, in order
+ */
+export function reorderBySelection<T extends { slug: string }>(
+    games: T[],
+    selectedSlugs: string[]
+): T[] {
+    const gameMap = new Map(games.map(g => [g.slug, g]));
+    const result: T[] = [];
+
+    for (const slug of selectedSlugs) {
+        const game = gameMap.get(slug);
+        if (game) {
+            result.push(game);
+        }
+    }
+
+    return result;
 }
 
 /**

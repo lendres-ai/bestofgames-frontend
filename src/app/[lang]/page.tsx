@@ -12,7 +12,7 @@ import { generateWebsiteStructuredData, generateGameListStructuredData } from "@
 import { Locale, getDictionary } from "@/lib/dictionaries";
 import { getLocalizedText } from "@/lib/i18n";
 import { getHeroVariant, applyHeroVariant, USE_BANDIT } from "@/lib/ab-test";
-import { selectHeroGame, reorderWithHero } from "@/lib/bandit";
+import { selectCarouselGames, reorderBySelection, RECOMMENDED_POOL_SIZE } from "@/lib/bandit";
 
 // ISR: 1 hour
 export const revalidate = 3600;
@@ -35,8 +35,9 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
   const { lang: langParam } = await params;
   const lang = (langParam as Locale) || 'en';
   const dict = await getDictionary(lang);
+  // Fetch larger pool for bandit selection (20 candidates for 5 carousel slots)
   const [rows, reviewCount, heroVariant] = await Promise.all([
-    getRecentReviews(12), // Increased limit for carousel
+    getRecentReviews(USE_BANDIT ? RECOMMENDED_POOL_SIZE : 12),
     getReviewCount(),
     getHeroVariant()
   ]);
@@ -55,23 +56,33 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
       image: coverOf(r),
     }));
 
-  // Logic: 
-  // Carousel gets top 5 (reordered by bandit or A/B variant)
-  // Right side gets next 4
-  // Remaining items get the rest
+  // Layout Logic:
+  // - Carousel: 5 games (selected by bandit from larger pool, or top 5 by score)
+  // - Right side: next 4 games not in carousel
+  // - Remaining: rest of the games
 
   let carouselItems: ReviewItem[];
-  if (USE_BANDIT && items.length > 1) {
-    // Bandit-based selection: pick the best hero dynamically
-    const candidates = items.slice(0, 5);
-    const heroSlug = await selectHeroGame(candidates.map(g => ({ id: g.id, slug: g.slug, score: g.score })));
-    carouselItems = reorderWithHero(candidates, heroSlug);
+  let rightItems: ReviewItem[];
+  let remaining: ReviewItem[];
+
+  if (USE_BANDIT && items.length > 5) {
+    // Enhanced bandit: select 5 games from larger pool (~20 candidates)
+    // Position 1 is hero (most important), positions 2-5 are supporting
+    const candidates = items.map(g => ({ id: g.id, slug: g.slug, score: g.score }));
+    const selectedSlugs = await selectCarouselGames(candidates, 5);
+    carouselItems = reorderBySelection(items, selectedSlugs);
+    
+    // Right side and remaining: games not selected for carousel
+    const selectedSet = new Set(selectedSlugs);
+    const notSelected = items.filter(item => !selectedSet.has(item.slug));
+    rightItems = notSelected.slice(0, 4);
+    remaining = notSelected.slice(4);
   } else {
-    // Legacy A/B test selection
+    // Legacy A/B test selection (fallback when bandit disabled or few games)
     carouselItems = applyHeroVariant(items.slice(0, 5), heroVariant);
+    rightItems = items.slice(5, 9);
+    remaining = items.slice(9);
   }
-  const rightItems = items.slice(5, 9);
-  const remaining = items.slice(9);
 
   const websiteStructuredData = generateWebsiteStructuredData();
   const gameListStructuredData = generateGameListStructuredData(
