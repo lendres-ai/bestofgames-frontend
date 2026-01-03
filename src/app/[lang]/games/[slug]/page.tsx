@@ -11,7 +11,10 @@ import { getLocalizedText, formatLocalizedDate } from '@/lib/i18n';
 import { SITE_URL } from '@/lib/constants';
 
 // ISR: 1 day
-export const revalidate = 86400;
+// Game detail pages rarely change - cache aggressively
+// Cloudflare edge caches for 7 days
+// Use POST /api/revalidate?paths=/en/games/slug,/de/games/slug to bust cache
+export const revalidate = 604800; // 7 days
 export const dynamicParams = true;
 
 async function getSteamPriceText(appId: number): Promise<string | null> {
