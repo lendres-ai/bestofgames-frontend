@@ -128,7 +128,7 @@ const nextConfig: NextConfig = {
       // ISR: 1 day, Edge: 7 days (aggressive), Browser: 1 hour
       // ===========================================
       {
-        source: '/:lang(en|de)/games/:slug*',
+        source: '/:lang(en|de)/games/:slug',
         headers: [
           {
             key: 'Cache-Control',
@@ -145,7 +145,7 @@ const nextConfig: NextConfig = {
       // ISR: 1 hour, Edge: 1 hour, Browser: 0
       // ===========================================
       {
-        source: '/:lang(en|de)/tags/:tag*',
+        source: '/:lang(en|de)/tags/:tag',
         headers: [
           {
             key: 'Cache-Control',
