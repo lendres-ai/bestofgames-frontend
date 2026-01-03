@@ -8,6 +8,7 @@ import {
     platforms,
     gameImages,
     reviewProsCons,
+    heroBanditStats,
 } from './schema';
 import { and, desc, eq, gte, inArray, ilike, ne, notInArray, or, sql } from 'drizzle-orm';
 import { LocalizedField } from './i18n';
@@ -86,12 +87,12 @@ export type SearchResult = {
 
 /**
  * Get featured reviews for the homepage.
- * Strategy: Show top-scored games released in the last 7 days first,
+ * Strategy: Show top-scored games released in the last 90 days first,
  * then fill remaining slots with top-rated games from all time.
  */
 export async function getRecentReviews(limit = 8): Promise<ReviewListItem[]> {
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const ninetyDaysAgo = new Date();
+    ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
 
     // First: get top-scored games released in the last 7 days
     const recentTopRated = await db.select({
@@ -109,7 +110,7 @@ export async function getRecentReviews(limit = 8): Promise<ReviewListItem[]> {
         .leftJoin(games, eq(reviews.gameId, games.id))
         .where(and(
             eq(reviews.isPublished, true),
-            gte(games.releaseDate, thirtyDaysAgo)
+            gte(games.releaseDate, ninetyDaysAgo)
         ))
         .orderBy(desc(reviews.score))
         .limit(limit);
@@ -151,6 +152,106 @@ export async function getRecentReviews(limit = 8): Promise<ReviewListItem[]> {
     const allTimeTopRated = await fillQuery;
 
     return [...recentTopRated, ...allTimeTopRated];
+}
+
+/**
+ * Trending game candidate with composite ranking score.
+ */
+export type TrendingGame = ReviewListItem & {
+    /** Composite ranking score (0-10) combining score, recency, and engagement */
+    trendingScore: number;
+};
+
+/**
+ * Get trending games for the bandit candidate pool.
+ * 
+ * Combines three signals into a composite ranking score:
+ * - Base score (50%): Review score (0-10)
+ * - Recency boost (20%): Decays from 1.0 to 0 over 90 days since release
+ * - Engagement score (30%): CTR from last 10 days, normalized to 0-10 scale
+ * 
+ * Games without engagement data get a neutral engagement score (5.0) so they
+ * can still rank based on review score and recency.
+ * 
+ * @param limit - Maximum number of games to return
+ * @returns Games sorted by composite trending score
+ */
+export async function getTrendingGames(limit = 20): Promise<TrendingGame[]> {
+    const now = new Date();
+    const RECENCY_WINDOW_DAYS = 90;
+    const MIN_IMPRESSIONS_FOR_CTR = 10;
+
+    // Weight configuration
+    const WEIGHT_SCORE = 0.5;
+    const WEIGHT_RECENCY = 0.2;
+    const WEIGHT_ENGAGEMENT = 0.3;
+
+    // Fetch all published games with their bandit stats
+    const results = await db
+        .select({
+            id: games.id,
+            slug: games.slug,
+            title: games.title,
+            summary: games.summary,
+            heroUrl: games.heroUrl,
+            score: reviews.score,
+            publishedAt: reviews.publishedAt,
+            releaseDate: games.releaseDate,
+            images: coverImageSubquery,
+            // Bandit stats (may be null if game hasn't been shown yet)
+            impressions10d: heroBanditStats.impressions10d,
+            clicks10d: heroBanditStats.clicks10d,
+        })
+        .from(reviews)
+        .innerJoin(games, eq(reviews.gameId, games.id))
+        .leftJoin(heroBanditStats, eq(heroBanditStats.gameId, games.id))
+        .where(eq(reviews.isPublished, true));
+
+    // Calculate composite trending score for each game
+    const scoredGames: TrendingGame[] = results.map(game => {
+        // 1. Base score (0-10)
+        const baseScore = game.score ? parseFloat(game.score) : 5.0;
+
+        // 2. Recency boost (0-1, decays over 90 days)
+        let recencyBoost = 0.5; // Default for games without release date
+        if (game.releaseDate) {
+            const daysSinceRelease = (now.getTime() - game.releaseDate.getTime()) / (1000 * 60 * 60 * 24);
+            recencyBoost = Math.max(0, 1 - (daysSinceRelease / RECENCY_WINDOW_DAYS));
+        }
+
+        // 3. Engagement score (CTR normalized to 0-10)
+        let engagementScore = 5.0; // Neutral default for cold-start games
+        if (game.impressions10d && game.impressions10d >= MIN_IMPRESSIONS_FOR_CTR) {
+            // CTR typically ranges 0-0.1 (0-10%), normalize to 0-10 scale
+            // Using a 10% CTR as "excellent" (maps to 10)
+            const ctr = game.clicks10d! / game.impressions10d;
+            engagementScore = Math.min(10, ctr * 100); // 0.01 CTR = 1.0, 0.10 CTR = 10.0
+        }
+
+        // Composite score (weighted average, all normalized to 0-10)
+        const trendingScore =
+            (baseScore * WEIGHT_SCORE) +
+            (recencyBoost * 10 * WEIGHT_RECENCY) + // Scale recency to 0-10
+            (engagementScore * WEIGHT_ENGAGEMENT);
+
+        return {
+            id: game.id,
+            slug: game.slug,
+            title: game.title,
+            summary: game.summary,
+            heroUrl: game.heroUrl,
+            score: game.score,
+            publishedAt: game.publishedAt,
+            releaseDate: game.releaseDate,
+            images: game.images,
+            trendingScore: Math.round(trendingScore * 100) / 100, // Round to 2 decimals
+        };
+    });
+
+    // Sort by trending score (descending) and return top N
+    return scoredGames
+        .sort((a, b) => b.trendingScore - a.trendingScore)
+        .slice(0, limit);
 }
 
 export async function getGameBySlug(slug: string): Promise<GameDetail | null> {

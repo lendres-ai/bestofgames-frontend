@@ -6,7 +6,7 @@ import HeroCoverGrid from "@/components/HeroCoverGrid";
 import RandomGameButton from "@/components/RandomGameButton";
 import NewsletterSignup from "@/components/NewsletterSignup";
 import ListViewTracker from "@/components/ListViewTracker";
-import { getRecentReviews, getReviewCount } from "@/lib/queries";
+import { getTrendingGames, getReviewCount } from "@/lib/queries";
 import { coverOf } from "@/lib/ui-helpers";
 import { generateWebsiteStructuredData, generateGameListStructuredData } from "@/lib/structured-data";
 import { Locale, getDictionary } from "@/lib/dictionaries";
@@ -35,14 +35,15 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
   const { lang: langParam } = await params;
   const lang = (langParam as Locale) || 'en';
   const dict = await getDictionary(lang);
-  // Fetch larger pool for bandit selection (20 candidates for 5 carousel slots)
-  const [rows, reviewCount, heroVariant] = await Promise.all([
-    getRecentReviews(USE_BANDIT ? RECOMMENDED_POOL_SIZE : 12),
+  // Fetch trending games for bandit selection (20 candidates for 5 carousel slots)
+  // Uses composite score: 50% review score + 20% recency + 30% engagement CTR
+  const [trendingGames, reviewCount, heroVariant] = await Promise.all([
+    getTrendingGames(USE_BANDIT ? RECOMMENDED_POOL_SIZE : 12),
     getReviewCount(),
     getHeroVariant()
   ]);
 
-  const items: ReviewItem[] = rows
+  const items: ReviewItem[] = trendingGames
     .filter((r) => r.slug && r.title && r.id)
     .map((r) => ({
       id: r.id as string,
@@ -71,7 +72,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
     const candidates = items.map(g => ({ id: g.id, slug: g.slug, score: g.score }));
     const selectedSlugs = await selectCarouselGames(candidates, 5);
     carouselItems = reorderBySelection(items, selectedSlugs);
-    
+
     // Right side and remaining: games not selected for carousel
     const selectedSet = new Set(selectedSlugs);
     const notSelected = items.filter(item => !selectedSet.has(item.slug));
