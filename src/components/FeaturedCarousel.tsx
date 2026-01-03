@@ -122,6 +122,20 @@ export default function FeaturedCarousel({ games, locale, dict, heroVariant }: F
                         position={currentIndex}
                     />
                 </div>
+
+                {/* Indicators - placed inside the overflow container to position correctly */}
+                <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 gap-2 rounded-full bg-black/20 px-3 py-1.5 backdrop-blur-sm">
+                    {games.map((_, idx) => (
+                        <button
+                            key={idx}
+                            onClick={() => setCurrentIndex(idx)}
+                            className={`h-2 transition-all duration-300 rounded-full ${idx === currentIndex ? 'w-6 bg-white' : 'w-2 bg-white/40 hover:bg-white/60'
+                                }`}
+                            aria-label={`Go to slide ${idx + 1}`}
+                            aria-current={idx === currentIndex}
+                        />
+                    ))}
+                </div>
             </div>
 
             {/* Navigation Controls - visible on hover or focus */}
@@ -146,20 +160,6 @@ export default function FeaturedCarousel({ games, locale, dict, heroVariant }: F
                 >
                     <ChevronRight className="h-8 w-8" />
                 </button>
-            </div>
-
-            {/* Indicators */}
-            <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2 rounded-full bg-black/20 px-3 py-1.5 backdrop-blur-sm">
-                {games.map((_, idx) => (
-                    <button
-                        key={idx}
-                        onClick={() => setCurrentIndex(idx)}
-                        className={`h-2 transition-all duration-300 rounded-full ${idx === currentIndex ? 'w-6 bg-white' : 'w-2 bg-white/40 hover:bg-white/60'
-                            }`}
-                        aria-label={`Go to slide ${idx + 1}`}
-                        aria-current={idx === currentIndex}
-                    />
-                ))}
             </div>
         </div>
     );

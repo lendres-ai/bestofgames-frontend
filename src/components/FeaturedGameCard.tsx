@@ -73,7 +73,7 @@ export default function FeaturedGameCard({
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           style={{ transform, transition: transform ? 'transform 0.1s ease-out' : 'transform 0.4s ease-out' }}
-          className={`featured-card relative overflow-hidden rounded-3xl border border-white/20 bg-white/40 shadow-lg ring-1 ring-white/10 backdrop-blur-xl transition-shadow duration-300 hover:shadow-2xl dark:border-white/10 dark:bg-gray-900/40 ${isHighScore ? 'high-score-glow' : ''}`}
+          className="featured-card relative overflow-hidden rounded-3xl border border-white/20 bg-white/40 shadow-lg ring-1 ring-white/10 backdrop-blur-xl transition-shadow duration-300 hover:shadow-2xl dark:border-white/10 dark:bg-gray-900/40"
         >
           {/* Glare effect */}
           <div
