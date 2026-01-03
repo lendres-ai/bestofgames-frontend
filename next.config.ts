@@ -65,6 +65,54 @@ const nextConfig: NextConfig = {
           }
         ]
       },
+      // HTML pages - tell Cloudflare to cache at edge but let browsers revalidate
+      // s-maxage = edge cache TTL, stale-while-revalidate = serve stale while fetching fresh
+      {
+        source: '/:lang(en|de)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, s-maxage=300, stale-while-revalidate=600'
+          }
+        ]
+      },
+      {
+        source: '/:lang(en|de)/games',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, s-maxage=3600, stale-while-revalidate=7200'
+          }
+        ]
+      },
+      {
+        source: '/:lang(en|de)/games/:slug*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, s-maxage=86400, stale-while-revalidate=172800'
+          }
+        ]
+      },
+      {
+        source: '/:lang(en|de)/tags/:tag*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, s-maxage=3600, stale-while-revalidate=7200'
+          }
+        ]
+      },
+      // Optimized images - cache at edge for 31 days
+      {
+        source: '/_next/image',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, s-maxage=2678400, stale-while-revalidate=86400'
+          }
+        ]
+      },
       {
         source: '/(.*)',
         headers: [
