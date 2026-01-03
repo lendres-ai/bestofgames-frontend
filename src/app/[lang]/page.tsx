@@ -14,8 +14,8 @@ import { getLocalizedText } from "@/lib/i18n";
 import { getHeroVariant, applyHeroVariant, USE_BANDIT } from "@/lib/ab-test";
 import { selectHeroGame, reorderWithHero } from "@/lib/bandit";
 
-// ISR: 1 hour
-export const revalidate = 3600;
+// ISR: 5 minutes - allows Thompson Sampling to re-sample frequently for faster learning
+export const revalidate = 300;
 
 type ReviewItem = {
   id: string;
