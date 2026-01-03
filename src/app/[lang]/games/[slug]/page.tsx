@@ -10,8 +10,9 @@ import { Locale, getDictionary } from '@/lib/dictionaries';
 import { getLocalizedText, formatLocalizedDate } from '@/lib/i18n';
 import { SITE_URL } from '@/lib/constants';
 
-// ISR: 1 day
-export const revalidate = 86400;
+// ISR: 7 days - game content rarely changes after publish
+// Edge cache (Cloudflare) also set to 7 days for consistency
+export const revalidate = 604800;
 export const dynamicParams = true;
 
 async function getSteamPriceText(appId: number): Promise<string | null> {
