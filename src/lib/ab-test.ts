@@ -1,8 +1,4 @@
-import { cookies } from 'next/headers';
-
 export type HeroVariant = 'A' | 'B' | 'bandit';
-
-const COOKIE_NAME = 'ab_hero_variant';
 
 /**
  * Feature flag for bandit-based hero selection.
@@ -12,29 +8,14 @@ const COOKIE_NAME = 'ab_hero_variant';
 export const USE_BANDIT = process.env.USE_BANDIT === 'true';
 
 /**
- * A/B Test for Hero Game Selection (Legacy)
- * 
- * Variant A (control): Default order - first game is hero
- * Variant B (test): Swap game #2 to hero position
- * 
- * Cookie is set by middleware; this function only reads it.
- * Falls back to 'A' if cookie is missing (shouldn't happen with middleware).
- * 
- * NOTE: When USE_BANDIT is true, this returns 'bandit' regardless of cookie.
+ * Get the current hero variant.
+ * Returns 'bandit' when USE_BANDIT is enabled, otherwise 'A' (control).
  */
 export async function getHeroVariant(): Promise<HeroVariant> {
     if (USE_BANDIT) {
         return 'bandit';
     }
-
-    const cookieStore = await cookies();
-    const variant = cookieStore.get(COOKIE_NAME)?.value;
-
-    if (variant === 'A' || variant === 'B') {
-        return variant;
-    }
-
-    // Fallback to control if cookie missing
+    // Default to control variant (no A/B testing)
     return 'A';
 }
 
